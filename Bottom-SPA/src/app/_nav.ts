@@ -37,7 +37,11 @@ export const navItems: INavData[] = [
       }
     ]
   },
-  
+  {
+    name: 'In/Out History',
+    url: '/io-history',
+    icon: 'icon-book-open'
+  }
   // {
   //   title: true,
   //   name: 'Theme'

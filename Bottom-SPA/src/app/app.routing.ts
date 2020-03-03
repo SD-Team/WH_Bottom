@@ -117,6 +117,15 @@ export const routes: Routes = [
                  )
              },
              {
+               path: "io-history",
+               // runGuardsAndResolvers: 'always',
+               // canActivate: [AuthGuard],
+               loadChildren: () =>
+                 import("./views/io-history/history.module").then(
+                   m => m.HistoryModule
+                 )
+             },
+             {
                path: "icons",
                loadChildren: () =>
                  import("./views/icons/icons.module").then(m => m.IconsModule)
