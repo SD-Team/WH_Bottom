@@ -10,7 +10,7 @@
         </div>
         <form class="form-horizontal" #addAuditTypeForm="ngForm">
           <div class="card-body">
-          
+
             <div class="form-group row">
               <div class="col-md-2">
                 <label> Material Sheet NO:</label>
@@ -74,8 +74,8 @@
                     <td>{{item.outputQty}}</td>
                     <td>{{item.remainingQty}}</td>
                     <td rowspan="2">
-                      <button class="btn btn-warning">>>Show Detail</button>
-                      <button class="btn btn-danger">Delete</button>
+                      <button class="btn btn-warning mr-2"><i class="fa fa-search-plus"></i>  Detail</button>
+                      <button class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button>
                     </td>
                   </tr>
                   <tr>
@@ -87,17 +87,16 @@
               </tbody>
             </table>
           </div>
-          <ng-container *ngIf="result.length>0">
-            <div class="float-right mt-3">
-              <button class="btn btn-secondary mr-3">Cancel</button>
-              <button class="btn btn-primary mr-3">Submit</button>
-              <button class="btn btn-secondary">Print</button>
-            </div>
-          </ng-container>
+
           <div class="d-flex">
 
           </div>
         </div>
+          <div class="card-footer" *ngIf="result.length>0">
+            <button class="btn btn-danger mr-2"><i class="fa fa-ban"></i> Cancel</button>
+            <button class="btn btn-success mr-2"><i class="fa fa-check"></i> Submit</button>
+            <button class="btn btn-primary"><i class="fa fa-print"></i> Print</button>
+          </div>
       </div>
     </div>
     <!--/.col-->
