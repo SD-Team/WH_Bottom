@@ -10,13 +10,15 @@
         </div>
         <form class="form-horizontal" #addAuditTypeForm="ngForm">
           <div class="card-body">
-           
+
             <div class="form-group row">
               <div class="col-md-2">
                 <label>Rack Location:</label>
                 <div class="input-group">
-                  <button class="btn btn-primary mr-2" type="button">SCAN</button>
-                  <input type="text" placeholder="Rack Location" class="form-control">
+                  <span class="input-group-prepend">
+                    <button class="btn btn-primary" type="button" disabled>SCAN</button>
+                  </span>
+                  <input type="text" placeholder="Scan" class="form-control">
                 </div>
               </div>
             </div>
@@ -24,7 +26,9 @@
               <div class="col-md-2">
                 <label> QrCode:</label>
                 <div class="input-group">
-                  <button class="btn btn-primary mr-2" type="button">SCAN</button>
+                  <span class="input-group-prepend">
+                    <button class="btn btn-primary" type="button" disabled>SCAN</button>
+                  </span>
                   <input type="text" placeholder="QRCode" class="form-control">
                 </div>
               </div>
