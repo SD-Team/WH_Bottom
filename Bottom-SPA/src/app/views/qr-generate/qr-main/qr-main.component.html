@@ -82,7 +82,12 @@
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th class="text-center"><input type="checkbox"></th>
+                <th class="text-center">
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="all">
+                    <label class="custom-control-label" for="all"></label>
+                  </div>
+                </th>
                 <th>QRCodeID</th>
                 <th>Plan No</th>
                 <th>Recive No</th>
@@ -96,7 +101,12 @@
             <tbody >
               <ng-container *ngFor="let item of results; let index = index">
                 <tr>
-                  <td class="text-center"><input type="checkbox"></td>
+                  <td class="text-center">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" [id]="item.qrCodeId">
+                      <label class="custom-control-label" [for]="item.qrCodeId"></label>
+                    </div>
+                  </td>
                   <td>{{item.qrCodeId}}</td>
                   <td>{{item.plan_no}}</td>
                   <td>{{item.recevie_no}}</td>
