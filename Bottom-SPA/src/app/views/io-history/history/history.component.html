@@ -1,3 +1,112 @@
-<p>
-  history works!
-</p>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <strong>In/Out History</strong> 
+          In/Out History
+          <button type="button" 
+            class="btn btn-sm btn-primary float-right">
+            <i class="fa fa-chevron-left"></i> Back
+          </button>
+        </div>
+        <form class="form-horizontal">
+          <div class="card-body">
+            <div class="form-group row">
+              <label class="col-md-2 col-form-label" for="fromDate"><strong class="float-right">Date</strong></label>
+              <div class="col-md-2">
+                <div class="input-group">
+                  <input type="text" 
+                    placeholder="Datepicker" 
+                    id="fromDate" class="form-control" 
+                    bsDatepicker [bsValue]="fromDate" 
+                    [bsConfig]="bsConfig">
+                  <span class="input-group-append">
+                    <button class="btn btn-primary" type="button" disabled><i class="fa fa-calendar"></i></button>
+                  </span>
+                </div>
+              </div>
+              <div class="col-1"></div>
+              <div class="col-md-2">
+                <div class="input-group">
+                  <input type="text" 
+                    placeholder="Datepicker" 
+                    class="form-control" 
+                    bsDatepicker 
+                    [bsValue]="toDate" 
+                    [bsConfig]="bsConfig">
+                  <span class="input-group-append">
+                    <button class="btn btn-primary" type="button" disabled><i class="fa fa-calendar"></i></button>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-2 col-form-label" for="version"><strong class="float-right">Plan No</strong></label>
+              <div class="col-md-2">
+                <input type="text" class="form-control" placeholder="Enter Plan No  ..">
+              </div>
+              <label class="col-md-1 col-form-label" for="status"><strong class="float-right">Status</strong></label>
+              <div class="col-md-2">
+                <select class="form-control" id="status" name="status">
+                  <option value="">All</option>
+                  <option value="1">In</option>
+                  <option value="2">Out</option>
+                  <option value="3">Transfer</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <button type="button" class="btn btn-success btn-block" (click)="search()"><i class="fa fa-search"></i>
+                  Search
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <!-- <ngx-spinner bdOpacity=0.2 bdColor="rgba(51,51,51,0.8)" size="medium" color="#20A8D8" type="pacman">
+          </ngx-spinner> -->
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th class="text-center">Date</th>
+                <th>Status</th>
+                <th>Plan No</th>
+                <th>In/Out No</th>
+                <th>Batch</th>
+                <th>Mat_Name</th>
+                <th>Source_Location</th>
+                <th>Destination_Location</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody >
+              <ng-container *ngFor="let item of results; let index = index">
+                <tr>
+                  <td>{{item.date | date : "MM/dd/yyyy"}}</td>
+                  <td>{{item.status}}</td>
+                  <td>{{item.plan_no}}</td>
+                  <td>{{item.inOut_no}}</td>
+                  <td>{{item.batch}}</td>
+                  <td>{{item.mat_name}}</td>
+                  <td>{{item.source_location}}</td>
+                  <td>{{item.destination_location}}</td>
+                  <td>
+                    <button class="btn btn-warning text-white">Detail</button>
+                    <button class="btn btn-primary">Print</button>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
