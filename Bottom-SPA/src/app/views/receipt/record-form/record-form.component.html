@@ -1,0 +1,143 @@
+
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <strong>Add record</strong>
+          <button type="button" class="btn btn-sm btn-primary float-right"><i class="fa fa-chevron-left"></i>
+            Back</button>
+        </div>
+        <form class="form-horizontal" #addAuditTypeForm="ngForm">
+          <div class="card-body">
+            <div class="form-group row">
+              <label class="col-md-1 col-form-label" for="fromDate"><strong class="float-right">Receive No</strong></label>
+              <div class="col-md-3">
+                <input type="text" name="receiveNo" class="form-control" disabled>
+              </div>
+              <label class="col-md-1 col-form-label" for="purchaseNo"><strong
+                  class="float-right">Purchase No </strong></label>
+              <div class="col-md-3">
+                <input type="text" name="purchaseNo" class="form-control" disabled>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-1 col-form-label" for="receiveNo"><strong class="float-right">Receive Date</strong></label>
+              <div class="col-md-3">
+                <input type="text" placeholder="Datepicker" id="fromDate" class="form-control" bsDatepicker [bsValue]="fromDate" [isDisabled]="isDisabled">
+              </div>
+              <label class="col-md-1 col-form-label" for="planNo"><strong class="float-right">Plan No</strong></label>
+              <div class="col-md-3">
+                <input type="text" name="planNo" class="form-control" disabled>
+              </div>
+              <label class="col-md-1 col-form-label" for="batch"><strong class="float-right">Batch</strong></label>
+              <div class="col-md-1">
+                <input type="text" name="batch" class="form-control" disabled>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-1 col-form-label" for="supplierNo"><strong class="float-right">Supplier No</strong></label>
+              <div class="col-md-1">
+                <input type="text" name="supplierNo" class="form-control" disabled>
+              </div>
+              <div class="col-md-2">
+                <input type="text" name="supplierName" class="form-control" disabled>
+              </div>
+              <label class="col-md-1 col-form-label" for="deliveryNo"><strong class="float-right">Delivery No</strong></label>
+              <div class="col-md-3">
+                <input type="text" name="deliveryNo" class="form-control">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-1 col-form-label" for="supplierNo"><strong class="float-right">Material No</strong></label>
+              <div class="col-md-2">
+                <input type="text" name="supplierNo" class="form-control" disabled>
+              </div>
+              <div class="col-md-3">
+                <input type="text" name="supplierName" class="form-control" disabled>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-10 offset-md-1">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr class="text-center">
+                      <th>Size</th>
+                      <th>03.5</th>
+                      <th>04</th>
+                      <th>05</th>
+                      <th>05.5</th>
+                      <th>06</th>
+                      <th>06.5</th>
+                      <th>07</th>
+                      <th>07.5</th>
+                      <th>08</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="text-center">
+                      <td>Purchase Qty A</td>
+                      <td>300</td>
+                      <td>220</td>
+                      <td>100</td>
+                      <td>100</td>
+                      <td>300</td>
+                      <td>100</td>
+                      <td>50</td>
+                      <td>50</td>
+                      <td>30</td>
+                    </tr>
+                    <tr class="text-center">
+                      <td>Receive Qty B</td>
+                      <td><input type="text" class="input-table"></td>
+                      <td><input type="text" class="input-table"></td>
+                      <td><input type="text" class="input-table"></td>
+                      <td><input type="text" class="input-table"></td>
+                      <td><input type="text" class="input-table"></td>
+                      <td><input type="text" class="input-table"></td>
+                      <td><input type="text" class="input-table"></td>
+                      <td><input type="text" class="input-table"></td>
+                      <td><input type="text" class="input-table"></td>
+                    </tr>
+                    <tr class="text-center">
+                      <td>Received Qty C</td>
+                      <td>100</td>
+                      <td>100</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                    </tr>
+                    <tr class="text-center">
+                      <td>Balance Qty D=A-C</td>
+                      <td>200</td>
+                      <td>20</td>
+                      <td>100</td>
+                      <td>100</td>
+                      <td>300</td>
+                      <td>100</td>
+                      <td>50</td>
+                      <td>50</td>
+                      <td>30</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              
+            </div>
+
+          </div>
+        </form>
+
+        <div class="card-footer">
+          <button type="button" class="btn btn-danger"><i class="fa fa-ban"></i> Cancel</button>
+          <button type="button" class="btn btn-success" [disabled]="!addAuditTypeForm.valid"><i
+              class="fa fa-check"></i> Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
