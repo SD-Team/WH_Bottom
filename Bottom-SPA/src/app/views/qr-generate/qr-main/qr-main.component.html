@@ -115,7 +115,7 @@
                   <td>{{item.mat_name}}</td>
                   <td class="text-center">
                     <button class="btn btn-warning">
-                      <i class="fa fa-search-plus"></i> Show Detail
+                      <i class="fa fa-search-plus"></i> Detail
                     </button>
                   </td>
                   <td>
@@ -128,17 +128,17 @@
           </table>
           <div class="d-flex float-right">
           </div>
-          <div class="card-footer" *ngIf="results.length > 0">
-            <button class="btn btn-danger mr-2"
-              (click)="cancel()">
-              <i class="fa fa-ban"></i>
-              Cancel
-            </button>
-            <button class="btn btn-success">
-              <i class="fa fa-check"></i>
-              Generate Barcode
-            </button>
-          </div>
+        </div>
+        <div class="card-footer" *ngIf="results.length > 0">
+          <button class="btn btn-danger mr-2"
+            (click)="cancel()">
+            <i class="fa fa-ban"></i>
+            Cancel
+          </button>
+          <button class="btn btn-success">
+            <i class="fa fa-check"></i>
+            Generate Barcode
+          </button>
         </div>
       </div>
     </div>
