@@ -1,3 +1,107 @@
-<p>
-  input-main works!
-</p>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <strong>Add new</strong>
+          Audit Type
+          <button type="button" class="btn btn-sm btn-primary float-right"><i class="fa fa-chevron-left"></i>
+            Back</button>
+        </div>
+        <form class="form-horizontal" #addAuditTypeForm="ngForm">
+          <div class="card-body">
+           
+            <div class="form-group row">
+              <div class="col-md-2">
+                <label>Rack Location:</label>
+                <div class="input-group">
+                  <button class="btn btn-primary mr-2" type="button">SCAN</button>
+                  <input type="text" placeholder="Rack Location" class="form-control">
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-2">
+                <label> QrCode:</label>
+                <div class="input-group">
+                  <button class="btn btn-primary mr-2" type="button">SCAN</button>
+                  <input type="text" placeholder="QRCode" class="form-control">
+                </div>
+              </div>
+              <div class="col-md-2">
+                <button class="btn btn-success float-right" (click)="search()">Search</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <!--/.col-->
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <!-- <ngx-spinner bdOpacity=0.2 bdColor="rgba(51,51,51,0.8)" size="medium" color="#20A8D8" type="pacman">
+          </ngx-spinner> -->
+          <div class="table-reponsive">
+            <table class="table table-bordered text-center">
+              <thead>
+                <tr>
+                  <th>SEQ</th>
+                  <th>Input Sheet No</th>
+                  <th>QRcode Id</th>
+                  <th>Plan No</th>
+                  <th>Purchase No</th>
+                  <th>Batch</th>
+                  <th>Rack Location</th>
+                  <th>Recevied Qty</th>
+                  <th>Input Qty</th>
+                  <th>Stock Qty</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let item of result">
+                  <tr>
+                    <td>
+                      {{item.seq}}
+                    </td>
+                    <td>{{item.inputShetNo}}</td>
+                    <td>{{item.qrCodeID}}</td>
+                    <td>{{item.planNo}}</td>
+                    <td>{{item.purchaNo}}</td>
+                    <td>{{item.betch}}</td>
+                    <td>{{item.rackLocation}}</td>
+                    <td>{{item.receivdeQty}}</td>
+                    <td>{{item.inputQty}}</td>
+                    <td>{{item.stockQty}}</td>
+                    <td rowspan="2">
+                      <button class="btn btn-warning mr-2">>>>ShowDetal</button>
+                      <button class="btn btn-danger">Delete</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="10">{{item.description}}</td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+          <ng-container *ngIf="result.length>0">
+            <div class="float-right mt-3">
+              <button class="btn btn-secondary mr-3">Cancel</button>
+              <button class="btn btn-primary mr-3">Submit</button>
+              <button class="btn btn-secondary">Print</button>
+            </div>
+          </ng-container>
+
+          <div class="d-flex">
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
