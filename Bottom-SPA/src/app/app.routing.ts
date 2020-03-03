@@ -99,6 +99,24 @@ export const routes: Routes = [
                  )
              },
              {
+               path: "input",
+               // runGuardsAndResolvers: 'always',
+               // canActivate: [AuthGuard],
+               loadChildren: () =>
+                 import("./views/input/input.module").then(
+                   m => m.InputModule
+                 )
+             },
+             {
+               path: "output",
+               // runGuardsAndResolvers: 'always',
+               // canActivate: [AuthGuard],
+               loadChildren: () =>
+                 import("./views/output/output.module").then(
+                   m => m.OutputModule
+                 )
+             },
+             {
                path: "icons",
                loadChildren: () =>
                  import("./views/icons/icons.module").then(m => m.IconsModule)

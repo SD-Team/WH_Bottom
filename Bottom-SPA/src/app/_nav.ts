@@ -18,8 +18,26 @@ export const navItems: INavData[] = [
   {
     name: 'QR Generate',
     url: '/qr/main',
-    icon: 'icon-list',
+    icon: 'icon-frame',
   },
+  {
+    name: 'Input/Output',
+    url: 'io',
+    icon: 'icon-loop',
+    children: [
+      {
+        name: 'Input',
+        url: '/input/main',
+        icon: 'icon-arrow-left-circle'
+      },
+      {
+        name: 'Output',
+        url: '/output/main',
+        icon: 'icon-arrow-right-circle'
+      }
+    ]
+  },
+  
   // {
   //   title: true,
   //   name: 'Theme'
