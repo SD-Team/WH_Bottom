@@ -1,5 +1,7 @@
 export class Receipt {
     close: string;
+    type: string;
+    missing_mat_no: string;
     plan_no: string;
     purchase_No: string;
     mat_no: string;

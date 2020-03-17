@@ -3,8 +3,7 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
-          <strong>Add new</strong>
-          Audit Type
+          <strong>Receipt</strong>
           <button type="button" class="btn btn-sm btn-primary float-right"><i
               class="fa fa-chevron-left"></i>
             Back</button>
@@ -39,10 +38,18 @@
               </div>
             </div>
             <div class="form-group row">
-              <label class="col-md-2 col-form-label" for="version"><strong class="float-right">Purchase No</strong></label>
+              <label class="col-md-2  col-form-label" for="type"><strong class="float-right">Type</strong></label>
+              <div class="col-md-2">
+                <select class="form-control" id="type" name="type">
+                  <option value="1">Receive Material</option>
+                  <option value="0">Missing Material</option>
+                </select>
+              </div>
+              <label class="col-md-2 offset-md-2 col-form-label" for="version"><strong class="float-right">Purchase No</strong></label>
               <div class="col-md-2">
                 <input type="text" name="purchaseNo" class="form-control" placeholder="Enter Purchase No  ..">
               </div>
+             
             </div>
             <div class="form-group row">
               <label class="col-md-2 col-form-label" for="status"><strong class="float-right">Status</strong></label>
@@ -53,6 +60,7 @@
                   <option value="0">Not Closed</option>
                 </select>
               </div>
+              
               <div class="col-md-2">
                 <button type="button" class="btn btn-success btn-block" (click)="search()"><i class="fa fa-search"></i>
                   Search</button>
@@ -78,6 +86,8 @@
             <thead>
               <tr>
                 <th>Close</th>
+                <th>Type</th>
+                <th>Missing Mat# No</th>
                 <th>Plan_No</th>
                 <th>Purchase No</th>
                 <th>Unit</th>
@@ -95,13 +105,15 @@
             <tbody >
               <ng-container *ngFor="let item of results; let index = index">
                 <tr>
-                  <td class="text-center"><button type="button" class="btn btn-sm btn-primary">{{item.close}}</button></td>
-                  <td class="text-center"><button type="button" class="btn btn-sm btn-primary">{{item.plan_no}}</button></td>
+                  <td class="text-center vertical-middle" rowspan="2"><button type="button" class="btn btn-sm btn-primary">{{item.close}}</button></td>
+                  <td class="vertical-middle" rowspan="2"></td>
+                  <td class="vertical-middle" rowspan="2"></td>
+                  <td class="text-center vertical-middle" rowspan="2"><button type="button" class="btn btn-sm btn-primary">{{item.plan_no}}</button></td>
                   <td>{{item.purchase_No}}</td>
                   <td>{{item.unit}}</td>
                   <td>{{item.Batch}}</td>
                   <td>{{item.model_no}}</td>
-                  <td>{{item.model_name}}</td>
+                  <td>{{item.model_name}}</td> 
                   <td>{{item.article}}</td>
                   <td>{{item.supplier_no}}</td>                
                   <td>{{item.supplier_name}}</td>

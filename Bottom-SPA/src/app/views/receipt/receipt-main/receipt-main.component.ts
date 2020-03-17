@@ -22,6 +22,7 @@ export class ReceiptMainComponent implements OnInit {
   search() {
     let a = new Receipt();
     a.close = "N";
+    
     a.plan_no = "0123456789";
     a.purchase_No = "PW19B08MEC";
     a.mat_no = "001";
