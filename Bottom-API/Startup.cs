@@ -2,7 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Bottom_API._Repositories.Interfaces;
+using Bottom_API._Repositories.Repositories;
+using Bottom_API._Services.Interfaces;
+using Bottom_API._Services.Services;
 using Bottom_API.Data;
+using Bottom_API.Helpers.AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,6 +36,18 @@ namespace Bottom_API
             services.AddCors();
             services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers();
+
+            //Auto Mapper
+            services.AddAutoMapper(typeof(Startup));
+            services.AddScoped<IMapper>(sp =>
+            {
+                return new Mapper(AutoMapperConfig.RegisterMappings());
+            });
+            services.AddSingleton(AutoMapperConfig.RegisterMappings());
+
+            services.AddScoped<ICodeIDDetailRepo, CodeIDDetailRepo>();
+
+            services.AddScoped<ICodeIDDetailService, CodeIDDetailService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,7 +57,7 @@ namespace Bottom_API
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
             app.UseHttpsRedirection();
 
             app.UseRouting();

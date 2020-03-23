@@ -126,6 +126,15 @@ export const routes: Routes = [
                  )
              },
              {
+               path: "rack",
+               // runGuardsAndResolvers: 'always',
+               // canActivate: [AuthGuard],
+               loadChildren: () =>
+                 import("./views/rack-location/rack.module").then(
+                   m => m.RackModule
+                 )
+             },
+             {
                path: "icons",
                loadChildren: () =>
                  import("./views/icons/icons.module").then(m => m.IconsModule)
