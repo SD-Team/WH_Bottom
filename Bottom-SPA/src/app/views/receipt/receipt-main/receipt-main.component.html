@@ -14,7 +14,7 @@
               <label class="col-md-2 col-form-label" for="fromDate"><strong class="float-right">Expected Delivery Date</strong></label>
               <div class="col-md-2">
                 <div class="input-group">
-                  <input type="text" placeholder="Datepicker" id="fromDate" class="form-control" 
+                  <input type="text" placeholder="Datepicker" id="fromDate" class="form-control"
                   bsDatepicker [bsValue]="fromDate" [bsConfig]="bsConfig">
                   <span class="input-group-append">
                     <button class="btn btn-primary" type="button" disabled><i class="fa fa-calendar"></i></button>
@@ -49,7 +49,6 @@
               <div class="col-md-2">
                 <input type="text" name="purchaseNo" class="form-control" placeholder="Enter Purchase No  ..">
               </div>
-             
             </div>
             <div class="form-group row">
               <label class="col-md-2 col-form-label" for="status"><strong class="float-right">Status</strong></label>
@@ -60,16 +59,11 @@
                   <option value="0">Not Closed</option>
                 </select>
               </div>
-              
               <div class="col-md-2">
                 <button type="button" class="btn btn-success btn-block" (click)="search()"><i class="fa fa-search"></i>
                   Search</button>
               </div>
-              
             </div>
-            
-            
-
           </div>
         </form>
       </div>
@@ -113,9 +107,9 @@
                   <td>{{item.unit}}</td>
                   <td>{{item.Batch}}</td>
                   <td>{{item.model_no}}</td>
-                  <td>{{item.model_name}}</td> 
+                  <td>{{item.model_name}}</td>
                   <td>{{item.article}}</td>
-                  <td>{{item.supplier_no}}</td>                
+                  <td>{{item.supplier_no}}</td>
                   <td>{{item.supplier_name}}</td>
                   <td>{{item.purchasing_qty}}</td>
                   <td>{{item.received_qty}}</td>
@@ -127,11 +121,9 @@
                   <td colspan="13" class="text-center">{{item.text}}</td>
                 </tr>
               </ng-container>
-              
             </tbody>
           </table>
           <div class="d-flex">
-            
           </div>
         </div>
       </div>

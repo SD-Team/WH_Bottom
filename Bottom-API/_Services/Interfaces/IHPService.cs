@@ -4,14 +4,8 @@ using Bottom_API.Helpers;
 
 namespace Bottom_API._Services.Interfaces
 {
-    public interface IBottomService<T> where T : class
+    public interface IHPService<T> where T: class
     {
-        Task<bool> Add(T model);
-
-        Task<bool> Update(T model);
-
-        Task<bool> Delete(object id);
-
         Task<List<T>> GetAllAsync();
 
         Task<PagedList<T>> GetWithPaginations(PaginationParams param);

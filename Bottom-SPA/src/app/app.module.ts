@@ -6,7 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
-
+import { NgxQRCodeModule } from 'ngx-qrcode2';
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
 };
@@ -40,9 +40,9 @@ import { AppRoutingModule } from './app.routing';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ChartsModule } from 'ng2-charts';
-import { NgSelectModule } from "@ng-select/ng-select";
+import { NgSelectModule } from '@ng-select/ng-select';
 
-//Import service
+// Import service
 import { AuthService } from '../app/_core/_services/auth.service';
 import { ErrorInterceptorProvider } from './_core/_services/error.interceptor';
 import { AlertifyService } from './_core/_services/alertify.service';
@@ -54,7 +54,7 @@ import { PaginationModule, BsDatepickerModule } from 'ngx-bootstrap';
 import { NgxSpinnerModule } from 'ngx-spinner';
 
 export function tokenGetter() {
-  return localStorage.getItem("token");
+  return localStorage.getItem('token');
 }
 
 @NgModule({
@@ -77,12 +77,13 @@ export function tokenGetter() {
     PaginationModule.forRoot(),
     ChartsModule,
     NgxSpinnerModule,
+    NgxQRCodeModule,
     BsDatepickerModule.forRoot(),
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        whitelistedDomains: ["localhost:5000"],
-        blacklistedRoutes: ["localhost:5000/api/auth"]
+        whitelistedDomains: ['localhost:5000'],
+        blacklistedRoutes: ['localhost:5000/api/auth']
       }
     })
   ],

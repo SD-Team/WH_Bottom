@@ -2,7 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Bottom_API._Repositories.Interfaces;
+using Bottom_API._Repositories.Repositories;
+using Bottom_API._Services.Interfaces;
+using Bottom_API._Services.Services;
 using Bottom_API.Data;
+using Bottom_API.Helpers.AutoMapper;
+using ME_API.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,8 +35,28 @@ namespace Bottom_API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
-            services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<WMS_DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SHC_WMS_Connection")));
+            services.AddDbContext<HP_DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("HP_Basis_Connection")));
             services.AddControllers();
+            services.AddControllers();
+            //Auto Mapper
+            services.AddAutoMapper(typeof(Startup));
+            services.AddScoped<IMapper>(sp =>
+            {
+                return new Mapper(AutoMapperConfig.RegisterMappings());
+            });
+            services.AddSingleton(AutoMapperConfig.RegisterMappings());
+
+
+            // Repository
+            services.AddScoped<IHPVendorU01Repository, HPVendorU01Repository>();
+            services.AddScoped<IQRCodeMainRepository, QRCodeMainRepository>();
+            services.AddScoped<IPackingListRepository, PackingListRepository>();
+
+            // Service
+            services.AddScoped<IHPVendorU01Service, HPVendorU01Service>();
+            services.AddScoped<IQRCodeMainService, QRCodeMainService>();
+            services.AddScoped<IPackingListService, PackingListService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,7 +66,7 @@ namespace Bottom_API
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
             app.UseHttpsRedirection();
 
             app.UseRouting();
