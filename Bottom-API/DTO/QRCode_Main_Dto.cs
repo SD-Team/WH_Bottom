@@ -2,7 +2,7 @@ using System;
 
 namespace Bottom_API.DTO
 {
-    public class WMSB_QRCode_MainDto
+    public class QRCode_Main_Dto
     {
         public string QRCode_ID {get;set;}
         public int QRCode_Version {get;set;}

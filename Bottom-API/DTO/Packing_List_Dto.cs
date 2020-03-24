@@ -2,7 +2,7 @@ using System;
 
 namespace Bottom_API.DTO
 {
-    public class WMSB_Packing_ListDto
+    public class Packing_List_Dto
     {
         public string Sheet_Type {get;set;}
         public string Missing_No {get;set;}

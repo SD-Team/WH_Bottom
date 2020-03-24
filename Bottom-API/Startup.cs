@@ -45,8 +45,6 @@ namespace Bottom_API
             });
             services.AddSingleton(AutoMapperConfig.RegisterMappings());        
              // Repository
-            services.AddScoped<IHPVendorU01Repository, HPVendorU01Repository>();
-            services.AddScoped<IQRCodeMainRepository, QRCodeMainRepository>();
             services.AddScoped<IPackingListRepository, PackingListRepository>();
             services.AddScoped<ICodeIDDetailRepo, CodeIDDetailRepo>();
             services.AddScoped<IRackLocationRepo, RackLocationRepo>();

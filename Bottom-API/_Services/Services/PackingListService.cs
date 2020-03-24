@@ -25,51 +25,51 @@ namespace Bottom_API._Services.Services
             _mapper = mapper;
             _configMapper = configMapper;
         }
-        public async Task<List<WMSB_Packing_ListDto>> GetAllAsync()
+        public async Task<List<Packing_List_Dto>> GetAllAsync()
         {
-            return await _repo.GetAll().ProjectTo<WMSB_Packing_ListDto>(_configMapper).ToListAsync();
+            return await _repo.GetAll().ProjectTo<Packing_List_Dto>(_configMapper).ToListAsync();
         }
 
-        public WMSB_Packing_ListDto GetById(object id)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<PagedList<WMSB_Packing_ListDto>> GetWithPaginations(PaginationParams param)
+        public Packing_List_Dto GetById(object id)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<PagedList<WMSB_Packing_ListDto>> Search(PaginationParams param, object text)
+        public Task<PagedList<Packing_List_Dto>> GetWithPaginations(PaginationParams param)
         {
             throw new System.NotImplementedException();
         }
 
-        public async Task<WMSB_Packing_ListDto> FindBySupplier(string supplier_ID)
+        public Task<PagedList<Packing_List_Dto>> Search(PaginationParams param, object text)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public async Task<Packing_List_Dto> FindBySupplier(string supplier_ID)
         {
             var data =  await _repo.GetAll()
                         .Where(x => x.Supplier_ID.Trim() == supplier_ID.Trim())
                         .FirstOrDefaultAsync();
-            var model = _mapper.Map<WMSB_Packing_ListDto>(data);
+            var model = _mapper.Map<Packing_List_Dto>(data);
             return model;
         }
 
-        public async Task<PagedList<WMSB_Packing_ListDto>> SearchViewModel(PaginationParams param,PackingListSearchViewModel model)
+        public async Task<PagedList<Packing_List_Dto>> SearchViewModel(PaginationParams param,PackingListSearchViewModel model)
         {
-            var packingSearch =  _repo.GetAll().ProjectTo<WMSB_Packing_ListDto>(_configMapper).
+            var packingSearch =  _repo.GetAll().ProjectTo<Packing_List_Dto>(_configMapper).
                             Where(  x => x.Receive_Date >= Convert.ToDateTime(model.From_Date + " 00:00") &&
                                     x.Receive_Date <= Convert.ToDateTime(model.To_Date + " 00:00") &&
                                     x.Supplier_ID.Trim() == model.Supplier_ID.Trim() &&
                                     x.MO_No.Trim() == model.MO_No.Trim());
-            return await PagedList<WMSB_Packing_ListDto>.CreateAsync(packingSearch, param.PageNumber, param.PageSize);
+            return await PagedList<Packing_List_Dto>.CreateAsync(packingSearch, param.PageNumber, param.PageSize);
         }
 
-        public Task<bool> Add(WMSB_Packing_ListDto model)
+        public Task<bool> Add(Packing_List_Dto model)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> Update(WMSB_Packing_ListDto model)
+        public Task<bool> Update(Packing_List_Dto model)
         {
             throw new NotImplementedException();
         }
