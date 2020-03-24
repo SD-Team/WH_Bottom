@@ -6,7 +6,7 @@ namespace Bottom_API.Data
     public class WMS_DataContext : DbContext
     {
         public WMS_DataContext(DbContextOptions<WMS_DataContext> options) : base(options) { }
-        public DbSet<WMSB_CodeID_Detail> WMSB_CodeID_Detail { get; set; }
+        public DbSet<WMS_Code> WMS_Code { get; set; }
         public DbSet<WMSB_RackLocation_Main> WMSB_RackLocation_Main { get; set; }
         public DbSet<WMSB_Packing_List> WMSB_Packing_List {get;set;}
         public DbSet<BTW_PackingList_Detail> BTW_PackingList_Detail {get;set;}
