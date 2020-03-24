@@ -17,10 +17,12 @@
               <div class="col-md-2">
                 <div class="input-group">
                   <input type="text" 
-                    placeholder="Datepicker" 
+                    placeholder="Start" 
                     id="fromDate" class="form-control" 
-                    bsDatepicker [bsValue]="fromDate" 
-                    [bsConfig]="bsConfig">
+                    bsDatepicker [bsValue]="fromDate"
+                    [(ngModel)]="time_start"
+                    name="time_start"
+                    [bsConfig]="{isAnimated: true, dateInputFormat: 'YYYY/MM/DD'}">
                   <span class="input-group-append">
                     <button class="btn btn-primary" type="button" disabled><i class="fa fa-calendar"></i></button>
                   </span>
@@ -29,11 +31,13 @@
               <div class="col-md-2">
                 <div class="input-group">
                   <input type="text" 
-                    placeholder="Datepicker" 
+                    placeholder="End" 
                     class="form-control" 
                     bsDatepicker 
                     [bsValue]="toDate" 
-                    [bsConfig]="bsConfig">
+                    [(ngModel)]="time_end"
+                    name="time_end"
+                    [bsConfig]="{isAnimated: true, dateInputFormat: 'YYYY/MM/DD'}">
                   <span class="input-group-append">
                     <button class="btn btn-primary" type="button" disabled><i class="fa fa-calendar"></i></button>
                   </span>
@@ -41,29 +45,19 @@
               </div>
               <label class="col-md-1 offset-md-1 col-form-label" for="audit_Type2_Name"><strong class="float-right">Supplier No </strong></label>
               <div class="col-md-1">
-                <input type="text" class="form-control">
+                <input type="text" [(ngModel)]="supplier_ID" name="supplier_ID" class="form-control">
               </div>
               <div class="col-md-2">
-                <input type="text" class="form-control" disabled>
+                <input type="text" [(ngModel)]="supplier_Name" name="supplier_Name" class="form-control" disabled>
               </div>
             </div>
             <div class="form-group row">
               <label class="col-md-2 col-form-label" for="version"><strong class="float-right">Plan No</strong></label>
               <div class="col-md-2">
-                <input type="text" class="form-control" placeholder="Enter Plan No  ..">
-              </div>
-            </div>
-            <div class="form-group row">
-              <label class="col-md-2 col-form-label" for="status"><strong class="float-right">Status</strong></label>
-              <div class="col-md-2">
-                <select class="form-control" id="status" name="status">
-                  <option value="">All</option>
-                  <option value="1">Closed</option>
-                  <option value="0">Not Closed</option>
-                </select>
+                <input type="text" [(ngModel)]="mO_No" name="mO_No" class="form-control" placeholder="Enter Plan No  ..">
               </div>
               <div class="col-md-2">
-                <button type="button" class="btn btn-success btn-block" (click)="search()"><i class="fa fa-search"></i>
+                 <button type="button" class="btn btn-success btn-block" (click)="search()"><i class="fa fa-search"></i>
                   Search
                 </button>
               </div>
@@ -88,39 +82,30 @@
                     <label class="custom-control-label" for="all"></label>
                   </div>
                 </th>
-                <th>QRCodeID</th>
                 <th>Plan No</th>
                 <th>Recive No</th>
                 <th>Batch</th>
                 <th>Math#</th>
                 <th>Math_Name</th>
                 <th></th>
-                <th>QRCode</th>
               </tr>
             </thead>
             <tbody >
-              <ng-container *ngFor="let item of results; let index = index">
+              <ng-container *ngFor="let item of packingLists; let index = index">
                 <tr>
                   <td class="text-center">
                     <div class="custom-control custom-checkbox">
-                      <input type="checkbox" class="custom-control-input" [id]="item.qrCodeId">
-                      <label class="custom-control-label" [for]="item.qrCodeId"></label>
+                      <input type="checkbox" class="custom-control-input" id="{{item.receive_No}}">
+                      <label class="custom-control-label" for="{{item.receive_No}}"></label>
                     </div>
                   </td>
-                  <td>{{item.qrCodeId}}</td>
-                  <td>{{item.plan_no}}</td>
-                  <td>{{item.recevie_no}}</td>
-                  <td>{{item.batch}}</td>
-                  <td>{{item.mat}}</td>
-                  <td>{{item.mat_name}}</td>
-                  <td class="text-center">
-                    <button class="btn btn-warning">
-                      <i class="fa fa-search-plus"></i> Detail
-                    </button>
-                  </td>
+                  <td>{{item.mO_No}}</td>
+                  <td>{{item.receive_No}}</td>
+                  <td>{{item.mO_Seq}}</td>
+                  <td>{{item.material_ID}}</td>
+                  <td>{{item.material_Name}}</td>
                   <td>
-                    <button class="btn btn-primary">S</button>
-                    <button class="btn btn-primary">L</button>
+                    <button class="btn btn-primary">>>Show Detail</button>
                   </td>
                 </tr>
               </ng-container>
@@ -129,13 +114,19 @@
           <div class="d-flex float-right">
           </div>
         </div>
-        <div class="card-footer" *ngIf="results.length > 0">
+        <div class="d-flex">
+          <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [(ngModel)]="pagination.currentPage"
+          [itemsPerPage]="pagination.itemsPerPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;"
+          nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [maxSize]=5>
+          </pagination>
+        </div>
+        <div class="card-footer" *ngIf="packingLists.length > 0">
           <button class="btn btn-danger mr-2"
             (click)="cancel()">
             <i class="fa fa-ban"></i>
             Cancel
           </button>
-          <button class="btn btn-success">
+          <button (click)="pageQrCode()" class="btn btn-success">
             <i class="fa fa-check"></i>
             Generate Barcode
           </button>

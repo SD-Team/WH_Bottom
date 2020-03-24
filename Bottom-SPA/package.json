@@ -53,6 +53,7 @@
     "ng2-charts": "^2.3.0",
     "ngx-bootstrap": "^5.2.0",
     "ngx-perfect-scrollbar": "^8.0.0",
+    "ngx-qrcode2": "0.0.9",
     "ngx-spinner": "^8.0.3",
     "rxjs": "^6.5.3",
     "simple-line-icons": "^2.4.1",

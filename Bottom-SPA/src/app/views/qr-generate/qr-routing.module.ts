@@ -13,7 +13,7 @@ const routes: Routes = [
             {
                 path: 'main',
                 component: QrMainComponent,
-                //resolve: { brands: BrandListResolver },
+                // resolve: { brands: BrandListResolver },
                 data: {
                     title: 'Search'
                 }
@@ -22,7 +22,7 @@ const routes: Routes = [
             {
                 path: 'print',
                 component: QrPrintComponent,
-                //resolve: { brands: BrandListResolver },
+                // resolve: { brands: BrandListResolver },
                 data: {
                     title: 'QR Print'
                 }

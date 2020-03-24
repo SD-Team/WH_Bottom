@@ -1,12 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace Bottom_API._Repositories.Interfaces
+namespace Bottom_API.Data
 {
-    public interface IBottomRepository<T> where T : class
+    public interface IWMSRepository<T> where T: class
     {
         T FindById(object id);
 
@@ -16,15 +15,6 @@ namespace Bottom_API._Repositories.Interfaces
 
         IQueryable<T> FindAll(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties);
 
-        void Add(T entity);
-
-        void Update(T entity);
-
-        void Remove(T entity);
-
-        void Remove(object id);
-
-        void RemoveMultiple(List<T> entities);
 
         IQueryable<T> GetAll();
 

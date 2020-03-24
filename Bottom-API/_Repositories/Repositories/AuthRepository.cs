@@ -8,8 +8,8 @@ namespace Bottom_API.Data
 {
     public class AuthRepository : IAuthRepository
     {
-        private readonly DataContext _context;
-        public AuthRepository(DataContext context)
+        private readonly WMS_DataContext _context;
+        public AuthRepository(WMS_DataContext context)
         {
             _context = context;
         }
