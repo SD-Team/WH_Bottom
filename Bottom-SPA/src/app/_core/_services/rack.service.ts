@@ -30,5 +30,11 @@ export class RackService {
     return this.http.get<WmsCode[]>(this.baseUrl + 'codeIDDetail/area', {});
   }
 
+
+  filter(param: Object) {
+    console.log("Service: ",param);
+    return this.http.post(this.baseUrl + 'rackLocation/', param);
+  }
+
   
 }

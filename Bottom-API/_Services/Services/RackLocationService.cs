@@ -34,11 +34,35 @@ namespace Bottom_API._Services.Services
             throw new System.NotImplementedException();
         }
 
-        public  Task<List<RackLocation_Main_Dto>> Filter(FilterRackLocationParam filterParam)
+        public async  Task<List<RackLocation_Main_Dto>> Filter(FilterRackLocationParam filterParam)
         {
-            // var result =  await _repoRackLocation.FindAll().ProjectTo<RackLocation_Main_Dto>(_configMapper).OrderByDescending(x => x.Updated_Time).ToListAsync();
-            // if(filterParam.factory)
-            throw new System.NotImplementedException();
+            var resultAll =  _repoRackLocation.FindAll().ProjectTo<RackLocation_Main_Dto>(_configMapper);
+            if(filterParam.factory != "")
+            {
+                resultAll = resultAll.Where(x => x.Factory_ID == filterParam.factory);
+            }
+
+            if (filterParam.wh != "")
+            {
+                resultAll = resultAll.Where(x => x.WH_ID == filterParam.wh);
+            }
+
+            if (filterParam.building != "")
+            {
+                resultAll = resultAll.Where(x => x.Build_ID == filterParam.building);
+            }
+
+            if (filterParam.floor != "")
+            {
+                resultAll = resultAll.Where(x => x.Floor_ID == filterParam.floor);
+            }
+
+            if (filterParam.area != "")
+            {
+                resultAll = resultAll.Where(x => x.Area_ID == filterParam.area);
+            }
+
+            return await resultAll.OrderByDescending(x => x.Updated_Time).ToListAsync();
         }
 
         public Task<List<RackLocation_Main_Dto>> GetAllAsync()

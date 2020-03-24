@@ -46,8 +46,10 @@ namespace Bottom_API
             services.AddSingleton(AutoMapperConfig.RegisterMappings());
 
             services.AddScoped<ICodeIDDetailRepo, CodeIDDetailRepo>();
+            services.AddScoped<IRackLocationRepo, RackLocationRepo>();
 
             services.AddScoped<ICodeIDDetailService, CodeIDDetailService>();
+            services.AddScoped<IRackLocationService, RackLocationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

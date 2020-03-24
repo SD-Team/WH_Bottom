@@ -14,11 +14,11 @@ namespace Bottom_API.DTO
         public string Build_ID { get; set; }
         public string Floor_ID { get; set; }
         public string Area_ID { get; set; }
-        public decimal CBM { get; set; }
-        public decimal Max_per { get; set; }
+        public float? CBM { get; set; }
+        public float? Max_per { get; set; }
         public string Memo { get; set; }
-        public DateTime Rack_Invalid_date { get; set; }
-        public DateTime Updated_Time { get; set; }
+        public DateTime? Rack_Invalid_date { get; set; }
+        public DateTime? Updated_Time { get; set; }
         public string Updated_By { get; set; }
 
         public RackLocation_Main_Dto()

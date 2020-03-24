@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RackService } from '../../../_core/_services/rack.service';
 import { WmsCode } from '../../../_core/_models/wms-code';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
+import { FilerRackParam } from '../../../_core/_models/filer-rack-param';
 
 @Component({
   selector: 'app-rack-main',
@@ -14,14 +15,10 @@ export class RackMainComponent implements OnInit {
   buildings: WmsCode[];
   floors: WmsCode[];
   areas: WmsCode[];
-  params: any = {
-    factory: "",
-    wh: "",
-    building: "",
-    floor: "",
-    area: ""
-  };
-  constructor(private rackServcie: RackService, private alertify: AlertifyService) { }
+  params: FilerRackParam;
+  constructor(private rackServcie: RackService, private alertify: AlertifyService) { 
+    
+  }
 
   ngOnInit() {
     this.loadFactories();
@@ -80,21 +77,31 @@ export class RackMainComponent implements OnInit {
 
   changeFactory() {
     console.log(this.params);
+    this.filter();
   }
 
-  changeWh(id: string) {
-
+  changeWh() {
+    this.filter();
   }
 
-  changeBuilding(id: string) {
-
+  changeBuilding() {
+    this.filter();
   }
 
-  changeFloor(id: string) {
-
+  changeFloor() {
+    this.filter();
   }
 
-  changeArea(id: string) {
+  changeArea() {
+    this.filter();
+  }
 
+  filter() {
+    this.rackServcie.filter(this.params).subscribe(
+      (res) => {
+        console.log(res);
+        this.alertify.success("Succeed");
+      }
+    )
   }
 }
