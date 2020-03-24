@@ -8,7 +8,6 @@ namespace Bottom_API.Helpers.AutoMapper
     {
         public DtoToEfMappingProfile()
         {
-            CreateMap<HPVendorU01Dto, HP_Vendor_u01>();
             CreateMap<QRCode_Main_Dto, WMSB_QRCode_Main>();
             CreateMap<Packing_List_Dto, WMSB_Packing_List>();
 
