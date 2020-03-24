@@ -1,0 +1,138 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <strong>Receipt</strong>
+          <button type="button" class="btn btn-sm btn-primary float-right"><i class="fa fa-chevron-left"></i>
+            Back</button>
+        </div>
+        <form class="form-horizontal" #addAuditTypeForm="ngForm">
+          <div class="card-body">
+            <div class="form-group row">
+              
+              <label class="col-md-1 col-form-label" for="factory"><strong
+                  class="float-right"> Factory</strong></label>
+              <div class="col-md-2">
+                <select class="form-control" id="factory" name="factory" [(ngModel)]="params.factory" (change)="changeFactory()">
+                  <option value="">All</option>
+                  <option *ngFor="let item of factories" value="{{item.code_ID}}">{{item.code_Cname}}</option>
+                </select>
+              </div>
+
+              <label class="col-md-1 col-form-label" for="wh"><strong class="float-right">WH </strong></label>
+              <div class="col-md-2">
+                <select class="form-control" id="wh" name="wh" [(ngModel)]="params.wh" (change)="changeWh()">
+                  <option value="">All</option>
+                  <option *ngFor="let item of whs" value="{{item.code_ID}}">{{item.code_Cname}}</option>
+                </select>
+              </div>
+
+              <label class="col-md-1 col-form-label" for="building"><strong class="float-right">Building </strong></label>
+              <div class="col-md-2">
+                <select class="form-control" id="building" name="building" [(ngModel)]="params.building" (change)="changeBuilding()">
+                  <option value="">All</option>
+                  <option *ngFor="let item of buildings" value="{{item.code_ID}}" >{{item.code_Cname}}</option>
+                </select>
+              </div>
+
+              <label class="col-md-1 col-form-label" for="floor"><strong class="float-right">Floor </strong></label>
+              <div class="col-md-2">
+                <select class="form-control" id="floor" name="floor" [(ngModel)]="params.floor" (change)="changeFloor()">
+                  <option value="">All</option>
+                  <option *ngFor="let item of floors" value="{{item.code_ID}}">{{item.code_Cname}}</option>
+                </select>
+              </div>
+              
+            </div>
+            <div class="form-group row">
+              <label class="col-md-1 col-form-label" for="area"><strong class="float-right">Area</strong></label>
+              <div class="col-md-2">
+                <select class="form-control" id="area" name="area" [(ngModel)]="params.area" (change)="changeArea()">
+                  <option value="">All</option>
+                  <option *ngFor="let item of areas" value="{{item.code_ID}}">{{item.code_Cname}}</option>
+                </select>
+              </div>
+
+              <div class="col-md-2 offset-md-1">
+                <button type="button" class="btn btn-success btn-block" ><i class="fa fa-plus"></i>
+                  Add</button>
+              </div>
+
+              <div class="col-md-2">
+                <button type="button" class="btn btn-primary btn-block"><i class="fa fa-print"></i>
+                  Print QRCode</button>
+              </div>
+
+            </div>
+
+
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <!--/.col-->
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <!-- <ngx-spinner bdOpacity=0.2 bdColor="rgba(51,51,51,0.8)" size="medium" color="#20A8D8" type="pacman">
+          </ngx-spinner> -->
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="all">
+                    <label class="custom-control-label" for="all"></label>
+                  </div>
+                </th>
+                <th>Warehouse</th>
+                <th>Building</th>
+                <th>Floor</th>
+                <th>Area</th>
+                <th>Rack Location</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- <ng-container *ngFor="let item of results; let index = index">
+                <tr>
+                  <td class="text-center vertical-middle" rowspan="2"><button type="button"
+                      class="btn btn-sm btn-primary">{{item.close}}</button></td>
+                  <td class="vertical-middle" rowspan="2"></td>
+                  <td class="vertical-middle" rowspan="2"></td>
+                  <td class="text-center vertical-middle" rowspan="2"><button type="button"
+                      class="btn btn-sm btn-primary">{{item.plan_no}}</button></td>
+                  <td>{{item.purchase_No}}</td>
+                  <td>{{item.unit}}</td>
+                  <td>{{item.Batch}}</td>
+                  <td>{{item.model_no}}</td>
+                  <td>{{item.model_name}}</td>
+                  <td>{{item.article}}</td>
+                  <td>{{item.supplier_no}}</td>
+                  <td>{{item.supplier_name}}</td>
+                  <td>{{item.purchasing_qty}}</td>
+                  <td>{{item.received_qty}}</td>
+                  <td>{{item.balance_qty}}</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td colspan="13" class="text-center">{{item.text}}</td>
+                </tr>
+              </ng-container> -->
+
+            </tbody>
+          </table>
+          <div class="d-flex">
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>

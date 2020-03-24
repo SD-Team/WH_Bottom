@@ -2,7 +2,7 @@ using System;
 
 namespace Bottom_API.DTO
 {
-    public class RackLocation_Main
+    public class RackLocation_Main_Dto
     {
         public int ID { get; set; }
         public string Rack_Location { get; set; }
@@ -21,7 +21,7 @@ namespace Bottom_API.DTO
         public DateTime Updated_Time { get; set; }
         public string Updated_By { get; set; }
 
-        public RackLocation_Main()
+        public RackLocation_Main_Dto()
         {
             this.Updated_Time = DateTime.Now;
         }

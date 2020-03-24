@@ -9,7 +9,10 @@ using Bottom_API._Services.Interfaces;
 using Bottom_API._Services.Services;
 using Bottom_API.Data;
 using Bottom_API.Helpers.AutoMapper;
+<<<<<<< HEAD
 using ME_API.Data;
+=======
+>>>>>>> 0033a102b758854207a06eb4a4c64f8f840c216f
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -38,7 +41,11 @@ namespace Bottom_API
             services.AddDbContext<WMS_DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SHC_WMS_Connection")));
             services.AddDbContext<HP_DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("HP_Basis_Connection")));
             services.AddControllers();
+<<<<<<< HEAD
             services.AddControllers();
+=======
+
+>>>>>>> 0033a102b758854207a06eb4a4c64f8f840c216f
             //Auto Mapper
             services.AddAutoMapper(typeof(Startup));
             services.AddScoped<IMapper>(sp =>
@@ -47,6 +54,7 @@ namespace Bottom_API
             });
             services.AddSingleton(AutoMapperConfig.RegisterMappings());
 
+<<<<<<< HEAD
 
             // Repository
             services.AddScoped<IHPVendorU01Repository, HPVendorU01Repository>();
@@ -57,6 +65,11 @@ namespace Bottom_API
             services.AddScoped<IHPVendorU01Service, HPVendorU01Service>();
             services.AddScoped<IQRCodeMainService, QRCodeMainService>();
             services.AddScoped<IPackingListService, PackingListService>();
+=======
+            services.AddScoped<ICodeIDDetailRepo, CodeIDDetailRepo>();
+
+            services.AddScoped<ICodeIDDetailService, CodeIDDetailService>();
+>>>>>>> 0033a102b758854207a06eb4a4c64f8f840c216f
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

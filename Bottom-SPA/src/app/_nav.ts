@@ -1,46 +1,51 @@
-import { INavData } from '@coreui/angular';
+import { INavData } from "@coreui/angular";
 
 export const navItems: INavData[] = [
   {
-    name: 'Dashboard',
-    url: '/dashboard',
-    icon: 'icon-speedometer',
+    name: "Dashboard",
+    url: "/dashboard",
+    icon: "icon-speedometer"
     // badge: {
     //   variant: 'info',
     //   text: 'NEW'
     // }
   },
   {
-    name: 'Receipt',
-    url: '/receipt/main',
-    icon: 'icon-list',
+    name: "Receipt",
+    url: "/receipt/main",
+    icon: "icon-list"
   },
   {
-    name: 'QR Generate',
-    url: '/qr/main',
-    icon: 'icon-frame',
+    name: "QR Generate",
+    url: "/qr/main",
+    icon: "icon-frame"
   },
   {
-    name: 'Input/Output',
-    url: 'io',
-    icon: 'icon-loop',
+    name: "Input/Output",
+    url: "io",
+    icon: "icon-loop",
     children: [
       {
-        name: 'Input',
-        url: '/input/main',
-        icon: 'icon-arrow-left-circle'
+        name: "Input",
+        url: "/input/main",
+        icon: "icon-arrow-left-circle"
       },
       {
-        name: 'Output',
-        url: '/output/main',
-        icon: 'icon-arrow-right-circle'
+        name: "Output",
+        url: "/output/main",
+        icon: "icon-arrow-right-circle"
       }
     ]
   },
   {
-    name: 'In/Out History',
-    url: '/io-history',
-    icon: 'icon-book-open'
+    name: "In/Out History",
+    url: "/io-history",
+    icon: "icon-book-open"
+  },
+  {
+    name: "Rack Location",
+    url: "/rack/main",
+    icon: "icon-book-open"
   }
   // {
   //   title: true,
