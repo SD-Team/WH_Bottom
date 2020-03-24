@@ -4,10 +4,10 @@ using Bottom_API.Models;
 
 namespace Bottom_API._Repositories.Repositories
 {
-    public class QRCodeMainRepository : WMSRepository<WMSB_QRCode_Main>, IQRCodeMainRepository
+    public class QRCodeMainRepository : BottomRepository<WMSB_QRCode_Main>, IQRCodeMainRepository
     {
-        private readonly WMS_DataContext _context;
-        public QRCodeMainRepository(WMS_DataContext context) : base(context) {
+        private readonly DataContext _context;
+        public QRCodeMainRepository(DataContext context) : base(context) {
             _context = context;
         }
     }

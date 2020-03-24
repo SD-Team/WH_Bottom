@@ -34,7 +34,7 @@ namespace Bottom_API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
-            services.AddDbContext<WMS_DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SHC_WMS_Connection")));
+            services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<HP_DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("HP_Basis_Connection")));
             services.AddControllers();
             //Auto Mapper
@@ -43,21 +43,17 @@ namespace Bottom_API
             {
                 return new Mapper(AutoMapperConfig.RegisterMappings());
             });
-            services.AddSingleton(AutoMapperConfig.RegisterMappings());         // Repository
+            services.AddSingleton(AutoMapperConfig.RegisterMappings());        
+             // Repository
             services.AddScoped<IHPVendorU01Repository, HPVendorU01Repository>();
             services.AddScoped<IQRCodeMainRepository, QRCodeMainRepository>();
             services.AddScoped<IPackingListRepository, PackingListRepository>();
-
-            // Service
-            services.AddScoped<IHPVendorU01Service, HPVendorU01Service>();
-            services.AddScoped<IQRCodeMainService, QRCodeMainService>();
-            services.AddScoped<IPackingListService, PackingListService>();
-
             services.AddScoped<ICodeIDDetailRepo, CodeIDDetailRepo>();
             services.AddScoped<IRackLocationRepo, RackLocationRepo>();
 
+            // Service
+            services.AddScoped<IPackingListService, PackingListService>();
             services.AddScoped<ICodeIDDetailService, CodeIDDetailService>();
-
             services.AddScoped<IRackLocationService, RackLocationService>();
 
         }

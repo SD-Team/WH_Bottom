@@ -63,5 +63,20 @@ namespace Bottom_API._Services.Services
                                     x.MO_No.Trim() == model.MO_No.Trim());
             return await PagedList<WMSB_Packing_ListDto>.CreateAsync(packingSearch, param.PageNumber, param.PageSize);
         }
+
+        public Task<bool> Add(WMSB_Packing_ListDto model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> Update(WMSB_Packing_ListDto model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> Delete(object id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

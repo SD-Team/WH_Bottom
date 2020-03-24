@@ -4,10 +4,10 @@ using Bottom_API.Models;
 
 namespace Bottom_API._Repositories.Repositories
 {
-    public class PackingListRepository : WMSRepository<WMSB_Packing_List>, IPackingListRepository
+    public class PackingListRepository : BottomRepository<WMSB_Packing_List>, IPackingListRepository
     {
-        private readonly WMS_DataContext _context;
-        public PackingListRepository(WMS_DataContext context) : base(context) {
+        private readonly DataContext _context;
+        public PackingListRepository(DataContext context) : base(context) {
             _context = context;
         }
     }
