@@ -45,7 +45,7 @@
               </div>
               <label class="col-md-1 offset-md-1 col-form-label" for="audit_Type2_Name"><strong class="float-right">Supplier No </strong></label>
               <div class="col-md-1">
-                <input type="text" [(ngModel)]="supplier_ID" name="supplier_ID" class="form-control">
+                <input type="text" [(ngModel)]="supplier_ID" (change)="changeSupplier()" name="supplier_ID" class="form-control">
               </div>
               <div class="col-md-2">
                 <input type="text" [(ngModel)]="supplier_Name" name="supplier_Name" class="form-control" disabled>
@@ -78,7 +78,7 @@
               <tr>
                 <th class="text-center">
                   <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="all">
+                    <input type="checkbox" class="custom-control-input" (change)="checkAll($event)" id="all">
                     <label class="custom-control-label" for="all"></label>
                   </div>
                 </th>
@@ -87,15 +87,17 @@
                 <th>Batch</th>
                 <th>Math#</th>
                 <th>Math_Name</th>
-                <th></th>
               </tr>
             </thead>
             <tbody >
-              <ng-container *ngFor="let item of packingLists; let index = index">
+              <ng-container *ngFor="let item of packingLists; let i = index">
                 <tr>
                   <td class="text-center">
                     <div class="custom-control custom-checkbox">
-                      <input type="checkbox" class="custom-control-input" id="{{item.receive_No}}">
+                      <input type="checkbox" [value]="item.receive_No"
+                       class="custom-control-input"
+                      (change)="onCheckboxChange($event)"
+                       id="{{item.receive_No}}">
                       <label class="custom-control-label" for="{{item.receive_No}}"></label>
                     </div>
                   </td>
@@ -104,9 +106,6 @@
                   <td>{{item.mO_Seq}}</td>
                   <td>{{item.material_ID}}</td>
                   <td>{{item.material_Name}}</td>
-                  <td>
-                    <button class="btn btn-primary">>>Show Detail</button>
-                  </td>
                 </tr>
               </ng-container>
             </tbody>

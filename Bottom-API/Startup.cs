@@ -43,17 +43,22 @@ namespace Bottom_API
             {
                 return new Mapper(AutoMapperConfig.RegisterMappings());
             });
-            services.AddSingleton(AutoMapperConfig.RegisterMappings());        
+            services.AddSingleton(AutoMapperConfig.RegisterMappings());
              // Repository
             services.AddScoped<IPackingListRepository, PackingListRepository>();
             services.AddScoped<ICodeIDDetailRepo, CodeIDDetailRepo>();
             services.AddScoped<IRackLocationRepo, RackLocationRepo>();
+            services.AddScoped<IQRCodeMainRepository, QRCodeMainRepository>();
+            services.AddScoped<IPackingListDetailRepository, PackingListDetailRepository>();
+            services.AddScoped<IQRCodeDetailRepository, QRCodeDetailRepository>();
 
             // Service
             services.AddScoped<IPackingListService, PackingListService>();
             services.AddScoped<ICodeIDDetailService, CodeIDDetailService>();
             services.AddScoped<IRackLocationService, RackLocationService>();
-
+            services.AddScoped<IQRCodeMainService, QRCodeMainService>();
+            services.AddScoped<IPackingListDetailService, PackingListDetailService>();
+            services.AddScoped<IQRCodeDetailService, QRCodeDetailService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

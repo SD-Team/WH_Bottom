@@ -58,9 +58,14 @@ namespace Bottom_API._Services.Services
         {
             var packingSearch =  _repo.GetAll().ProjectTo<Packing_List_Dto>(_configMapper).
                             Where(  x => x.Receive_Date >= Convert.ToDateTime(model.From_Date + " 00:00") &&
-                                    x.Receive_Date <= Convert.ToDateTime(model.To_Date + " 00:00") &&
-                                    x.Supplier_ID.Trim() == model.Supplier_ID.Trim() &&
-                                    x.MO_No.Trim() == model.MO_No.Trim());
+                                    x.Generated_QRCode.Trim() == "N" &&
+                                    x.Receive_Date <= Convert.ToDateTime(model.To_Date + " 00:00"));
+            if (model.Supplier_ID != null) {
+                packingSearch = packingSearch.Where(x => x.Supplier_ID.Trim() == model.Supplier_ID.Trim());
+            }
+            if (model.MO_No != null) {
+                packingSearch = packingSearch.Where(x => x.MO_No.Trim() == model.MO_No.Trim());
+            }
             return await PagedList<Packing_List_Dto>.CreateAsync(packingSearch, param.PageNumber, param.PageSize);
         }
 

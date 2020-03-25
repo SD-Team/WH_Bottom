@@ -10,10 +10,10 @@ namespace Bottom_API.Helpers.AutoMapper
         {
             CreateMap<QRCode_Main_Dto, WMSB_QRCode_Main>();
             CreateMap<Packing_List_Dto, WMSB_Packing_List>();
-
+            CreateMap<Packing_List_Detail_Dto, WMSB_PackingList_Detail>();
             CreateMap<CodeID_Detail_Dto, WMS_Code>();
             CreateMap<RackLocation_Main_Dto, WMSB_RackLocation_Main>();
-
+            CreateMap<QRCode_Detail_Dto, WMSB_QRCode_Detail>();
         }
     }
 }
