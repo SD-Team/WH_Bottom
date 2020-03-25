@@ -16,7 +16,6 @@ import { QrcodeDetailService } from '../../../_core/_services/qrcode-detail.serv
 })
 export class QrMainComponent implements OnInit {
   pagination: Pagination;
-  test: Pagination;
   bsConfig: Partial<BsDatepickerConfig>;
   time_start: string;
   time_end: string;
@@ -31,7 +30,6 @@ export class QrMainComponent implements OnInit {
   constructor(private router: Router,
               private packingListService: PackingListService,
               private qrcodeService: QrcodeMainService,
-              private qrCodeDetailService: QrcodeDetailService,
               private alertifyService: AlertifyService) { }
 
   ngOnInit() {
@@ -58,7 +56,6 @@ export class QrMainComponent implements OnInit {
     }
   }
   search() {
-    this.clickSearch = true;
     if (this.time_start === undefined || this.time_end === undefined) {
       this.alertifyService.error('Please option start and end time');
     } else {
@@ -87,8 +84,6 @@ export class QrMainComponent implements OnInit {
       this.checkArray.push(e.target.value);
       // console.log(e.target.id);
     } else {
-      console.log(this.checkArray);
-      console.log(e.target.value);
       // tslint:disable-next-line:prefer-const
       let i = this.checkArray.findIndex(element => element === e.target.value);
       this.checkArray.splice(i, 1);
@@ -122,11 +117,11 @@ export class QrMainComponent implements OnInit {
   }
   // genare QrCode
   pageQrCode() {
-    // this.router.navigate(['/qr/print']);
     // tslint:disable-next-line:prefer-const
     if (this.checkArray.length > 0) {
       this.qrcodeService.generateQrCode(this.checkArray).subscribe(res => {
         this.alertifyService.success('Generate QRCode succed!');
+        this.router.navigate(['/qr/body']);
         // this.search();
       }, error => {
         this.alertifyService.error(error);

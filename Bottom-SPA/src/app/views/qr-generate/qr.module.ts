@@ -11,6 +11,7 @@ import { NgxQRCodeModule } from 'ngx-qrcode2';
 // Component
 import { QrMainComponent } from './qr-main/qr-main.component';
 import { QrPrintComponent } from './qr-print/qr-print.component';
+import { QrBodyComponent } from './qr-body/qr-body.component';
 
 @NgModule({
     imports: [
@@ -26,7 +27,8 @@ import { QrPrintComponent } from './qr-print/qr-print.component';
     ],
     declarations: [
         QrMainComponent,
-        QrPrintComponent
+        QrPrintComponent,
+        QrBodyComponent
     ]
 })
 

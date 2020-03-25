@@ -13,7 +13,6 @@ import { map } from 'rxjs/operators';
 export class PackingListService {
     baseUrl = environment.apiUrl + 'PackingList/';
   constructor(private http: HttpClient) { }
-  
     search(page?, itemsPerPage?, packingSearch?: PackingSearch): Observable<PaginatedResult<PackingList[]>> {
       const paginatedResult: PaginatedResult<PackingList[]> = new PaginatedResult<PackingList[]>();
       let params = new HttpParams();
@@ -23,7 +22,7 @@ export class PackingListService {
       }
       // tslint:disable-next-line:prefer-const
       let url = this.baseUrl + 'search/';
-      return this.http.post<any>(this.baseUrl + 'search', packingSearch, {observe: 'response', params})
+      return this.http.post<any>(url, packingSearch, {observe: 'response', params})
       .pipe(
         map(response => {
           paginatedResult.result = response.body;
@@ -34,7 +33,6 @@ export class PackingListService {
         })
       );
   }
-  
     findBySupplier(supplier: any): Observable<PackingList> {
       return this.http.get<any>(this.baseUrl + 'findBySupplier/' + supplier, {});
     }

@@ -7,7 +7,7 @@ namespace Bottom_API.Models
     public class WMSB_PackingList_Detail
     {
         [Key]
-        public int SID { get; set; }
+        public long SID { get; set; }
         public string Receive_No {get;set;}
         public string Order_Size { get; set; }
         public string Model_Size { get; set; }

@@ -9,6 +9,7 @@ using Bottom_API._Services.Interfaces;
 using Bottom_API.DTO;
 using Bottom_API.Helpers;
 using Bottom_API.Models;
+using Bottom_API.ViewModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bottom_API._Services.Services
@@ -82,11 +83,30 @@ namespace Bottom_API._Services.Services
                         }
                     }
             }
-            
             await _repoQrcode.SaveAll();
             return checkCreate;
         }
-
+        public async Task<PagedList<QRCodeMainViewModel>> SearchByPlanNo(PaginationParams param ,QRCodeSearchViewModel dataSearch)
+        {
+            var listPackingList =  _repoPacking.GetAll()
+                .Where( x => x.Receive_Date >= Convert.ToDateTime(dataSearch.From_Date + " 00:00") &&
+                        x.Receive_Date <= Convert.ToDateTime(dataSearch.To_Date + " 00:00"));
+            var listQrCodeMain = _repoQrcode.GetAll();
+            if (dataSearch.MO_No != null && dataSearch.MO_No != "") {
+                listPackingList = listPackingList.Where(x => x.MO_No.Trim() == dataSearch.MO_No.Trim());
+            }
+            var listQrCodeModel = listQrCodeMain
+                .Join(listPackingList, x => x.Receive_No.Trim(), y=> y.Receive_No.Trim(), (x,y) => new QRCodeMainViewModel
+                {
+                    QRCode_ID = x.QRCode_ID,
+                    MO_No = y.MO_No,
+                    Receive_No = x.Receive_No,
+                    MO_Seq = y.MO_Seq,
+                    Material_ID = y.Material_ID,
+                    Material_Name = y.Material_Name
+                });
+            return await PagedList<QRCodeMainViewModel>.CreateAsync(listQrCodeModel, param.PageNumber, param.PageSize);
+        }
         public Task<bool> Delete(object id)
         {
             throw new System.NotImplementedException();
@@ -111,7 +131,6 @@ namespace Bottom_API._Services.Services
         {
             throw new System.NotImplementedException();
         }
-
         public Task<bool> Update(QRCode_Main_Dto model)
         {
             throw new System.NotImplementedException();
