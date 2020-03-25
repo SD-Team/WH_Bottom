@@ -60,10 +60,10 @@ namespace Bottom_API._Services.Services
                             Where(  x => x.Receive_Date >= Convert.ToDateTime(model.From_Date + " 00:00") &&
                                     x.Generated_QRCode.Trim() == "N" &&
                                     x.Receive_Date <= Convert.ToDateTime(model.To_Date + " 00:00"));
-            if (model.Supplier_ID != null) {
+            if (model.Supplier_ID != null && model.Supplier_ID != "") {
                 packingSearch = packingSearch.Where(x => x.Supplier_ID.Trim() == model.Supplier_ID.Trim());
             }
-            if (model.MO_No != null) {
+            if (model.MO_No != null && model.MO_No != "") {
                 packingSearch = packingSearch.Where(x => x.MO_No.Trim() == model.MO_No.Trim());
             }
             return await PagedList<Packing_List_Dto>.CreateAsync(packingSearch, param.PageNumber, param.PageSize);

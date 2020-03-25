@@ -2,6 +2,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { QrMainComponent } from './qr-main/qr-main.component';
 import { QrPrintComponent } from './qr-print/qr-print.component';
+import { QrBodyComponent } from './qr-body/qr-body.component';
 
 const routes: Routes = [
     {
@@ -25,6 +26,14 @@ const routes: Routes = [
                 // resolve: { brands: BrandListResolver },
                 data: {
                     title: 'QR Print'
+                }
+            },
+            {
+                path: 'body',
+                component: QrBodyComponent,
+                // resolve: { brands: BrandListResolver },
+                data: {
+                    title: 'QR Body'
                 }
             },
         ]
