@@ -6,6 +6,6 @@ namespace Bottom_API._Services.Interfaces
 {
     public interface IQRCodeMainService : IBottomService<QRCode_Main_Dto>
     {
-        public Task<bool> AddListQRCode(List<string> listReceiveNo);
+        Task<bool> AddListQRCode(List<string> listReceiveNo);
     }
 }

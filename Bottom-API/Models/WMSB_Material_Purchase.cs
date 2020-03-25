@@ -22,10 +22,21 @@ namespace Bottom_API.Models
         public string Spec_Size {get;set;}
         public string Purchase_Kind {get;set;}
         public string Purchase_Size {get;set;}
+
+        [Column(TypeName = "decimal(9,2)")]
         public decimal MO_Qty {get;set;}
+
+        [Column(TypeName = "decimal(9,2)")]
         public decimal PreBook_Qty {get;set;}
+
+        [Column(TypeName = "decimal(9,2)")]
         public decimal Stock_Qty {get;set;}
+
+        [Column(TypeName = "decimal(9,2)")]
         public decimal Purchase_Qty {get;set;}
+        
+        [Column(TypeName = "decimal(9,2)")]
+        public decimal Accumlated_In_Qty { get; set; }
         public string Supplier_ID {get;set;}
         public DateTime? Require_Delivery {get;set;}
         public DateTime? Confirm_Delivery {get;set;}
