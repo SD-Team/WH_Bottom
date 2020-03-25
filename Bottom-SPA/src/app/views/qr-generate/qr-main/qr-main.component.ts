@@ -121,6 +121,7 @@ export class QrMainComponent implements OnInit {
     if (this.checkArray.length > 0) {
       this.qrcodeService.generateQrCode(this.checkArray).subscribe(res => {
         this.alertifyService.success('Generate QRCode succed!');
+        this.router.navigate(['/qr/body']);
         // this.search();
       }, error => {
         this.alertifyService.error(error);
@@ -128,9 +129,6 @@ export class QrMainComponent implements OnInit {
     } else {
       this.alertifyService.error('Please check checkbox!');
     }
-  }
-  qrCodeBody() {
-    this.router.navigate(['/qr/body']);
   }
   cancel() {
     this.clickSearch = false;
