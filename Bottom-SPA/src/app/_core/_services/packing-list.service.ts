@@ -12,7 +12,8 @@ import { map } from 'rxjs/operators';
 })
 export class PackingListService {
     baseUrl = environment.apiUrl + 'PackingList/';
-    constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { }
+  
     search(page?, itemsPerPage?, packingSearch?: PackingSearch): Observable<PaginatedResult<PackingList[]>> {
       const paginatedResult: PaginatedResult<PackingList[]> = new PaginatedResult<PackingList[]>();
       let params = new HttpParams();
@@ -32,7 +33,8 @@ export class PackingListService {
           return paginatedResult;
         })
       );
-    }
+  }
+  
     findBySupplier(supplier: any): Observable<PackingList> {
       return this.http.get<any>(this.baseUrl + 'findBySupplier/' + supplier, {});
     }

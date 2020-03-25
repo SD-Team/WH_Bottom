@@ -37,29 +37,29 @@ namespace Bottom_API._Services.Services
         public async  Task<List<RackLocation_Main_Dto>> Filter(FilterRackLocationParam filterParam)
         {
             var resultAll =  _repoRackLocation.FindAll().ProjectTo<RackLocation_Main_Dto>(_configMapper);
-            if(filterParam.factory != "")
+            if(filterParam.Factory != "")
             {
-                resultAll = resultAll.Where(x => x.Factory_ID == filterParam.factory);
+                resultAll = resultAll.Where(x => x.Factory_ID == filterParam.Factory);
             }
 
-            if (filterParam.wh != "")
+            if (filterParam.Wh != "")
             {
-                resultAll = resultAll.Where(x => x.WH_ID == filterParam.wh);
+                resultAll = resultAll.Where(x => x.WH_ID == filterParam.Wh);
             }
 
-            if (filterParam.building != "")
+            if (filterParam.Building != "")
             {
-                resultAll = resultAll.Where(x => x.Build_ID == filterParam.building);
+                resultAll = resultAll.Where(x => x.Build_ID == filterParam.Building);
             }
 
-            if (filterParam.floor != "")
+            if (filterParam.Floor != "")
             {
-                resultAll = resultAll.Where(x => x.Floor_ID == filterParam.floor);
+                resultAll = resultAll.Where(x => x.Floor_ID == filterParam.Floor);
             }
 
-            if (filterParam.area != "")
+            if (filterParam.Area != "")
             {
-                resultAll = resultAll.Where(x => x.Area_ID == filterParam.area);
+                resultAll = resultAll.Where(x => x.Area_ID == filterParam.Area);
             }
 
             return await resultAll.OrderByDescending(x => x.Updated_Time).ToListAsync();

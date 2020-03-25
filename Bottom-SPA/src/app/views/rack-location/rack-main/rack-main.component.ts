@@ -3,6 +3,7 @@ import { RackService } from '../../../_core/_services/rack.service';
 import { WmsCode } from '../../../_core/_models/wms-code';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
 import { FilerRackParam } from '../../../_core/_models/filer-rack-param';
+import { Pagination } from '../../../_core/_models/pagination';
 
 @Component({
   selector: 'app-rack-main',
@@ -10,12 +11,19 @@ import { FilerRackParam } from '../../../_core/_models/filer-rack-param';
   styleUrls: ['./rack-main.component.scss']
 })
 export class RackMainComponent implements OnInit {
+  pagination: Pagination;
   factories: WmsCode[];
   whs: WmsCode[];
   buildings: WmsCode[];
   floors: WmsCode[];
   areas: WmsCode[];
-  params: FilerRackParam;
+  params: any = {
+    factory: "",
+    wh: "",
+    building: "",
+    floor: "",
+    area: ""
+  };
   constructor(private rackServcie: RackService, private alertify: AlertifyService) { 
     
   }
@@ -97,7 +105,8 @@ export class RackMainComponent implements OnInit {
   }
 
   filter() {
-    this.rackServcie.filter(this.params).subscribe(
+    console.log("Call: ", this.params)
+    this.rackServcie.filter(1, 3, this.params).subscribe(
       (res) => {
         console.log(res);
         this.alertify.success("Succeed");
