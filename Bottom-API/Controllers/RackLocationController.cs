@@ -15,7 +15,7 @@ namespace Bottom_API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Filter(FilterRackLocationParam filterParam) 
+        public async Task<IActionResult> Filter([FromQuery]PaginationParams param, FilterRackLocationParam filterParam) 
         {
             var result = await _service.Filter(filterParam);
             return Ok(result);

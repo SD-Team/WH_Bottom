@@ -2,10 +2,10 @@ namespace Bottom_API.Helpers
 {
     public class FilterRackLocationParam
     {
-        public string factory { get; set; }
-        public string wh { get; set; }
-        public string building { get; set; }
-        public string floor { get; set; }
-        public string area { get; set; }
+        public string Factory { get; set; }
+        public string Wh { get; set; }
+        public string Building { get; set; }
+        public string Floor { get; set; }
+        public string Area { get; set; }
     }
 }

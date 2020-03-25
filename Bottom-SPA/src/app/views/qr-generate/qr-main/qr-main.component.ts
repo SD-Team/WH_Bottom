@@ -58,6 +58,7 @@ export class QrMainComponent implements OnInit {
     }
   }
   search() {
+    console.log("Search")
     this.clickSearch = true;
     if (this.time_start === undefined || this.time_end === undefined) {
       this.alertifyService.error('Please option start and end time');
