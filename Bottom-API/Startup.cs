@@ -35,7 +35,7 @@ namespace Bottom_API
         {
             services.AddCors();
             services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDbContext<HP_DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("HP_Basis_Connection")));
+            services.AddDbContext<HPDataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("HPConnection")));
             services.AddControllers();
             //Auto Mapper
             services.AddAutoMapper(typeof(Startup));
