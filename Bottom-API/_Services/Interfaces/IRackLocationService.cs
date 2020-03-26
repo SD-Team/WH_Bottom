@@ -6,6 +6,6 @@ namespace Bottom_API._Services.Interfaces
 {
     public interface IRackLocationService : IBottomService<RackLocation_Main_Dto>
     {
-        Task<List<RackLocation_Main_Dto>> Filter(FilterRackLocationParam filterParam);
+        Task<PagedList<RackLocation_Main_Dto>> Filter(PaginationParams param, FilterRackLocationParam filterParam);
     }
 }

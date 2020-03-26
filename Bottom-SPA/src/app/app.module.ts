@@ -52,6 +52,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { JwtModule } from '@auth0/angular-jwt';
 import { PaginationModule, BsDatepickerModule } from 'ngx-bootstrap';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { RackListResolver } from './_core/_resolvers/rack-list.resolver';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -100,6 +101,7 @@ export function tokenGetter() {
     ErrorInterceptorProvider,
     AlertifyService,
     AuthGuard,
+    RackListResolver,
     {
       provide: LocationStrategy,
       useClass: HashLocationStrategy

@@ -4,6 +4,9 @@ import { WmsCode } from '../../../_core/_models/wms-code';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
 import { FilerRackParam } from '../../../_core/_models/filer-rack-param';
 import { Pagination } from '../../../_core/_models/pagination';
+import { Route } from '@angular/compiler/src/core';
+import { ActivatedRoute } from '@angular/router';
+import { RackLocation } from '../../../_core/_models/rack-location';
 
 @Component({
   selector: 'app-rack-main',
@@ -17,6 +20,7 @@ export class RackMainComponent implements OnInit {
   buildings: WmsCode[];
   floors: WmsCode[];
   areas: WmsCode[];
+  rackLocations: RackLocation[];
   params: any = {
     factory: "",
     wh: "",
@@ -24,7 +28,7 @@ export class RackMainComponent implements OnInit {
     floor: "",
     area: ""
   };
-  constructor(private rackServcie: RackService, private alertify: AlertifyService) { 
+  constructor(private rackServcie: RackService, private alertify: AlertifyService, private route: ActivatedRoute) { 
     
   }
 
@@ -34,6 +38,10 @@ export class RackMainComponent implements OnInit {
     this.loadBuildings();
     this.loadFloors();
     this.loadAreas();
+    this.route.data.subscribe(data => {
+      this.rackLocations = data['racks'].result;
+      this.pagination = data['racks'].pagination;
+    });
     console.log(this.params);
   }
   

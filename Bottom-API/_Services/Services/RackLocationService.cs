@@ -34,35 +34,36 @@ namespace Bottom_API._Services.Services
             throw new System.NotImplementedException();
         }
 
-        public async  Task<List<RackLocation_Main_Dto>> Filter(FilterRackLocationParam filterParam)
+        public async  Task<List<RackLocation_Main_Dto>> Filter(PaginationParams param, ParaFilterRackLocationParam filterParam)
         {
             var resultAll =  _repoRackLocation.FindAll().ProjectTo<RackLocation_Main_Dto>(_configMapper);
-            if(filterParam.Factory != "")
+            if(filterParam.Factory != "" && filterParam.Factory != null)
             {
                 resultAll = resultAll.Where(x => x.Factory_ID == filterParam.Factory);
             }
 
-            if (filterParam.Wh != "")
+            if (filterParam.Wh != "" && filterParam.Wh != null)
             {
                 resultAll = resultAll.Where(x => x.WH_ID == filterParam.Wh);
             }
 
-            if (filterParam.Building != "")
+            if (filterParam.Building != "" && filterParam.Building != null)
             {
                 resultAll = resultAll.Where(x => x.Build_ID == filterParam.Building);
             }
 
-            if (filterParam.Floor != "")
+            if (filterParam.Floor != "" && filterParam.Floor != null)
             {
                 resultAll = resultAll.Where(x => x.Floor_ID == filterParam.Floor);
             }
 
-            if (filterParam.Area != "")
+            if (filterParam.Area != "" && filterParam.Area != null)
             {
                 resultAll = resultAll.Where(x => x.Area_ID == filterParam.Area);
             }
-
-            return await resultAll.OrderByDescending(x => x.Updated_Time).ToListAsync();
+            resultAll = resultAll.OrderByDescending(x => x.Updated_Time);
+            return await PagedList<RackLocation_Main_Dto>.CreateAsync(resultAll, param.PageNumber, param.PageSize);
+           // return await resultAll.OrderByDescending(x => x.Updated_Time).ToListAsync();
         }
 
         public Task<List<RackLocation_Main_Dto>> GetAllAsync()

@@ -1,6 +1,7 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { RackMainComponent } from './rack-main/rack-main.component';
+import { RackListResolver } from '../../_core/_resolvers/rack-list.resolver';
 
 
 
@@ -14,7 +15,7 @@ const routes: Routes = [
             {
                 path: 'main',
                 component: RackMainComponent,
-                //resolve: { brands: BrandListResolver },
+                resolve: { racks: RackListResolver },
                 data: {
                     title: 'Rack Location'
                 }
