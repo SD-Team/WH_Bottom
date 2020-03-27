@@ -20,6 +20,13 @@ namespace Bottom_API.Models
         public string MO_Seq {get;set;}
         public string Material_ID {get;set;}
         public string Material_Name {get;set;}
+        public string Model_No {get;set;}
+        public string Model_Name {get;set;}
+        public string Article {get;set;}
+        public string Subcon_ID {get;set;}
+        public string Subcon_Name {get;set;}
+        public string T3_Supplier {get;set;}
+        public string T3_Supplier_Name {get;set;}
         public string Generated_QRCode {get;set;}
         public DateTime? Updated_Time {get;set;}
         public string Updated_By {get;set;}

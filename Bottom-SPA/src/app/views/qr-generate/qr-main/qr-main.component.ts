@@ -117,7 +117,6 @@ export class QrMainComponent implements OnInit {
   }
   // genare QrCode
   pageQrCode() {
-    // tslint:disable-next-line:prefer-const
     if (this.checkArray.length > 0) {
       this.qrcodeService.generateQrCode(this.checkArray).subscribe(res => {
         this.alertifyService.success('Generate QRCode succed!');

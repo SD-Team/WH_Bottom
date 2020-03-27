@@ -20,11 +20,26 @@ export class QrBodyComponent implements OnInit {
   time_start: string;
   time_end: string;
   mO_No: string;
+  qrCodeMainItem: QRCodeMainModel;
+  // ------print qr code----------------------
+  elementType: 'url' | 'canvas' | 'img' = 'url';
+  TSizeArray: any[];
+  sizeArray:  any[];
+  PQty:  any[];
+  RQty:  any[];
+  Bal:  any[];
+  // -----------------------------------------
   constructor(private router: Router,
               private qrCodeMainService: QrcodeMainService,
               private alertifyService: AlertifyService) { }
 
   ngOnInit() {
+    this.TSizeArray = ['03.5', '03.5', '03.5', '03.5', '03.5', '03.5', '03.5', '03.5'];
+    this.sizeArray = ['03.5', '04', '04.5', '05', '05.5', '06', '06', '06'];
+    this.PQty = [300, 200, 300, 100, 100, 50, 50, 50];
+    this.RQty = [300, 200, 300, 100, 100, 50, 50, 50];
+    this.Bal = [0, 0, 0, 0, 0, 0, 0, 0];
+
     this.pagination = {
       currentPage: 1,
       itemsPerPage: 3,
@@ -43,11 +58,8 @@ export class QrBodyComponent implements OnInit {
     if (this.time_start === undefined || this.time_end === undefined) {
       this.alertifyService.error('Please option start and end time');
     } else {
-      // tslint:disable-next-line:prefer-const
       let form_date = new Date(this.time_start).toLocaleDateString();
-      // tslint:disable-next-line:prefer-const
       let to_date = new Date(this.time_end).toLocaleDateString();
-      // tslint:disable-next-line:prefer-const
       let object = {
         mO_No: this.mO_No,
         from_Date: form_date,
@@ -61,6 +73,21 @@ export class QrBodyComponent implements OnInit {
         this.alertifyService.error(error);
       });
     }
+  }
+    print(qrCodeMain) {
+    this.qrCodeMainItem =  qrCodeMain; 
+    let self = this;
+    setTimeout(function(){
+      self.printHtml();
+      window.location.reload();
+    },2000);
+  }
+  printHtml() {
+      let printContents = document.getElementById('wrap-print').innerHTML;
+      let originalContents = document.body.innerHTML;
+      document.body.innerHTML = printContents;
+      window.print();
+      document.body.innerHTML = originalContents;
   }
   pageChanged(event: any): void {
     this.pagination.currentPage = event.page;

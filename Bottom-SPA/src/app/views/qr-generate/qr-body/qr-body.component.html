@@ -16,9 +16,9 @@
                     <label class="col-md-2 col-form-label" for="fromDate"><strong class="float-right">Date</strong></label>
                     <div class="col-md-2">
                     <div class="input-group">
-                        <input type="text" 
-                            placeholder="Start" 
-                            id="fromDate" class="form-control" 
+                        <input type="text"
+                            placeholder="Start"
+                            id="fromDate" class="form-control"
                             bsDatepicker [bsValue]="fromDate"
                             [(ngModel)]="time_start"
                             name="time_start"
@@ -98,7 +98,10 @@
                             <th>{{item.mO_Seq}}</th>
                             <th>{{item.material_ID}}</th>
                             <th>{{item.material_Name}}</th>
-                            <th class="center-btn"><button class="btn-print1 btn btn-block btn-primary">L</button></th>
+                            <th class="center-btn">
+                                <button (click)="print(item)"
+                                class="btn-print1 btn btn-block btn-primary">L</button>
+                            </th>
                         </tr>
                     </ng-container>
                 </tbody>
@@ -112,13 +115,13 @@
                 nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [maxSize]=5>
                 </pagination>
             </div>
-            <div class="card-footer">
+            <div class="card-footer" *ngIf="listQrCode.length > 0">
                 <button class="btn btn-danger mr-2"
                 >
                 <i class="fa fa-ban"></i>
                 Cancel
                 </button>
-                <button  class="btn btn-success">
+                <button (click)="printHtml()"  class="btn btn-success">
                 <i class="fa fa-check"></i>
                 Print
                 </button>
@@ -127,3 +130,157 @@
         </div>
         </div>
     </div>
+
+
+<!----------------------------------------------Start Body Print QrCode ----------------------------------------------->
+<div class="container" id="wrap-print">
+    <div class="row">
+        <div class="col-1">
+        </div>
+        <div class="col-10">
+            <div class="row">
+                <div class="col-4">
+                    <div style="display: flex;">
+                        <ngx-qrcode id="qrCodeImage" *ngIf="qrCodeMainItem !== undefined" [qrc-element-type]="elementType" [qrc-value] = "qrCodeMainItem.qrCode_ID">
+                        </ngx-qrcode>
+                        <span class="text-red div-top1" style="margin-left: 6%;">QRCodeID</span>
+                    </div>
+                    <div>
+                        <span *ngIf="qrCodeMainItem !== undefined">{{qrCodeMainItem.qrCode_ID}}</span>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="div-top1">
+                        <span class="text-red">Receive Date</span>
+                    </div>
+                    <div>
+                        <span *ngIf="qrCodeMainItem !== undefined">{{ qrCodeMainItem.receive_Date | date: "MM/dd/yyyy" }}</span>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="div-top1">
+                        <span class="text-red margin-title">Supplier No + Name</span>
+                    </div>
+                    <div>
+                        <span *ngIf="qrCodeMainItem !== undefined">{{qrCodeMainItem.supplier_ID}} - {{qrCodeMainItem.supplier_Name}}</span>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-4">
+                    <span>0124696503</span>
+                    <span style="margin-left: 30px;">-1</span>
+                </div>
+                <div class="col-8">
+                    <span class="text-red">Plan No, Batch, Total Qty</span>
+                    <span style="margin-left: 100px;">1050</span>
+                </div>
+                <div class="col-4">
+                    <span>JAE06</span>
+                    <span>FALCON W</span>
+                </div>
+                <div class="col-8">
+                    <span>EH3522</span>
+                    <span class="text-red">Model No, Model Name,</span>
+                    <span class="text-red" style="margin-left: 50px;">Articel</span>
+                </div>
+                <div class="col-4">
+                    <span>SKYJ17S00A</span>
+                </div>
+                <div class="col-8">
+                    <span>(35876)(65A 90 SO RERUB NM EPM3)BLK Forefoot Lateral+Rearfoo</span>
+                </div>
+                <div class="col-4">
+
+                </div>
+                <div class="col-4">
+                    <span class="text-red">Mat# - Mat#Name</span>
+                </div>
+                <div class="col-4">
+
+                </div>
+                <div class="col-10">
+                    <table>
+                        <tr>
+                            <td>TSize</td>
+                            <td *ngFor="let item of TSizeArray">{{ item }}</td>
+                        </tr>
+                        <tr>
+                            <td>Size</td>
+                            <td *ngFor="let item of sizeArray">{{ item }}</td>
+                        </tr>
+                        <tr>
+                            <td>PQty</td>
+                            <td *ngFor="let item of PQty">{{ item }}</td>
+                        </tr>
+                        <tr>
+                            <td>RQty</td>
+                            <td *ngFor="let item of RQty">{{ item }}</td>
+                        </tr>
+                        <tr>
+                            <td>Bal</td>
+                            <td *ngFor="let item of Bal">{{ item }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-2">
+                    <span class="text-red">Tool Size</span>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-4">
+                    <span *ngIf="qrCodeMainItem !== undefined">{{qrCodeMainItem.subcon_ID}}</span>
+                    <div>
+                        <span class="text-red">Subcon No</span>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <span *ngIf="qrCodeMainItem !== undefined">{{qrCodeMainItem.subcon_Name}}</span>
+                    <div>
+                        <span  class="text-red">SunCon Name</span>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <span *ngIf="qrCodeMainItem !== undefined">{{qrCodeMainItem.t3_Supplier}} - {{qrCodeMainItem.t3_Supplier_Name}}</span>
+                    <div>
+                        <span  class="text-red">T3 Supplier No - Name</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-3">
+                    <span>Suggested Location</span>
+                    <div>
+                        <span class="text-red">Rack Location</span>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <span><i class="fa fa-square-o fa-lg"></i> A-01-02</span>
+                    <div>
+                        <ngx-qrcode  *ngIf="qrCodeMainItem !== undefined" id="qrCodeImage" [qrc-element-type]="elementType" [qrc-value] = "qrCodeMainItem.qrCode_ID">
+                        </ngx-qrcode>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <span><i class="fa fa-square-o fa-lg"></i> A-01-02</span>
+                    <div>
+                        <ngx-qrcode  *ngIf="qrCodeMainItem !== undefined" id="qrCodeImage" [qrc-element-type]="elementType" [qrc-value] = "qrCodeMainItem.qrCode_ID">
+                        </ngx-qrcode>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <span><i class="fa fa-square-o fa-lg"></i> A-01-02</span>
+                    <div>
+                        <ngx-qrcode  *ngIf="qrCodeMainItem !== undefined" id="qrCodeImage" [qrc-element-type]="elementType" [qrc-value] = "qrCodeMainItem.qrCode_ID">
+                        </ngx-qrcode>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-1">
+        </div>
+    </div>
+</div>
+<!----------------------------------------------End Body Print QrCode ------------------------------------------------->
