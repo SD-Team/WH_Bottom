@@ -18,7 +18,8 @@ namespace Bottom_API.Controllers
         [HttpPost]
         public async Task<IActionResult> Filter([FromQuery]PaginationParams param, FilterRackLocationParam filterParam) 
         {
-            var result = await _service.Filter(filterParam);
+            var result = await _service.Filter(param, filterParam);
+            Response.AddPagination(result.CurrentPage, result.PageSize, result.TotalCount, result.TotalPages);
             return Ok(result);
         }
     }

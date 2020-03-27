@@ -34,7 +34,7 @@ namespace Bottom_API._Services.Services
             throw new System.NotImplementedException();
         }
 
-        public async  Task<List<RackLocation_Main_Dto>> Filter(PaginationParams param, ParaFilterRackLocationParam filterParam)
+        public async  Task<PagedList<RackLocation_Main_Dto>> Filter(PaginationParams param, FilterRackLocationParam filterParam)
         {
             var resultAll =  _repoRackLocation.FindAll().ProjectTo<RackLocation_Main_Dto>(_configMapper);
             if(filterParam.Factory != "" && filterParam.Factory != null)
@@ -90,5 +90,6 @@ namespace Bottom_API._Services.Services
         {
             throw new System.NotImplementedException();
         }
+
     }
 }

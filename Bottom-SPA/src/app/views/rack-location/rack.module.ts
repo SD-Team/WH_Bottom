@@ -10,6 +10,7 @@ import { RackRoutingModule } from './rack-routing.module';
 
 //Component
 import { RackMainComponent } from './rack-main/rack-main.component';
+import { RackFormComponent } from './rack-form/rack-form.component';
 
 
 
@@ -25,7 +26,8 @@ import { RackMainComponent } from './rack-main/rack-main.component';
         BsDatepickerModule
     ],
     declarations: [
-        RackMainComponent
+        RackMainComponent,
+        RackFormComponent
     ]
 })
 

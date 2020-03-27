@@ -14,7 +14,7 @@
               <label class="col-md-1 col-form-label" for="factory"><strong
                   class="float-right"> Factory</strong></label>
               <div class="col-md-2">
-                <select class="form-control" id="factory" name="factory" [(ngModel)]="params.factory" (change)="changeFactory()">
+                <select class="form-control" id="factory" name="factory" [(ngModel)]="params.factory" (change)="changeParams()">
                   <option value="">All</option>
                   <option *ngFor="let item of factories" value="{{item.code_ID}}">{{item.code_Cname}}</option>
                 </select>
@@ -22,7 +22,7 @@
 
               <label class="col-md-1 col-form-label" for="wh"><strong class="float-right">WH </strong></label>
               <div class="col-md-2">
-                <select class="form-control" id="wh" name="wh" [(ngModel)]="params.wh" (change)="changeWh()">
+                <select class="form-control" id="wh" name="wh" [(ngModel)]="params.wh" (change)="changeParams()">
                   <option value="">All</option>
                   <option *ngFor="let item of whs" value="{{item.code_ID}}">{{item.code_Cname}}</option>
                 </select>
@@ -30,7 +30,7 @@
 
               <label class="col-md-1 col-form-label" for="building"><strong class="float-right">Building </strong></label>
               <div class="col-md-2">
-                <select class="form-control" id="building" name="building" [(ngModel)]="params.building" (change)="changeBuilding()">
+                <select class="form-control" id="building" name="building" [(ngModel)]="params.building" (change)="changeParams()">
                   <option value="">All</option>
                   <option *ngFor="let item of buildings" value="{{item.code_ID}}" >{{item.code_Cname}}</option>
                 </select>
@@ -38,7 +38,7 @@
 
               <label class="col-md-1 col-form-label" for="floor"><strong class="float-right">Floor </strong></label>
               <div class="col-md-2">
-                <select class="form-control" id="floor" name="floor" [(ngModel)]="params.floor" (change)="changeFloor()">
+                <select class="form-control" id="floor" name="floor" [(ngModel)]="params.floor" (change)="changeParams()">
                   <option value="">All</option>
                   <option *ngFor="let item of floors" value="{{item.code_ID}}">{{item.code_Cname}}</option>
                 </select>
@@ -48,14 +48,14 @@
             <div class="form-group row">
               <label class="col-md-1 col-form-label" for="area"><strong class="float-right">Area</strong></label>
               <div class="col-md-2">
-                <select class="form-control" id="area" name="area" [(ngModel)]="params.area" (change)="changeArea()">
+                <select class="form-control" id="area" name="area" [(ngModel)]="params.area" (change)="changeParams()">
                   <option value="">All</option>
                   <option *ngFor="let item of areas" value="{{item.code_ID}}">{{item.code_Cname}}</option>
                 </select>
               </div>
 
               <div class="col-md-2 offset-md-1">
-                <button type="button" class="btn btn-success btn-block" ><i class="fa fa-plus"></i>
+                <button type="button" class="btn btn-success btn-block" (click)="changeToFrom()"><i class="fa fa-plus"></i>
                   Add</button>
               </div>
 
@@ -98,37 +98,39 @@
               </tr>
             </thead>
             <tbody>
-              <!-- <ng-container *ngFor="let item of results; let index = index">
-                <tr>
-                  <td class="text-center vertical-middle" rowspan="2"><button type="button"
-                      class="btn btn-sm btn-primary">{{item.close}}</button></td>
-                  <td class="vertical-middle" rowspan="2"></td>
-                  <td class="vertical-middle" rowspan="2"></td>
-                  <td class="text-center vertical-middle" rowspan="2"><button type="button"
-                      class="btn btn-sm btn-primary">{{item.plan_no}}</button></td>
-                  <td>{{item.purchase_No}}</td>
-                  <td>{{item.unit}}</td>
-                  <td>{{item.Batch}}</td>
-                  <td>{{item.model_no}}</td>
-                  <td>{{item.model_name}}</td>
-                  <td>{{item.article}}</td>
-                  <td>{{item.supplier_no}}</td>
-                  <td>{{item.supplier_name}}</td>
-                  <td>{{item.purchasing_qty}}</td>
-                  <td>{{item.received_qty}}</td>
-                  <td>{{item.balance_qty}}</td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td></td>
-                  <td colspan="13" class="text-center">{{item.text}}</td>
-                </tr>
-              </ng-container> -->
+              <tr *ngFor="let item of rackLocations; let index = index">
+                <td>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="{{item.id}}">
+                    <label class="custom-control-label" for="{{item.id}}"></label>
+                  </div>
+                </td>
+                <td>{{item.wH_ID}}</td>
+                <td>{{item.build_ID}}</td>
+                <td>{{item.floor_ID}}</td>
+                <td>{{item.area_ID}}</td>
+                <td>{{item.rack_Location}}</td>
+                <td>
+                  <button type="button" class="btn btn-primary btn-sm mr-2"><i
+                      class="fa fa-edit fa-lg"></i></button>
+                  <button type="button" class="btn btn-danger btn-sm"><i
+                      class="fa fa-trash fa-lg"></i></button>
+                </td>
+              </tr>
+            
 
             </tbody>
           </table>
           <div class="d-flex">
-
+            <pagination 
+            [boundaryLinks]="true" 
+            [totalItems]="pagination.totalItems" 
+            [(ngModel)]="pagination.currentPage"
+            [itemsPerPage]="pagination.itemsPerPage" 
+            (pageChanged)="pageChanged($event)" 
+            previousText="&lsaquo;"
+             nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [maxSize]=5>
+            </pagination>
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 export interface RackLocation {
-    iD: number;
+    id: number;
     rack_Location: string;
     factory_ID: string;
     wH_ID: string;

@@ -3,9 +3,9 @@ import { RackService } from '../../../_core/_services/rack.service';
 import { WmsCode } from '../../../_core/_models/wms-code';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
 import { FilerRackParam } from '../../../_core/_models/filer-rack-param';
-import { Pagination } from '../../../_core/_models/pagination';
+import { Pagination, PaginatedResult } from '../../../_core/_models/pagination';
 import { Route } from '@angular/compiler/src/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RackLocation } from '../../../_core/_models/rack-location';
 
 @Component({
@@ -28,7 +28,11 @@ export class RackMainComponent implements OnInit {
     floor: "",
     area: ""
   };
-  constructor(private rackServcie: RackService, private alertify: AlertifyService, private route: ActivatedRoute) { 
+  constructor(
+    private rackServcie: RackService,
+    private alertify: AlertifyService,
+    private route: ActivatedRoute,
+    private router: Router) { 
     
   }
 
@@ -91,34 +95,29 @@ export class RackMainComponent implements OnInit {
       });
   }
 
-  changeFactory() {
+  changeParams() {
     console.log(this.params);
-    this.filter();
-  }
-
-  changeWh() {
-    this.filter();
-  }
-
-  changeBuilding() {
-    this.filter();
-  }
-
-  changeFloor() {
-    this.filter();
-  }
-
-  changeArea() {
     this.filter();
   }
 
   filter() {
     console.log("Call: ", this.params)
-    this.rackServcie.filter(1, 3, this.params).subscribe(
-      (res) => {
+    this.rackServcie.filter(this.pagination.currentPage, this.pagination.itemsPerPage, this.params).subscribe(
+      (res: PaginatedResult<RackLocation[]>) => {
         console.log(res);
+        this.rackLocations = res.result;
+        this.pagination = res.pagination;
         this.alertify.success("Succeed");
       }
     )
   }
+  pageChanged(event: any): void {
+    this.pagination.currentPage = event.page;
+    this.filter();
+  }
+
+  changeToFrom() {
+    this.router.navigate(["/rack/form"])
+  }
+  
 }
