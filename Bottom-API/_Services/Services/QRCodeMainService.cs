@@ -108,6 +108,8 @@ namespace Bottom_API._Services.Services
                     T3_Supplier_Name = y.T3_Supplier_Name,
                     Subcon_ID = y.Subcon_ID,
                     Subcon_Name = y.Subcon_Name,
+                    Model_Name = y.Model_Name,
+                    Model_No = y.Model_No,
                     Article = y.Article,
                     MO_Seq = y.MO_Seq,
                     Material_ID = y.Material_ID,

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { QRCodeMainModel } from '../_viewmodels/qrcode-main-model';
 import { QRCodeMainSearch } from '../_viewmodels/qrcode-main-search';
 import { PaginatedResult } from '../_models/pagination';
@@ -13,6 +13,8 @@ import { map } from 'rxjs/operators';
 export class QrcodeMainService {
 
 constructor(private http: HttpClient) { }
+  qrCodeMainListSource = new BehaviorSubject<QRCodeMainModel[]>([]);
+  currentQrCodeMain = this.qrCodeMainListSource.asObservable();
   baseUrl = environment.apiUrl;
   generateQrCode(listData: string[]) {
     return this.http.post<any>(this.baseUrl + 'qRCodeMain/', listData);
@@ -36,5 +38,8 @@ constructor(private http: HttpClient) { }
         return paginatedResult;
       })
     );
-}
+  }
+  changeQrCodeMainList(qrCodeMainList: QRCodeMainModel[]) {
+    this.qrCodeMainListSource.next(qrCodeMainList);
+  }
 }

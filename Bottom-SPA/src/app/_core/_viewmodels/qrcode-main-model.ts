@@ -9,6 +9,8 @@ export interface QRCodeMainModel {
     t3_Supplier_Name: string;
     subcon_ID: string;
     subcon_Name: string;
+    model_No: string;
+    model_Name: string;
     article: string;
     mO_Seq: string;
     material_ID: string;

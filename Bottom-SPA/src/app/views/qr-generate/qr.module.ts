@@ -7,7 +7,6 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { QrRoutingModule } from './qr-routing.module';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
-import {NgxPrintModule} from 'ngx-print';
 // Component
 import { QrMainComponent } from './qr-main/qr-main.component';
 import { QrPrintComponent } from './qr-print/qr-print.component';
@@ -24,7 +23,6 @@ import { QrBodyComponent } from './qr-body/qr-body.component';
         NgSelectModule,
         BsDatepickerModule,
         NgxQRCodeModule,
-        NgxPrintModule
     ],
     declarations: [
         QrMainComponent,

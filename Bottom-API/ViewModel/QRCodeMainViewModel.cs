@@ -14,6 +14,8 @@ namespace Bottom_API.ViewModel
         public string T3_Supplier_Name {get;set;}
         public string Subcon_ID {get;set;}
         public string Subcon_Name {get;set;}
+        public string Model_No {get;set;}
+        public string Model_Name {get;set;}
         public string Article {get;set;}
         public string MO_Seq {get;set;}
         public string Material_ID {get;set;}

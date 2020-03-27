@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { BsDatepickerConfig } from 'ngx-bootstrap';
-import { QrGenerate } from '../../../_core/_models/qr-generate';
 import { Router } from '@angular/router';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
 import { PackingListService } from '../../../_core/_services/packing-list.service';
 import { PackingList } from '../../../_core/_models/packingList';
 import { Pagination, PaginatedResult } from '../../../_core/_models/pagination';
 import { QrcodeMainService } from '../../../_core/_services/qrcode-main.service';
-import { QrcodeDetailService } from '../../../_core/_services/qrcode-detail.service';
 
 @Component({
   selector: 'app-qr-main',

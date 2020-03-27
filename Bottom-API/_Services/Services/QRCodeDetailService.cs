@@ -38,7 +38,6 @@ namespace Bottom_API._Services.Services
         {
             throw new System.NotImplementedException();
         }
-
         public async Task<List<QRCode_Detail_Dto>> GetAllAsync()
         {
             return await _repoQrCodeDetail.GetAll().ProjectTo<QRCode_Detail_Dto>(_configMapper).ToListAsync();
