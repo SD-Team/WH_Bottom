@@ -32,24 +32,17 @@ export class RackMainComponent implements OnInit {
     private rackServcie: RackService,
     private alertify: AlertifyService,
     private route: ActivatedRoute,
-    private router: Router) { 
-    
-  }
+    private router: Router) {}
 
   ngOnInit() {
-    this.loadFactories();
-    this.loadWhs();
-    this.loadBuildings();
-    this.loadFloors();
-    this.loadAreas();
+    this.loadDatas();
     this.route.data.subscribe(data => {
       this.rackLocations = data['racks'].result;
       this.pagination = data['racks'].pagination;
     });
-    console.log(this.params);
   }
   
-  loadFactories() {
+  loadDatas() {
     this.rackServcie.getFactories()
       .subscribe((res) => {
         console.log(res);
@@ -57,36 +50,24 @@ export class RackMainComponent implements OnInit {
       }, error => {
         this.alertify.error(error);
       });
-  }
-
-  loadWhs() {
     this.rackServcie.getWHs()
       .subscribe((res) => {
         this.whs = res;
       }, error => {
         this.alertify.error(error);
       });
-  }
-
-  loadBuildings() {
     this.rackServcie.getBuildings()
       .subscribe((res) => {
         this.buildings = res;
       }, error => {
         this.alertify.error(error);
       });
-  }
-
-  loadFloors() {
     this.rackServcie.getFloors()
       .subscribe((res) => {
         this.floors = res;
       }, error => {
         this.alertify.error(error);
       });
-  }
-
-  loadAreas() {
     this.rackServcie.getAreas()
       .subscribe((res) => {
         this.areas = res;
@@ -94,9 +75,8 @@ export class RackMainComponent implements OnInit {
         this.alertify.error(error);
       });
   }
-
+  
   changeParams() {
-    console.log(this.params);
     this.filter();
   }
 

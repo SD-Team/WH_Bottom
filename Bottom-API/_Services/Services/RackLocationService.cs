@@ -8,6 +8,8 @@ using Bottom_API.Helpers;
 using AutoMapper.QueryableExtensions;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Bottom_API.Models;
+using System;
 
 namespace Bottom_API._Services.Services
 {
@@ -24,14 +26,26 @@ namespace Bottom_API._Services.Services
 
         }
 
-        public Task<bool> Add(RackLocation_Main_Dto model)
+        public async Task<bool> Add(RackLocation_Main_Dto model)
         {
-            throw new System.NotImplementedException();
+            var item = _mapper.Map<WMSB_RackLocation_Main>(model);
+            _repoRackLocation.Add(item);
+            return await _repoRackLocation.SaveAll();
         }
 
-        public Task<bool> Delete(object id)
+        public async Task<bool> Update(RackLocation_Main_Dto model)
         {
-            throw new System.NotImplementedException();
+            var item = _mapper.Map<WMSB_RackLocation_Main>(model);
+            item.Updated_Time = DateTime.Now;
+            _repoRackLocation.Update(item);
+            return await _repoRackLocation.SaveAll();
+        }
+
+        public async Task<bool> Delete(object id)
+        {
+            var item = _repoRackLocation.FindById(id);
+            _repoRackLocation.Remove(item);
+            return await _repoRackLocation.SaveAll();
         }
 
         public async  Task<PagedList<RackLocation_Main_Dto>> Filter(PaginationParams param, FilterRackLocationParam filterParam)
@@ -86,10 +100,6 @@ namespace Bottom_API._Services.Services
             throw new System.NotImplementedException();
         }
 
-        public Task<bool> Update(RackLocation_Main_Dto model)
-        {
-            throw new System.NotImplementedException();
-        }
 
     }
 }

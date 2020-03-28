@@ -65,5 +65,16 @@ export class RackService {
       );
   }
 
+  create(rack: RackLocation) {
+    return this.http.post(this.baseUrl + 'rackLocation/create', rack);
+  }
+
+  updateBrand(rack: RackLocation) {
+    return this.http.put(this.baseUrl + 'rackLocation/', rack);
+  }
+
+  deleteBrand(id: number) {
+    return this.http.delete(this.baseUrl + 'rackLocation/' + id, {});
+  }
   
 }
