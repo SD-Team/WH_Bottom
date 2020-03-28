@@ -14,13 +14,19 @@ namespace Bottom_API._Services.Services
 {
     public class PackingListDetailService : IPackingListDetailService
     {
+        private readonly IPackingListRepository _repoPacking;
         private readonly IPackingListDetailRepository _repo;
+        private readonly IQRCodeMainRepository _repoQrcode;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
-        public PackingListDetailService(  IPackingListDetailRepository repo,
-                                    IMapper mapper,
-                                    MapperConfiguration configMapper) {
+        public PackingListDetailService(    IPackingListDetailRepository repo,
+                                            IPackingListRepository repoPacking,
+                                            IQRCodeMainRepository repoQrcode,
+                                            IMapper mapper,
+                                            MapperConfiguration configMapper) {
             _repo = repo;
+            _repoPacking = repoPacking;
+            _repoQrcode = repoQrcode;
             _mapper = mapper;
             _configMapper = configMapper;
         }
@@ -59,6 +65,44 @@ namespace Bottom_API._Services.Services
                 packingListDetailModel
             };
             return result;
+        }
+
+        public async Task<List<object>> FindByRecevieNoList(List<string> data)
+        {
+            var listPackingList =  _repoPacking.GetAll();
+            var listQrCodeMain = _repoQrcode.GetAll();
+            var listQrCodeModel = listQrCodeMain
+                .Join(listPackingList, x => x.Receive_No.Trim(), y=> y.Receive_No.Trim(), (x,y) => new QRCodeMainViewModel
+                {
+                    QRCode_ID = x.QRCode_ID,
+                    MO_No = y.MO_No,
+                    Receive_No = x.Receive_No,
+                    Receive_Date = y.Receive_Date,
+                    Supplier_ID = y.Supplier_ID,
+                    Supplier_Name = y.Supplier_Name,
+                    T3_Supplier = y.T3_Supplier,
+                    T3_Supplier_Name = y.T3_Supplier_Name,
+                    Subcon_ID = y.Subcon_ID,
+                    Subcon_Name = y.Subcon_Name,
+                    Model_Name = y.Model_Name,
+                    Model_No = y.Model_No,
+                    Article = y.Article,
+                    MO_Seq = y.MO_Seq,
+                    Material_ID = y.Material_ID,
+                    Material_Name = y.Material_Name
+                });
+            var objectResult = new List<object>();
+            foreach (var item in data)
+            {  
+                var object1 = await this.FindByReceiveNo(item);
+                var qrCodeMainItem = await listQrCodeModel.Where(x => x.Receive_No.Trim() == item.Trim()).FirstOrDefaultAsync();
+                var objectItem = new {
+                    object1,
+                    qrCodeMainItem
+                };
+                objectResult.Add(objectItem);
+            }
+            return objectResult;
         }
 
         public async Task<List<Packing_List_Detail_Dto>> GetAllAsync()

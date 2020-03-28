@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Bottom_API._Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,12 @@ namespace Bottom_API.Controllers
         public async Task<IActionResult> FindByReceiveNo(string receive_No) {
             var data = await _service.FindByReceiveNo(receive_No);
             return Ok(data);
+        }
+
+        [HttpPost("findPrint")]
+        public async Task<IActionResult> FindByRecevieNoList([FromBody]List<string> data) {
+            var result = await _service.FindByRecevieNoList(data);
+            return Ok(result);
         }
     }
 }

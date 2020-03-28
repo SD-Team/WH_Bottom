@@ -8,6 +8,7 @@ import { AlertifyService } from '../../../_core/_services/alertify.service';
 import { PackingDetailResult } from '../../../_core/_viewmodels/packing-detail-result';
 import { PackingListDetailService } from '../../../_core/_services/packing-list-detail.service';
 import { PackingListDetailModel } from '../../../_core/_viewmodels/packing-list-detail-model';
+import { PackingPrintAll } from '../../../_core/_viewmodels/packing-print-all';
 declare var $: any;
 @Component({
   selector: 'app-qr-body',
@@ -21,13 +22,17 @@ export class QrBodyComponent implements OnInit {
   bsConfig: Partial<BsDatepickerConfig>;
   listQrCodeMainModel: QRCodeMainModel[] = [];
   packingDetailResult: PackingDetailResult;
+  packingDetailResultList: PackingDetailResult[] = [];
   packingListDetail: PackingListDetailModel[] = [];
+  packingListDetailAll: PackingListDetailModel[][] = [];
   time_start: string;
   time_end: string;
   mO_No: string;
   qrCodeMainItem: QRCodeMainModel;
   totalQty: number;
+  totalQtyList: number[] = [];
   checkArray: any[] = [];
+  packingPrintAll: PackingPrintAll[] = [];
   // ------print qr code----------------------
   elementType: 'url' | 'canvas' | 'img' = 'url';
   // -----------------------------------------
@@ -107,12 +112,12 @@ export class QrBodyComponent implements OnInit {
       })
       let self = this;
       setTimeout(function(){
-        self.printHtml();
+        self.printHtml('wrap-print');
         window.location.reload();
       },1000);
   }
-  printHtml() {
-      let printContents = document.getElementById('wrap-print').innerHTML;
+  printHtml(divID: string) {
+      let printContents = document.getElementById(divID).innerHTML;
       let originalContents = document.body.innerHTML;
       document.body.innerHTML = printContents;
       window.print();
@@ -127,7 +132,7 @@ export class QrBodyComponent implements OnInit {
     if (e.target.checked) {
       $('input:checkbox').not(this).prop('checked', true);
       this.listQrCodeMainModel.forEach(item => {
-        arrayCheck.push(item.qrCode_ID);
+        arrayCheck.push(item.receive_No);
       });
       this.checkArray.length = 0;
       this.checkArray = arrayCheck;
@@ -145,7 +150,23 @@ export class QrBodyComponent implements OnInit {
     }
   }
   printAll() {
+    window.sessionStorage.setItem('checkPrint', '1');
     console.log(this.checkArray);
+    this.totalQtyList.length = 0;
+    this.packingListDetailAll.length = 0;
+    if (this.checkArray.length > 0) {
+      this.packingListDetailService.findByRecevieNoList(this.checkArray).subscribe(res => {
+        this.packingPrintAll = res;
+        console.log(this.packingPrintAll);
+      });
+      let self = this;
+      setTimeout(function(){
+        self.printHtml('wrap-print-all');
+        window.location.reload();
+      },2000);
+    } else {
+      this.alertifyService.error('Please check in checkbox!');
+    }
   }
   convertDate(dateString: string) {
     let arrayDate = dateString.split('/');

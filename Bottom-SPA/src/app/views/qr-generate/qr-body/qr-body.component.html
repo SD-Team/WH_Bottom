@@ -89,7 +89,7 @@
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox"
                                 id="{{i}}"
-                                [value]="item.qrCode_ID"
+                                [value]="item.receive_No"
                                 (change)="onCheckboxChange($event)"
                                 class="custom-control-input yourClass">
                                 <label class="custom-control-label" for="{{i}}"></label>
@@ -136,7 +136,7 @@
 
 
 <!----------------------------------------------Start Body Print QrCode ----------------------------------------------->
-<div class="container" *ngIf="qrCodeMainItem !== undefined" id="wrap-print">
+<div class="container div-hidden" *ngIf="qrCodeMainItem !== undefined" id="wrap-print">
     <div class="row">
         <div class="col-1">
         </div>
@@ -287,3 +287,158 @@
     </div>
 </div>
 <!----------------------------------------------End Body Print QrCode ------------------------------------------------->
+
+
+<div class="container div-hidden" *ngIf="packingPrintAll !== undefined" id="wrap-print-all">
+    <div *ngFor="let packingPrintItem of packingPrintAll" class="container print-all">
+        <div class="row">
+            <div class="col-1">
+            </div>
+            <div class="col-10">
+                <div class="row">
+                    <div class="col-4">
+                        <div style="display: flex;">
+                            <ngx-qrcode id="qrCodeImage" [qrc-element-type]="elementType" [qrc-value] = "packingPrintItem.qrCodeMainItem.qrCode_ID">
+                            </ngx-qrcode>
+                            <span class="text-red div-top1" style="margin-left: 6%;">QRCodeID</span>
+                        </div>
+                        <div>
+                            <span>{{packingPrintItem.qrCodeMainItem.qrCode_ID}}</span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="div-top1">
+                            <span class="text-red">Receive Date</span>
+                        </div>
+                        <div>
+                            <span>{{ packingPrintItem.qrCodeMainItem.receive_Date | date: "MM/dd/yyyy" }}</span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="div-top1">
+                            <span class="text-red margin-title">Supplier No + Name</span>
+                        </div>
+                        <div>
+                            <span >{{packingPrintItem.qrCodeMainItem.supplier_ID}} - {{packingPrintItem.qrCodeMainItem.supplier_Name}}</span>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-4">
+                        <span>{{packingPrintItem.qrCodeMainItem.mO_No}}</span>
+                        <span style="margin-left: 30px;">{{packingPrintItem.qrCodeMainItem.mO_Seq}}</span>
+                    </div>
+                    <div class="col-8">
+                        <span class="text-red">Plan No, Batch, Total Qty</span>
+                        <span *ngIf="totalQty !== undefined" style="margin-left: 100px;">{{ totalQty }}</span>
+                    </div>
+                    <div class="col-4">
+                        <span>{{packingPrintItem.qrCodeMainItem.model_No}}</span>
+                        <span>{{packingPrintItem.qrCodeMainItem.model_Name}}</span>
+                    </div>
+                    <div class="col-8">
+                        <span>{{packingPrintItem.qrCodeMainItem.article}}</span>
+                        <span class="text-red">Model No, Model Name,</span>
+                        <span class="text-red" style="margin-left: 50px;">Articel</span>
+                    </div>
+                    <div class="col-4">
+                        <span>{{packingPrintItem.qrCodeMainItem.material_ID}}</span>
+                    </div>
+                    <div class="col-8">
+                        <span>{{packingPrintItem.qrCodeMainItem.material_Name}}</span>
+                    </div>
+                    <div class="col-4">
+    
+                    </div>
+                    <div class="col-4">
+                        <span class="text-red">Mat# - Mat#Name</span>
+                    </div>
+                    <div class="col-4">
+    
+                    </div>
+                    <div class="col-10">
+                        <table>
+                            <tr>
+                                <td>TSize</td>
+                                <td *ngFor="let item of packingPrintItem.object1.packingListDetailModel">{{ item.tool_Size}}</td>
+                            </tr>
+                            <tr>
+                                <td>Size</td>
+                                <td *ngFor="let item of packingPrintItem.object1.packingListDetailModel">{{ item.order_Size }}</td>
+                            </tr>
+                            <tr>
+                                <td>PQty</td>
+                                <td *ngFor="let item of packingPrintItem.object1.packingListDetailModel">{{ item.purchase_Qty }}</td>
+                            </tr>
+                            <tr>
+                                <td>RQty</td>
+                                <td *ngFor="let item of packingPrintItem.object1.packingListDetailModel">{{ item.received_Qty }}</td>
+                            </tr>
+                            <tr>
+                                <td>Bal</td>
+                                <td *ngFor="let item of packingPrintItem.object1.packingListDetailModel">{{ item.bal }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-2">
+                        <span class="text-red">Tool Size</span>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-4">
+                        <span>{{packingPrintItem.qrCodeMainItem.subcon_ID}}</span>
+                        <div>
+                            <span class="text-red">Subcon No</span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <span>{{packingPrintItem.qrCodeMainItem.subcon_Name}}</span>
+                        <div>
+                            <span  class="text-red">SunCon Name</span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <span>{{packingPrintItem.qrCodeMainItem.t3_Supplier}} - {{packingPrintItem.qrCodeMainItem.t3_Supplier_Name}}</span>
+                        <div>
+                            <span  class="text-red">T3 Supplier No - Name</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-3">
+                        <span>Suggested Location</span>
+                        <div>
+                            <span class="text-red">Rack Location</span>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <span><i class="fa fa-square-o fa-lg"></i> A-01-02</span>
+                        <div>
+                            <ngx-qrcode id="qrCodeImage" [qrc-element-type]="elementType" [qrc-value] = "packingPrintItem.qrCodeMainItem.qrCode_ID">
+                            </ngx-qrcode>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <span><i class="fa fa-square-o fa-lg"></i> A-01-02</span>
+                        <div>
+                            <ngx-qrcode id="qrCodeImage" [qrc-element-type]="elementType" [qrc-value] = "packingPrintItem.qrCodeMainItem.qrCode_ID">
+                            </ngx-qrcode>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <span><i class="fa fa-square-o fa-lg"></i> A-01-02</span>
+                        <div>
+                            <ngx-qrcode id="qrCodeImage" [qrc-element-type]="elementType" [qrc-value] = "packingPrintItem.qrCodeMainItem.qrCode_ID">
+                            </ngx-qrcode>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+            </div>
+        </div>
+    </div>
+</div>
+
