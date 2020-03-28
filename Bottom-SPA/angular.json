@@ -30,6 +30,7 @@
               "includePaths": ["./node_modules"]
             },
             "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
               "node_modules/chart.js/dist/Chart.min.js",
               "node_modules/alertifyjs/build/alertify.min.js"
             ]

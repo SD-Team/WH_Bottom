@@ -88,8 +88,11 @@
                             <td class="text-center">
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox"
-                                class="custom-control-input">
-                                <label class="custom-control-label" for=""></label>
+                                id="{{i}}"
+                                [value]="item.qrCode_ID"
+                                (change)="onCheckboxChange($event)"
+                                class="custom-control-input yourClass">
+                                <label class="custom-control-label" for="{{i}}"></label>
                             </div>
                             </td>
                             <th>{{item.qrCode_ID}}</th>
@@ -121,7 +124,7 @@
                 <i class="fa fa-ban"></i>
                 Cancel
                 </button>
-                <button (click)="printHtml()"  class="btn btn-success">
+                <button (click)="printAll()"  class="btn btn-success">
                 <i class="fa fa-check"></i>
                 Print
                 </button>

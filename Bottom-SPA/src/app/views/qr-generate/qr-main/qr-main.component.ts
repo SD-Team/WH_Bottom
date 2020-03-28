@@ -31,7 +31,6 @@ export class QrMainComponent implements OnInit {
               private alertifyService: AlertifyService) { }
 
   ngOnInit() {
-    // tslint:disable-next-line:prefer-const
     this.pagination = {
       currentPage: 1,
       itemsPerPage: 3,
@@ -80,20 +79,16 @@ export class QrMainComponent implements OnInit {
   onCheckboxChange(e) {
     if (e.target.checked) {
       this.checkArray.push(e.target.value);
-      // console.log(e.target.id);
     } else {
-      // tslint:disable-next-line:prefer-const
       let i = this.checkArray.findIndex(element => element === e.target.value);
       this.checkArray.splice(i, 1);
     }
   }
   // Khi stick chọn all checkbox
   checkAll(e) {
-    // tslint:disable-next-line:prefer-const
     let arrayCheck = [];
     if (e.target.checked) {
       this.packingLists.forEach(element => {
-        // tslint:disable-next-line:prefer-const
         let ele =  document.getElementById(element.receive_No.toString()) as HTMLInputElement;
         ele.checked = true;
         this.checkArray.length = 0;
@@ -101,7 +96,6 @@ export class QrMainComponent implements OnInit {
       });
     } else {
       this.packingLists.forEach(element => {
-        // tslint:disable-next-line:prefer-const
         let ele =  document.getElementById(element.receive_No.toString()) as HTMLInputElement;
         ele.checked = false;
         arrayCheck.length = 0;

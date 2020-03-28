@@ -8,7 +8,7 @@ import { AlertifyService } from '../../../_core/_services/alertify.service';
 import { PackingDetailResult } from '../../../_core/_viewmodels/packing-detail-result';
 import { PackingListDetailService } from '../../../_core/_services/packing-list-detail.service';
 import { PackingListDetailModel } from '../../../_core/_viewmodels/packing-list-detail-model';
-
+declare var $: any;
 @Component({
   selector: 'app-qr-body',
   templateUrl: './qr-body.component.html',
@@ -27,6 +27,7 @@ export class QrBodyComponent implements OnInit {
   mO_No: string;
   qrCodeMainItem: QRCodeMainModel;
   totalQty: number;
+  checkArray: any[] = [];
   // ------print qr code----------------------
   elementType: 'url' | 'canvas' | 'img' = 'url';
   // -----------------------------------------
@@ -122,6 +123,29 @@ export class QrBodyComponent implements OnInit {
     this.search();
   }
   checkAll(e) {
+    let arrayCheck = [];
+    if (e.target.checked) {
+      $('input:checkbox').not(this).prop('checked', true);
+      this.listQrCodeMainModel.forEach(item => {
+        arrayCheck.push(item.qrCode_ID);
+      });
+      this.checkArray.length = 0;
+      this.checkArray = arrayCheck;
+    } else {
+      $('input:checkbox').not(this).prop('checked', false);
+      this.checkArray.length = 0;
+    }
+  }
+  onCheckboxChange(e) {
+    if (e.target.checked) {
+      this.checkArray.push(e.target.value);
+    } else {
+      let i = this.checkArray.findIndex(element => element === e.target.value);
+      this.checkArray.splice(i, 1);
+    }
+  }
+  printAll() {
+    console.log(this.checkArray);
   }
   convertDate(dateString: string) {
     let arrayDate = dateString.split('/');
