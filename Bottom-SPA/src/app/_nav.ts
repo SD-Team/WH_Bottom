@@ -46,7 +46,12 @@ export const navItems: INavData[] = [
     name: "Rack Location",
     url: "/rack/main",
     icon: "icon-book-open"
-  }
+  },
+  {
+    name: "Receiving Material",
+    url: "/receiving/main",
+    icon: "icon-book-open"
+  },
   // {
   //   title: true,
   //   name: 'Theme'

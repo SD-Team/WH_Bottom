@@ -95,26 +95,46 @@ namespace Bottom_API._Services.Services
             if (dataSearch.MO_No != null && dataSearch.MO_No != "") {
                 listPackingList = listPackingList.Where(x => x.MO_No.Trim() == dataSearch.MO_No.Trim());
             }
-            var listQrCodeModel = listQrCodeMain
-                .Join(listPackingList, x => x.Receive_No.Trim(), y=> y.Receive_No.Trim(), (x,y) => new QRCodeMainViewModel
-                {
-                    QRCode_ID = x.QRCode_ID,
-                    MO_No = y.MO_No,
-                    Receive_No = x.Receive_No,
-                    Receive_Date = y.Receive_Date,
-                    Supplier_ID = y.Supplier_ID,
-                    Supplier_Name = y.Supplier_Name,
-                    T3_Supplier = y.T3_Supplier,
-                    T3_Supplier_Name = y.T3_Supplier_Name,
-                    Subcon_ID = y.Subcon_ID,
-                    Subcon_Name = y.Subcon_Name,
-                    Model_Name = y.Model_Name,
-                    Model_No = y.Model_No,
-                    Article = y.Article,
-                    MO_Seq = y.MO_Seq,
-                    Material_ID = y.Material_ID,
-                    Material_Name = y.Material_Name
-                });
+            var listQrCodeModel = (from x in listQrCodeMain join y in listPackingList
+                                    on x.Receive_No.Trim() equals y.Receive_No.Trim()
+                                    select new QRCodeMainViewModel() {
+                                        QRCode_ID = x.QRCode_ID,
+                                        MO_No = y.MO_No,
+                                        Receive_No = x.Receive_No,
+                                        Receive_Date = y.Receive_Date,
+                                        Supplier_ID = y.Supplier_ID,
+                                        Supplier_Name = y.Supplier_Name,
+                                        T3_Supplier = y.T3_Supplier,
+                                        T3_Supplier_Name = y.T3_Supplier_Name,
+                                        Subcon_ID = y.Subcon_ID,
+                                        Subcon_Name = y.Subcon_Name,
+                                        Model_Name = y.Model_Name,
+                                        Model_No = y.Model_No,
+                                        Article = y.Article,
+                                        MO_Seq = y.MO_Seq,
+                                        Material_ID = y.Material_ID,
+                                        Material_Name = y.Material_Name
+                                                    }).OrderByDescending(x => x.Receive_Date);
+            // var listQrCodeModel = listQrCodeMain
+            //     .Join(listPackingList, x => x.Receive_No.Trim(), y=> y.Receive_No.Trim(), (x,y) => new QRCodeMainViewModel
+            //     {
+            //         QRCode_ID = x.QRCode_ID,
+            //         MO_No = y.MO_No,
+            //         Receive_No = x.Receive_No,
+            //         Receive_Date = y.Receive_Date,
+            //         Supplier_ID = y.Supplier_ID,
+            //         Supplier_Name = y.Supplier_Name,
+            //         T3_Supplier = y.T3_Supplier,
+            //         T3_Supplier_Name = y.T3_Supplier_Name,
+            //         Subcon_ID = y.Subcon_ID,
+            //         Subcon_Name = y.Subcon_Name,
+            //         Model_Name = y.Model_Name,
+            //         Model_No = y.Model_No,
+            //         Article = y.Article,
+            //         MO_Seq = y.MO_Seq,
+            //         Material_ID = y.Material_ID,
+            //         Material_Name = y.Material_Name
+            //     });
 
             return await PagedList<QRCodeMainViewModel>.CreateAsync(listQrCodeModel, param.PageNumber, param.PageSize);
         }

@@ -1,4 +1,4 @@
-<div class="container div-hidden print-all" *ngIf="qrCodeMainItem !== undefined" id="wrap-print">
+<div class="container print-all" *ngIf="qrCodeMainItem !== undefined" id="wrap-print">
     <div class="row">
         <div class="col-1">
         </div>
@@ -8,7 +8,6 @@
                     <div style="display: flex;">
                         <ngx-qrcode id="qrCodeImage" [qrc-element-type]="elementType" [qrc-value] = "qrCodeMainItem.qrCode_ID">
                         </ngx-qrcode>
-                        <span class="text-red div-top1" style="margin-left: 6%;">QRCodeID</span>
                     </div>
                     <div>
                         <span>{{qrCodeMainItem.qrCode_ID}}</span>
@@ -16,17 +15,11 @@
                 </div>
                 <div class="col-4">
                     <div class="div-top1">
-                        <span class="text-red">Receive Date</span>
-                    </div>
-                    <div>
                         <span>{{ qrCodeMainItem.receive_Date | date: "MM/dd/yyyy" }}</span>
                     </div>
                 </div>
                 <div class="col-4">
                     <div class="div-top1">
-                        <span class="text-red margin-title">Supplier No + Name</span>
-                    </div>
-                    <div>
                         <span >{{qrCodeMainItem.supplier_ID}} - {{qrCodeMainItem.supplier_Name}}</span>
                     </div>
                 </div>
@@ -38,7 +31,7 @@
                     <span style="margin-left: 30px;">{{qrCodeMainItem.mO_Seq}}</span>
                 </div>
                 <div class="col-8">
-                    <span class="text-red">Plan No, Batch, Total Qty</span>
+                    
                     <span *ngIf="totalQty !== undefined" style="margin-left: 100px;">{{ totalQty }}</span>
                 </div>
                 <div class="col-4">
@@ -47,8 +40,6 @@
                 </div>
                 <div class="col-8">
                     <span>{{qrCodeMainItem.article}}</span>
-                    <span class="text-red">Model No, Model Name,</span>
-                    <span class="text-red" style="margin-left: 50px;">Articel</span>
                 </div>
                 <div class="col-4">
                     <span>{{qrCodeMainItem.material_ID}}</span>
@@ -60,7 +51,7 @@
 
                 </div>
                 <div class="col-4">
-                    <span class="text-red">Mat# - Mat#Name</span>
+                    
                 </div>
                 <div class="col-4">
 
@@ -90,7 +81,7 @@
                     </table>
                 </div>
                 <div class="col-2">
-                    <span class="text-red">Tool Size</span>
+                    
                 </div>
             </div>
             <hr>
@@ -98,19 +89,19 @@
                 <div class="col-4">
                     <span>{{qrCodeMainItem.subcon_ID}}</span>
                     <div>
-                        <span class="text-red">Subcon No</span>
+                      
                     </div>
                 </div>
                 <div class="col-4">
                     <span>{{qrCodeMainItem.subcon_Name}}</span>
                     <div>
-                        <span  class="text-red">SunCon Name</span>
+                        
                     </div>
                 </div>
                 <div class="col-4">
                     <span>{{qrCodeMainItem.t3_Supplier}} - {{qrCodeMainItem.t3_Supplier_Name}}</span>
                     <div>
-                        <span  class="text-red">T3 Supplier No - Name</span>
+                       
                     </div>
                 </div>
             </div>
