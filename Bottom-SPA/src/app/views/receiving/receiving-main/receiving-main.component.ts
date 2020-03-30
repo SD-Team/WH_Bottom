@@ -6,10 +6,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./receiving-main.component.scss']
 })
 export class ReceivingMainComponent implements OnInit {
-
+  toDate: Date;
+  fromDate: Date;
+  time_start: string;
+  time_end: string;
   constructor() { }
 
   ngOnInit() {
   }
-
+  search() {
+    
+  }
 }

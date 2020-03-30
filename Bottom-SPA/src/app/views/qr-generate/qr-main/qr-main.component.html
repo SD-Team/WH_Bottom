@@ -57,7 +57,7 @@
                 <input type="text" [(ngModel)]="mO_No" name="mO_No" class="form-control" placeholder="Enter Plan No  ..">
               </div>
               <div class="col-md-2">
-                 <button type="button" class="btn btn-success btn-block" (click)="search()"><i class="fa fa-search"></i>
+                  <button type="button" class="btn btn-success btn-block" (click)="search()"><i class="fa fa-search"></i>
                   Search
                 </button>
               </div>
@@ -95,9 +95,9 @@
                   <td class="text-center">
                     <div class="custom-control custom-checkbox">
                       <input type="checkbox" [value]="item.receive_No"
-                       class="custom-control-input"
+                        class="custom-control-input"
                       (change)="onCheckboxChange($event)"
-                       id="{{item.receive_No}}">
+                        id="{{item.receive_No}}">
                       <label class="custom-control-label" for="{{item.receive_No}}"></label>
                     </div>
                   </td>

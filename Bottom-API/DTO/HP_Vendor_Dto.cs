@@ -1,11 +1,9 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 
-namespace Bottom_API.Models
+namespace Bottom_API.DTO
 {
-    public class HP_Vendor_u01
+    public class HP_Vendor_Dto
     {
-        [Key]
         public string Vendor_No {get;set;}
         public string Vendor_Desc {get;set;}
         public string Vendor_Name {get;set;}

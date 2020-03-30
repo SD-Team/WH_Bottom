@@ -110,11 +110,11 @@ export class QrBodyComponent implements OnInit {
         this.totalQty = this.packingDetailResult.totalQty;
         this.packingListDetail = this.packingDetailResult.packingListDetailModel;
       })
-      // let self = this;
-      // setTimeout(function(){
-      //   self.printHtml('wrap-print');
-      //   window.location.reload();
-      // },1000);
+      let self = this;
+      setTimeout(function(){
+        self.printHtml('wrap-print');
+        window.location.reload();
+      },1000);
   }
   printHtml(divID: string) {
       let printContents = document.getElementById(divID).innerHTML;

@@ -1,12 +1,10 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 
-namespace Bottom_API.Models
+namespace Bottom_API.DTO
 {
-    public class HP_Material_j13
+    public class HP_Material_Dto
     {
-        [Key]
-        public string Material_ID {get;set;}
+         public string Material_ID {get;set;}
         public string Material_C_Name {get;set;}
         public string Material_E_Name {get;set;}
         public string C_Unit {get;set;}

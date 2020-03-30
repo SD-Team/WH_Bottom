@@ -51,6 +51,8 @@ namespace Bottom_API
             services.AddScoped<IQRCodeMainRepository, QRCodeMainRepository>();
             services.AddScoped<IPackingListDetailRepository, PackingListDetailRepository>();
             services.AddScoped<IQRCodeDetailRepository, QRCodeDetailRepository>();
+            services.AddScoped<IHPMaterialRepository, HPMaterialRepository>();
+            services.AddScoped<IHPStyleRepository, HPStyleRepository>();
 
             // Service
             services.AddScoped<IPackingListService, PackingListService>();
@@ -59,6 +61,8 @@ namespace Bottom_API
             services.AddScoped<IQRCodeMainService, QRCodeMainService>();
             services.AddScoped<IPackingListDetailService, PackingListDetailService>();
             services.AddScoped<IQRCodeDetailService, QRCodeDetailService>();
+            services.AddScoped<IHPMaterialService, HPMaterialService>();
+            services.AddScoped<IHPStyleService, HPStyleService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
