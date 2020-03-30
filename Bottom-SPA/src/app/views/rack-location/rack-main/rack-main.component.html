@@ -111,9 +111,11 @@
                 <td>{{item.area_ID}}</td>
                 <td>{{item.rack_Location}}</td>
                 <td>
-                  <button type="button" class="btn btn-primary btn-sm mr-2"><i
+                  <button type="button" class="btn btn-primary btn-sm mr-2" (click)="print(item)"><i
+                      class="fa fa-print fa-lg"></i></button>
+                  <button type="button" class="btn btn-primary btn-sm mr-2" (click)="changeToEdit(item)"><i
                       class="fa fa-edit fa-lg"></i></button>
-                  <button type="button" class="btn btn-danger btn-sm"><i
+                  <button type="button" class="btn btn-danger btn-sm" (click)="delete(item)"><i
                       class="fa fa-trash fa-lg"></i></button>
                 </td>
               </tr>

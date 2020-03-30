@@ -11,6 +11,8 @@ import { RackRoutingModule } from './rack-routing.module';
 //Component
 import { RackMainComponent } from './rack-main/rack-main.component';
 import { RackFormComponent } from './rack-form/rack-form.component';
+import { RackPrintComponent } from './rack-print/rack-print.component';
+import { NgxQRCodeModule } from 'ngx-qrcode2';
 
 
 
@@ -23,11 +25,13 @@ import { RackFormComponent } from './rack-form/rack-form.component';
         RackRoutingModule,
         PaginationModule,
         NgSelectModule,
-        BsDatepickerModule
+        BsDatepickerModule,
+        NgxQRCodeModule,
     ],
     declarations: [
         RackMainComponent,
-        RackFormComponent
+        RackFormComponent,
+        RackPrintComponent
     ]
 })
 

@@ -28,6 +28,7 @@ export class RackMainComponent implements OnInit {
     floor: "",
     area: ""
   };
+  printArray: any = [];
   constructor(
     private rackServcie: RackService,
     private alertify: AlertifyService,
@@ -97,7 +98,32 @@ export class RackMainComponent implements OnInit {
   }
 
   changeToFrom() {
+    this.rackServcie.changeFlag("0");
     this.router.navigate(["/rack/form"])
   }
+
+  changeToEdit(rack: RackLocation) {
+    this.rackServcie.changeRack(rack);
+    this.rackServcie.changeFlag("1");
+    this.router.navigate(["/rack/form"]);
+  }
+
+  delete(rack: RackLocation) {
+    this.alertify.confirm('Delete Rack Location', 'Are you sure you want to delete this rack location "' + rack.rack_Location + '" ?', () => {
+      this.rackServcie.delete(rack.id).subscribe(() => {
+        this.filter();
+        this.alertify.success('Rack location has been deleted');
+      }, error => {
+        this.alertify.error('Failed to delete the rack location');
+      });
+    });
+  }
+
+  print(rack: RackLocation) {
+    this.printArray.push(rack.rack_Location);
+    console.log(this.printArray);
+    this.router.navigate(["/rack/print"])
+  }
+
   
 }

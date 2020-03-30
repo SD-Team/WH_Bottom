@@ -3,7 +3,7 @@ import { environment } from '../../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { WmsCode } from '../_models/wms-code';
 import { PaginatedResult } from '../_models/pagination';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RackLocation } from '../_models/rack-location';
 import { FilerRackParam } from '../_models/filer-rack-param';
@@ -13,6 +13,12 @@ import { FilerRackParam } from '../_models/filer-rack-param';
 })
 export class RackService {
   baseUrl = environment.apiUrl;
+  rackSource = new BehaviorSubject<Object>({});
+  currentRack = this.rackSource.asObservable();
+  flagSource = new BehaviorSubject<string>("0");
+  currentFlag = this.flagSource.asObservable();
+  printArr = new BehaviorSubject<Array<string>>([]);
+  currentArr = this.printArr.asObservable();
   constructor(private http: HttpClient) { }
 
   getFactories() {
@@ -69,12 +75,24 @@ export class RackService {
     return this.http.post(this.baseUrl + 'rackLocation/create', rack);
   }
 
-  updateBrand(rack: RackLocation) {
+  update(rack: RackLocation) {
     return this.http.put(this.baseUrl + 'rackLocation/', rack);
   }
 
-  deleteBrand(id: number) {
+  delete(id: number) {
     return this.http.delete(this.baseUrl + 'rackLocation/' + id, {});
+  }
+
+  changeRack(rack: RackLocation) {
+    this.rackSource.next(rack);
+  }
+
+  changeFlag(flag: string) {
+    this.flagSource.next(flag);
+  }
+
+  changeArr(arr: Array<string>) {
+    this.printArr.next(arr);
   }
   
 }

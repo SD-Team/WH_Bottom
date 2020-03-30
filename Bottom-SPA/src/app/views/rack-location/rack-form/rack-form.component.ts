@@ -12,6 +12,7 @@ import { RackService } from '../../../_core/_services/rack.service';
 })
 export class RackFormComponent implements OnInit {
   rack: any = {};
+  flag = "0";
   factories: WmsCode[];
   whs: WmsCode[];
   buildings: WmsCode[];
@@ -24,11 +25,15 @@ export class RackFormComponent implements OnInit {
 
   ngOnInit() {
     this.loadDatas();
-    this.rack.factory_ID = "";
-    this.rack.area_ID = "";
-    this.rack.wH_ID = "";
-    this.rack.floor_ID = "";
-    this.rack.build_ID = "";
+    this.rackServcie.currentRack.subscribe(rack => this.rack = rack)
+    this.rackServcie.currentFlag.subscribe(flag => this.flag = flag)
+    if (this.flag === "0") {
+      this.rack.factory_ID = "";
+      this.rack.area_ID = "";
+      this.rack.wH_ID = "";
+      this.rack.floor_ID = "";
+      this.rack.build_ID = "";
+    }
   }
 
   create() {
@@ -47,6 +52,18 @@ export class RackFormComponent implements OnInit {
         }
       )
     }
+  }
+
+  update() {
+    this.rackServcie.update(this.rack).subscribe(
+      () => {
+        this.alertify.success("Updated succeed");
+        this.router.navigate(["/rack/main"])
+      },
+      error => {
+        this.alertify.error(error)
+      }
+    )
   }
 
   loadDatas() {

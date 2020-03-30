@@ -1,0 +1,40 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <strong>Rack Location Print</strong>
+          <button type="button" class="btn btn-sm btn-primary float-right">
+            <i class="fa fa-chevron-left"></i> Back
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="container div-hidden print-all" id="wrap-print">
+            <div class="row">
+              <div class="col-4" *ngFor="let item of rackItem">
+                <div>
+                  <ngx-qrcode
+                    id="qrCodeImage"
+                    [qrc-element-type]="elementType"
+                    [qrc-value]="item"
+                  >
+                  </ngx-qrcode>
+                  <div>
+                    <strong class="rack-location">{{item}}</strong>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <button type="button" class="btn btn-primary" (click)="print()">
+            <i class="fa fa-print"></i> Print
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

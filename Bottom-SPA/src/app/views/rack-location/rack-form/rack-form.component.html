@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
-          <strong *ngIf="!rack.iD;else elseBlock">Add new</strong>
+          <strong *ngIf="flag=='0';else elseBlock">Add new</strong>
           <ng-template #elseBlock><strong>Update</strong></ng-template>
           Brand
           <button type="button" class="btn btn-sm btn-primary float-right" (click)="backList()"><i
@@ -64,8 +64,13 @@
           <div class="card-footer">
             <button type="button" class="btn btn-danger"><i class="fa fa-ban"></i>
               Cancel</button>
-            <button type="button" class="btn btn-success" (click)="create()" ><i
+            <button type="button" class="btn btn-success" (click)="create()" *ngIf="flag=='0';else elseButton"><i
                 class="fa fa-check"></i> Create</button>
+            <ng-template #elseButton>
+              <button type="button" class="btn btn-success" (click)="update()" ><i class="fa fa-check"></i>
+                Update</button>
+            </ng-template>
+                
           </div>
         </form>
       </div>
