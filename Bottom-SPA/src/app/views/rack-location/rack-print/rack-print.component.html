@@ -4,18 +4,20 @@
       <div class="card">
         <div class="card-header">
           <strong>Rack Location Print</strong>
-          <button type="button" class="btn btn-sm btn-primary float-right">
+          <button type="button" class="btn btn-sm btn-primary float-right" (click)="back()">
             <i class="fa fa-chevron-left"></i> Back
           </button>
         </div>
         <div class="card-body">
           <div class="container div-hidden print-all" id="wrap-print">
             <div class="row">
-              <div class="col-4" *ngFor="let item of rackItem">
+              <div class="col-4 qr-el" *ngFor="let item of rackItem">
                 <div>
                   <ngx-qrcode
                     id="qrCodeImage"
                     [qrc-element-type]="elementType"
+                    qrc-class = "qr-height"
+                    qrc-version = "7"
                     [qrc-value]="item"
                   >
                   </ngx-qrcode>
@@ -30,7 +32,7 @@
         </div>
 
         <div class="card-footer">
-          <button type="button" class="btn btn-primary" (click)="print()">
+          <button type="button" class="btn btn-primary" [useExistingCss]="true"  printSectionId="wrap-print" ngxPrint>
             <i class="fa fa-print"></i> Print
           </button>
         </div>

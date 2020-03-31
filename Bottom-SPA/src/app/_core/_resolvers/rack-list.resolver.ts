@@ -9,7 +9,7 @@ import { catchError } from 'rxjs/operators';
 @Injectable()
 export class RackListResolver implements Resolve<RackLocation[]> {
     pageNumber = 1;
-    pageSize = 3;
+    pageSize = 10;
     params: any = {
         factory: "",
         wh: "",

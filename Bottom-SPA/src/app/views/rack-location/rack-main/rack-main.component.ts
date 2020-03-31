@@ -119,11 +119,51 @@ export class RackMainComponent implements OnInit {
     });
   }
 
+  checkAll(e) {
+    this.printArray = [];
+    if (e.target.checked) {
+      this.rackLocations.forEach(element => {
+        let ele = document.getElementById(element.id.toString()) as HTMLInputElement;
+        ele.checked = true;
+        this.printArray.push(element.rack_Location);
+      });
+    } else {
+      this.rackLocations.forEach(element => {
+        let ele = document.getElementById(element.id.toString()) as HTMLInputElement;
+        ele.checked = false;
+      });
+    }
+    console.log(">>", this.printArray);
+  }
+
+  checkEle(e) {
+    if (e.target.checked) {
+      this.printArray.push(e.target.value);
+    } else {
+      let i = this.printArray.findIndex(element => element === e.target.value);
+      console.log(i);
+      this.printArray.splice(i, 1);
+    }
+    let ele = document.getElementById("all") as HTMLInputElement;
+    if (this.printArray.length === this.rackLocations.length) {
+      ele.checked = true;
+    }else ele.checked = false;
+  }
+
   print(rack: RackLocation) {
+    this.printArray = [];
     this.printArray.push(rack.rack_Location);
-    console.log(this.printArray);
+    this.rackServcie.changeArr(this.printArray);
     this.router.navigate(["/rack/print"])
   }
 
-  
+  generateArr() {
+    if (this.printArray.length > 0) {
+      this.rackServcie.changeArr(this.printArray);
+      this.router.navigate(["/rack/print"]);
+    } else {
+      this.alertify.error("Please choose Rack Location!");
+    }
+    
+  }
 }

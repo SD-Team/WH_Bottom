@@ -13,27 +13,23 @@ import { RackMainComponent } from './rack-main/rack-main.component';
 import { RackFormComponent } from './rack-form/rack-form.component';
 import { RackPrintComponent } from './rack-print/rack-print.component';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
+import { NgxPrintModule } from "ngx-print";
 
 
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        NgxSpinnerModule,
-        RackRoutingModule,
-        PaginationModule,
-        NgSelectModule,
-        BsDatepickerModule,
-        NgxQRCodeModule,
-    ],
-    declarations: [
-        RackMainComponent,
-        RackFormComponent,
-        RackPrintComponent
-    ]
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgxSpinnerModule,
+    RackRoutingModule,
+    PaginationModule,
+    NgSelectModule,
+    BsDatepickerModule,
+    NgxQRCodeModule,
+    NgxPrintModule
+  ],
+  declarations: [RackMainComponent, RackFormComponent, RackPrintComponent]
 })
-
-export class RackModule {
-}
+export class RackModule {}

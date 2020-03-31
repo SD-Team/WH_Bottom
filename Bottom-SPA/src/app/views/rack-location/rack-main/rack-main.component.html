@@ -60,7 +60,7 @@
               </div>
 
               <div class="col-md-2">
-                <button type="button" class="btn btn-primary btn-block"><i class="fa fa-print"></i>
+                <button type="button" class="btn btn-primary btn-block" (click)="generateArr()"><i class="fa fa-print"></i>
                   Print QRCode</button>
               </div>
 
@@ -85,7 +85,7 @@
               <tr>
                 <th>
                   <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="all">
+                    <input type="checkbox" class="custom-control-input" (change)="checkAll($event)" id="all">
                     <label class="custom-control-label" for="all"></label>
                   </div>
                 </th>
@@ -101,7 +101,7 @@
               <tr *ngFor="let item of rackLocations; let index = index">
                 <td>
                   <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="{{item.id}}">
+                    <input type="checkbox" class="custom-control-input" [value]="item.rack_Location" id="{{item.id}}" (change)="checkEle($event)">
                     <label class="custom-control-label" for="{{item.id}}"></label>
                   </div>
                 </td>

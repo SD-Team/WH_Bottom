@@ -52,6 +52,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { JwtModule } from '@auth0/angular-jwt';
 import { PaginationModule, BsDatepickerModule } from 'ngx-bootstrap';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { NgxPrintModule } from "ngx-print";
 import { RackListResolver } from './_core/_resolvers/rack-list.resolver';
 
 export function tokenGetter() {
@@ -79,6 +80,7 @@ export function tokenGetter() {
     ChartsModule,
     NgxSpinnerModule,
     NgxQRCodeModule,
+    NgxPrintModule,
     BsDatepickerModule.forRoot(),
     JwtModule.forRoot({
       config: {
