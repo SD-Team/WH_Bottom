@@ -14,8 +14,13 @@
               <label class="col-md-2 col-form-label" for="fromDate"><strong class="float-right">Expected Delivery Date</strong></label>
               <div class="col-md-2">
                 <div class="input-group">
-                  <input type="text" placeholder="Datepicker" id="fromDate" class="form-control"
-                  bsDatepicker [bsValue]="fromDate" [bsConfig]="bsConfig">
+                  <input type="text" 
+                    placeholder="Start" 
+                    id="fromDate" class="form-control" 
+                    bsDatepicker [bsValue]="fromDate"
+                    [(ngModel)]="time_start"
+                    name="time_start"
+                    [bsConfig]="{isAnimated: true, dateInputFormat: 'YYYY/MM/DD'}">
                   <span class="input-group-append">
                     <button class="btn btn-primary" type="button" disabled><i class="fa fa-calendar"></i></button>
                   </span>
@@ -23,38 +28,39 @@
               </div>
               <div class="col-md-2">
                 <div class="input-group">
-                  <input type="text" placeholder="Datepicker" class="form-control" bsDatepicker [bsValue]="toDate" [bsConfig]="bsConfig">
+                  <input type="text" 
+                    placeholder="End" 
+                    class="form-control" 
+                    bsDatepicker 
+                    [bsValue]="toDate" 
+                    [(ngModel)]="time_end"
+                    name="time_end"
+                    [bsConfig]="{isAnimated: true, dateInputFormat: 'YYYY/MM/DD'}">
                   <span class="input-group-append">
                     <button class="btn btn-primary" type="button" disabled><i class="fa fa-calendar"></i></button>
                   </span>
                 </div>
               </div>
-              <label class="col-md-1 offset-md-1 col-form-label" for="audit_Type2_Name"><strong class="float-right">Supplier No </strong></label>
-              <div class="col-md-1">
-                <input type="text" name="audit_Type2_Name" class="form-control">
+              <label class="col-md-2 col-form-label" for="purchase_no"><strong class="float-right">Purchase No </strong></label>
+              <div class="col-md-2">
+                <input type="text" name="purchase_No" [(ngModel)]="purchase_No" placeholder="Enter Purchase No" class="form-control">
               </div>
               <div class="col-md-2">
-                <input type="text" name="nameSupplier" class="form-control" disabled>
+               
               </div>
             </div>
             <div class="form-group row">
-              <label class="col-md-2  col-form-label" for="type"><strong class="float-right">Type</strong></label>
+              <label class="col-md-2 col-form-label" for="Supplier No"><strong class="float-right">Supplier No</strong></label>
               <div class="col-md-2">
-                <select class="form-control" id="type" name="type">
-                  <option value="1">Receive Material</option>
-                  <option value="0">Missing Material</option>
-                </select>
+                <input type="text" name="supplierNo" [(ngModel)]="supplier_ID" class="form-control" placeholder="Enter Supplier No  ..">
               </div>
-              <label class="col-md-2 offset-md-2 col-form-label" for="version"><strong class="float-right">Purchase No</strong></label>
               <div class="col-md-2">
-                <input type="text" name="purchaseNo" class="form-control" placeholder="Enter Purchase No  ..">
+                <input type="text" [(ngModel)]="supplier_Name" disabled name="supplier_Name" class="form-control">
               </div>
-            </div>
-            <div class="form-group row">
               <label class="col-md-2 col-form-label" for="status"><strong class="float-right">Status</strong></label>
               <div class="col-md-2">
-                <select class="form-control" id="status" name="status">
-                  <option value="">All</option>
+                <select class="form-control" [(ngModel)]="status" id="status" name="status">
+                  <option value="all">All</option>
                   <option value="1">Closed</option>
                   <option value="0">Not Closed</option>
                 </select>
@@ -63,6 +69,9 @@
                 <button type="button" class="btn btn-success btn-block" (click)="search()"><i class="fa fa-search"></i>
                   Search</button>
               </div>
+            </div>
+            <div class="form-group row">
+              
             </div>
           </div>
         </form>
@@ -80,51 +89,43 @@
             <thead>
               <tr>
                 <th>Close</th>
-                <th>Type</th>
                 <th>Missing Mat# No</th>
                 <th>Plan_No</th>
                 <th>Purchase No</th>
-                <th>Unit</th>
-                <th>Batch</th>
                 <th>Model No</th>
                 <th>Model Name</th>
                 <th>Article</th>
                 <th>Supplier No</th>
                 <th>Supplier Name</th>
-                <th>Purchasing Qty</th>
-                <th>Received Qty</th>
-                <th>Balance Qty</th>
               </tr>
             </thead>
             <tbody >
-              <ng-container *ngFor="let item of results; let index = index">
+              <ng-container *ngFor="let item of materialLists; let index = index">
                 <tr>
-                  <td class="text-center vertical-middle" rowspan="2"><button type="button" class="btn btn-sm btn-primary">{{item.close}}</button></td>
-                  <td class="vertical-middle" rowspan="2"></td>
-                  <td class="vertical-middle" rowspan="2"></td>
-                  <td class="text-center vertical-middle" rowspan="2"><button type="button" class="btn btn-sm btn-primary">{{item.plan_no}}</button></td>
-                  <td>{{item.purchase_No}}</td>
-                  <td>{{item.unit}}</td>
-                  <td>{{item.Batch}}</td>
-                  <td>{{item.model_no}}</td>
-                  <td>{{item.model_name}}</td>
-                  <td>{{item.article}}</td>
-                  <td>{{item.supplier_no}}</td>
-                  <td>{{item.supplier_name}}</td>
-                  <td>{{item.purchasing_qty}}</td>
-                  <td>{{item.received_qty}}</td>
-                  <td>{{item.balance_qty}}</td>
+                  <td class="text-center vertical-middle" rowspan="2">{{item.status}}</td>
+                  <td class="text-center vertical-middle" rowspan="2">{{item.missing_No}}</td>
+                  <td class="text-center vertical-middle" rowspan="2">{{item.mO_No}}</td>
+                  <th class="text-center vertical-middle">{{item.purchase_No}}</th>
+                  <th class="text-center vertical-middle">{{item.model_No}}</th>
+                  <th class="text-center vertical-middle">{{item.model_Name}}</th>
+                  <th class="text-center vertical-middle">{{item.article}}</th>
+                  <th class="text-center vertical-middle">{{item.supplier_ID}}</th>
+                  <th class="text-center vertical-middle">{{item.supplier_Name}}</th>
                 </tr>
                 <tr>
-                  <td></td>
-                  <td></td>
-                  <td colspan="13" class="text-center">{{item.text}}</td>
+                  <td class="text-center vertical-middle" colspan="6">{{item.material_Name}}</td>
                 </tr>
               </ng-container>
             </tbody>
           </table>
-          <div class="d-flex">
+          <div class="d-flex float-right">
           </div>
+        </div>
+        <div class="d-flex">
+          <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [(ngModel)]="pagination.currentPage"
+          [itemsPerPage]="pagination.itemsPerPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;"
+          nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [maxSize]=5>
+          </pagination>
         </div>
       </div>
     </div>

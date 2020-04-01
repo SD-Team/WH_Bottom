@@ -135,15 +135,6 @@ export const routes: Routes = [
                  )
              },
              {
-              path: "receiving",
-              // runGuardsAndResolvers: 'always',
-              // canActivate: [AuthGuard],
-              loadChildren: () =>
-                import("./views/receiving/receiving.module").then(
-                  m => m.ReceivingModule
-                )
-            },
-             {
                path: "icons",
                loadChildren: () =>
                  import("./views/icons/icons.module").then(m => m.IconsModule)

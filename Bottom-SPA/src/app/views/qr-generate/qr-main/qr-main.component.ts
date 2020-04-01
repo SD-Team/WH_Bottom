@@ -56,11 +56,8 @@ export class QrMainComponent implements OnInit {
     if (this.time_start === undefined || this.time_end === undefined) {
       this.alertifyService.error('Please option start and end time');
     } else {
-       // tslint:disable-next-line:prefer-const
       let form_date = new Date(this.time_start).toLocaleDateString();
-       // tslint:disable-next-line:prefer-const
       let to_date = new Date(this.time_end).toLocaleDateString();
-      // tslint:disable-next-line:prefer-const
       let object = {
         supplier_ID: this.supplier_ID,
         mO_No: this.mO_No,

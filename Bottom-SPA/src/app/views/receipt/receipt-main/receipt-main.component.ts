@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Receipt } from '../../../_core/_models/receipt';
 import { BsDatepickerConfig } from 'ngx-bootstrap';
+import { MaterialService } from '../../../_core/_services/material.service';
+import { Router } from '@angular/router';
+import { AlertifyService } from '../../../_core/_services/alertify.service';
+import { Pagination, PaginatedResult } from '../../../_core/_models/pagination';
+import { PackingListService } from '../../../_core/_services/packing-list.service';
+import { Material } from '../../../_core/_models/material';
 
 @Component({
   selector: 'app-receipt-main',
@@ -9,93 +15,67 @@ import { BsDatepickerConfig } from 'ngx-bootstrap';
 })
 export class ReceiptMainComponent implements OnInit {
   bsConfig: Partial<BsDatepickerConfig>;
+  pagination: Pagination;
+  time_start: string;
+  time_end: string;
   fromDate = new Date();
   toDate = new Date();
-  results = [];
-  constructor() { }
+  purchase_No: string;
+  supplier_ID: string;
+  supplier_Name: string;
+  materialLists: Material[] = [];
+  status: string = 'all';
+  constructor(private materialService: MaterialService,
+              private packingListService: PackingListService,
+              private router: Router,
+              private alertifyService: AlertifyService) { }
 
   ngOnInit() {
+    this.pagination = {
+      currentPage: 1,
+      itemsPerPage: 3,
+      totalItems: 0,
+      totalPages: 0
+    };
+    // Lấy ngày hiện tại
+    const timeNow = new Date().getFullYear().toString() +
+                    '/' + (new Date().getMonth() + 1).toString() +
+                    '/' + new Date().getDate().toString();
+    this.time_start = timeNow;
+    this.time_end = timeNow;
     this.bsConfig = Object.assign({}, { containerClass: 'theme-blue' });
   }
-
-  search() {
-    // tslint:disable-next-line:prefer-const
-    let a = new Receipt();
-    a.close = 'N';
-    a.plan_no = '0123456789';
-    a.purchase_No = 'PW19B08MEC';
-    a.mat_no = '001';
-    a.mat_name = 'ABC';
-    a.unit = 'pair';
-    a.Batch = -1;
-    a.model_no = 'JAE06';
-    a.model_name = 'FALCON W';
-    a.article = 'EH3522';
-    a.supplier_no = 'VB02';
-    a.supplier_name = 'YUE SHENG';
-    a.purchasing_qty = 1920;
-    a.received_qty = 0;
-    a.balance_qty = 1920;
-    a.text = 'SFCD27W00A    -   (03003)(016 55C CM LS3)A8L5/MIDSOLE';
-    this.results.push(a);
-    // tslint:disable-next-line:prefer-const
-    let b = new Receipt();
-    b.close = 'N';
-    b.plan_no = '01233434265';
-    b.purchase_No = 'DG49B78SDF';
-    b.mat_no = '001';
-    b.mat_name = 'ABC';
-    b.unit = 'pair';
-    b.Batch = -3;
-    b.model_no = 'JAE06';
-    b.model_name = 'FALCON W';
-    b.article = 'EH3522';
-    b.supplier_no = 'VB02';
-    b.supplier_name = 'YUE SHENG';
-    b.purchasing_qty = 1000;
-    b.received_qty = 0;
-    b.balance_qty = 1000;
-    b.text = 'SFCD27W00A    -   (03003)(016 55C CM LS3)A8L5/MIDSOLE';
-    this.results.push(b);
-    console.log(this.results);
-    // this.results = [
-    //   {
-    //     close: 'N',
-    //     plan_no : '0123456789',
-    //     purchase_No: 'PW19B08MEC',
-    //     mat_no: '001',
-    //     mat_name: 'ABC',
-    //     unit: 'pair',
-    //     Batch: -1,
-    //     model_no: 'JAE06',
-    //     model_name: 'FALCON W',
-    //     article: 'EH3522',
-    //     supplier_no: 'VB02',
-    //     supplier_name: 'YUE SHENG',
-    //     purchasing_qty: 1920,
-    //     received_qty: 0,
-    //     balance_qty: 1920,
-    //     text: 'SFCD27W00A    -   (03003)(016 55C CM LS3)A8L5/MIDSOLE'
-    //   },
-    //   {
-    //     close: 'Y',
-    //     plan_no: '0123824987',
-    //     purchase_No: 'PW19B0FEYC',
-    //     mat_no: '001',
-    //     mat_name: 'CCV',
-    //     unit: 'pair',
-    //     Batch: -2,
-    //     model_no: 'JAE06',
-    //     model_name: 'FALCON W',
-    //     article: 'EH3522',
-    //     supplier_no: 'VB02',
-    //     supplier_name: 'YUE SHENG',
-    //     purchasing_qty: 350,
-    //     received_qty: 0,
-    //     balance_qty: 350,
-    //     text: 'SFCD27W00A    -   (03003)(016 55C CM LS3)A8L5/MIDSOLE',
-    //   }
-    // ]
+  changeSupplier() {
+    if (this.supplier_ID !== undefined) {
+      this.packingListService.findBySupplier(this.supplier_ID).subscribe(res => {
+        this.supplier_Name = res.supplier_Name;
+      });
+    }
   }
-
+  search() {
+    if (this.time_start === undefined || this.time_end === undefined) {
+      this.alertifyService.error('Please option start and end time');
+    } else {
+      let form_date = new Date(this.time_start).toLocaleDateString();
+      let to_date = new Date(this.time_end).toLocaleDateString();
+      let object = {
+        supplier_ID: this.supplier_ID,
+        purchase_No: this.purchase_No,
+        from_Date: form_date,
+        to_Date: to_date,
+        status: this.status
+      };
+      this.materialService.search(this.pagination.currentPage , this.pagination.itemsPerPage, object)
+      .subscribe((res: PaginatedResult<Material[]>) => {
+        this.materialLists = res.result;
+        this.pagination = res.pagination;
+      }, error => {
+        this.alertifyService.error(error);
+      });
+    }
+  }
+  pageChanged(event: any): void {
+    this.pagination.currentPage = event.page;
+    this.search();
+  }
 }

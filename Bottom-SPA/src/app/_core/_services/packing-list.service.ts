@@ -20,7 +20,6 @@ export class PackingListService {
         params = params.append('pageNumber', page);
         params = params.append('pageSize', itemsPerPage);
       }
-      // tslint:disable-next-line:prefer-const
       let url = this.baseUrl + 'search/';
       return this.http.post<any>(url, packingSearch, {observe: 'response', params})
       .pipe(

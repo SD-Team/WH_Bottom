@@ -12,6 +12,7 @@ namespace Bottom_API.Data
         public DbSet<WMSB_PackingList_Detail> WMSB_PackingList_Detail {get;set;}
         public DbSet<BTW_Packing_Missing> BTW_Packing_Missing {get;set;}
         public DbSet<WMSB_Material_Purchase> WMSB_Material_Purchase {get;set;}
+        public DbSet<WMSB_Material_Missing> WMSB_Material_Missing {get;set;}
         public DbSet<WMSB_QRCode_Main> WMSB_QRCode_Main {get;set;}
         public DbSet<WMSB_QRCode_Detail> WMSB_QRCode_Detail {get;set;}
 
