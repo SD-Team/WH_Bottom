@@ -11,17 +11,14 @@
         <form class="form-horizontal" #addAuditTypeForm="ngForm">
           <div class="card-body">
             <div class="form-group row">
-              <label class="col-md-1 col-form-label" for="fromDate"><strong class="float-right">Receive No</strong></label>
+              <label class="col-md-1 col-form-label" for="Receive No"><strong class="float-right">Receive No</strong></label>
               <div class="col-md-3">
-                <select class="form-control" 
-                (change)= "changeForm()"
-                [(ngModel)]="type" 
-                id="status" name="status">
+                <select (change)="changeForm()" class="form-control" [(ngModel)]="type" id="status" name="status">
                   <option value="No Batch">No Batch</option>
                   <option value="Batches">Batches</option>
                 </select>
               </div>
-              <label class="col-md-1 col-form-label" for="purchaseNo"><strong
+              <label class="col-md-1 col-form-label" for="Delivery No"><strong
                   class="float-right">Delivery No </strong></label>
               <div class="col-md-3">
                 <input type="text" name="Delivery No" class="form-control" disabled>
@@ -65,16 +62,6 @@
                     </tr>
                     <tr class="text-center">
                       <td>Receive Qty</td>
-                      <td><input type="text" class="input-table"></td>
-                      <td><input type="text" class="input-table"></td>
-                      <td><input type="text" class="input-table"></td>
-                      <td><input type="text" class="input-table"></td>
-                      <td><input type="text" class="input-table"></td>
-                      <td><input type="text" class="input-table"></td>
-                      <td><input type="text" class="input-table"></td>
-                    </tr>
-                    <tr class="text-center">
-                      <td>-1</td>
                       <td><input type="text" disabled class="input-table"></td>
                       <td><input type="text" disabled class="input-table"></td>
                       <td><input type="text" disabled class="input-table"></td>
@@ -84,7 +71,27 @@
                       <td><input type="text" disabled class="input-table"></td>
                     </tr>
                     <tr class="text-center">
-                      <td>-2</td>
+                      <td>
+                        <div style="display: flex;">
+                          <button style="width: 70px;" class="btn btn-pill btn-block btn-secondary">Insert</button>
+                          <span style="padding-left: 25px;">-1</span>
+                        </div>
+                        </td>
+                      <td><input type="text" disabled class="input-table"></td>
+                      <td><input type="text" disabled class="input-table"></td>
+                      <td><input type="text" disabled class="input-table"></td>
+                      <td><input type="text" disabled class="input-table"></td>
+                      <td><input type="text" disabled class="input-table"></td>
+                      <td><input type="text" disabled class="input-table"></td>
+                      <td><input type="text" disabled class="input-table"></td>
+                    </tr>
+                    <tr class="text-center">
+                      <td>
+                        <div style="display: flex;">
+                          <button style="width: 70px;" class="btn btn-pill btn-block btn-secondary">Insert</button>
+                          <span style="padding-left: 25px;">-2</span>
+                        </div>
+                        </td>
                       <td><input type="text" disabled  class="input-table"></td>
                       <td><input type="text" disabled class="input-table"></td>
                       <td><input type="text" disabled class="input-table"></td>
@@ -94,7 +101,12 @@
                       <td><input type="text" disabled class="input-table"></td>
                     </tr>
                     <tr class="text-center">
-                      <td>-3</td>
+                      <td>
+                        <div style="display: flex;">
+                          <button style="width: 70px;" class="btn btn-pill btn-block btn-secondary">Insert</button>
+                          <span style="padding-left: 25px;">-3</span>
+                        </div>
+                        </td>
                       <td><input type="text" disabled class="input-table"></td>
                       <td><input type="text" disabled class="input-table"></td>
                       <td><input type="text" disabled class="input-table"></td>
@@ -111,6 +123,7 @@
 
           </div>
         </form>
+
         <div class="card-footer">
           <button type="button" class="btn btn-danger"><i class="fa fa-ban"></i> Cancel</button>
           <button type="button" class="btn btn-success" [disabled]="!addAuditTypeForm.valid"><i

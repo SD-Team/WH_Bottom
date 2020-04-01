@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { ReceiptMainComponent } from './receipt-main/receipt-main.component';
 import { RecordComponent } from './record/record.component';
 import { RecordFormComponent } from './record-form/record-form.component';
+import { RecordFormBatchesComponent } from './record-form-batches/record-form-batches.component';
 
 const routes: Routes = [
     {
@@ -33,6 +34,13 @@ const routes: Routes = [
                     {
                         path: 'add',
                         component: RecordFormComponent,
+                        data: {
+                            title: 'Add Record'
+                        }
+                    },
+                    {
+                        path: 'add-batches',
+                        component: RecordFormBatchesComponent,
                         data: {
                             title: 'Add Record'
                         }

@@ -11,6 +11,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { ReceiptMainComponent } from './receipt-main/receipt-main.component';
 import { RecordComponent } from './record/record.component';
 import { RecordFormComponent } from './record-form/record-form.component';
+import { RecordFormBatchesComponent } from './record-form-batches/record-form-batches.component';
 
 @NgModule({
     imports: [
@@ -26,7 +27,8 @@ import { RecordFormComponent } from './record-form/record-form.component';
     declarations: [
         ReceiptMainComponent,
         RecordComponent,
-        RecordFormComponent
+        RecordFormComponent,
+        RecordFormBatchesComponent
     ]
 })
 

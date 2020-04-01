@@ -7,6 +7,7 @@ import { AlertifyService } from '../../../_core/_services/alertify.service';
 import { Pagination, PaginatedResult } from '../../../_core/_models/pagination';
 import { PackingListService } from '../../../_core/_services/packing-list.service';
 import { Material } from '../../../_core/_models/material';
+import { MaterialModel } from '../../../_core/_viewmodels/material-model';
 
 @Component({
   selector: 'app-receipt-main',
@@ -23,7 +24,7 @@ export class ReceiptMainComponent implements OnInit {
   purchase_No: string;
   supplier_ID: string;
   supplier_Name: string;
-  materialLists: Material[] = [];
+  materialLists: MaterialModel[] = [];
   status: string = 'all';
   constructor(private materialService: MaterialService,
               private packingListService: PackingListService,
@@ -52,6 +53,28 @@ export class ReceiptMainComponent implements OnInit {
       });
     }
   }
+  // search() {
+  //   if (this.time_start === undefined || this.time_end === undefined) {
+  //     this.alertifyService.error('Please option start and end time');
+  //   } else {
+  //     let form_date = new Date(this.time_start).toLocaleDateString();
+  //     let to_date = new Date(this.time_end).toLocaleDateString();
+  //     let object = {
+  //       supplier_ID: this.supplier_ID,
+  //       purchase_No: this.purchase_No,
+  //       from_Date: form_date,
+  //       to_Date: to_date,
+  //       status: this.status
+  //     };
+  //     this.materialService.search(this.pagination.currentPage , this.pagination.itemsPerPage, object)
+  //     .subscribe((res: PaginatedResult<MaterialModel[]>) => {
+  //       this.materialLists = res.result;
+  //       this.pagination = res.pagination;
+  //     }, error => {
+  //       this.alertifyService.error(error);
+  //     });
+  //   }
+  // }
   search() {
     if (this.time_start === undefined || this.time_end === undefined) {
       this.alertifyService.error('Please option start and end time');
@@ -65,14 +88,17 @@ export class ReceiptMainComponent implements OnInit {
         to_Date: to_date,
         status: this.status
       };
-      this.materialService.search(this.pagination.currentPage , this.pagination.itemsPerPage, object)
-      .subscribe((res: PaginatedResult<Material[]>) => {
-        this.materialLists = res.result;
-        this.pagination = res.pagination;
+      this.materialService.search(object)
+      .subscribe(res => {
+        this.materialLists = res;
       }, error => {
         this.alertifyService.error(error);
       });
     }
+  }
+  changePageAdd(materialModel) {
+    this.materialService.changeMaterialModel(materialModel);
+    this.router.navigate(['receipt/record']);
   }
   pageChanged(event: any): void {
     this.pagination.currentPage = event.page;

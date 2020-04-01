@@ -46,9 +46,13 @@ export class QrMainComponent implements OnInit {
     this.bsConfig = Object.assign({}, { containerClass: 'theme-blue' });
   }
   changeSupplier() {
-    if (this.supplier_ID !== undefined) {
+    if (this.supplier_ID !== undefined && this.supplier_ID !== '') {
       this.packingListService.findBySupplier(this.supplier_ID).subscribe(res => {
-        this.supplier_Name = res.supplier_Name;
+        if (res === null) {
+          this.supplier_Name = '';
+        } else {
+          this.supplier_Name = res.supplier_Name;
+        }
       });
     }
   }

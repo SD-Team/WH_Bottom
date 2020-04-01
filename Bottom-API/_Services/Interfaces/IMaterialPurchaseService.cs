@@ -8,6 +8,8 @@ namespace Bottom_API._Services.Interfaces
 {
     public interface IMaterialPurchaseService : IBottomService<Material_Dto>
     {
-        Task<PagedList<Material_Dto>> SearchByModel(PaginationParams param, MaterialSearchViewModel model);
+        // Task<PagedList<MaterialMainViewModel>> SearchByModel(PaginationParams param, MaterialSearchViewModel model);
+        Task<List<MaterialMainViewModel>> SearchByModel(MaterialSearchViewModel model);
+        Task<object> MaterialMerging(string Purchase_No);
     }
 }

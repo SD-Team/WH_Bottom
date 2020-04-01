@@ -46,13 +46,13 @@
                 <input type="text" name="purchase_No" [(ngModel)]="purchase_No" placeholder="Enter Purchase No" class="form-control">
               </div>
               <div class="col-md-2">
-               
+                
               </div>
             </div>
             <div class="form-group row">
               <label class="col-md-2 col-form-label" for="Supplier No"><strong class="float-right">Supplier No</strong></label>
               <div class="col-md-2">
-                <input type="text" name="supplierNo" [(ngModel)]="supplier_ID" class="form-control" placeholder="Enter Supplier No  ..">
+                <input type="text" name="supplierNo" [(ngModel)]="supplier_ID" (change)="changeSupplier()" class="form-control" placeholder="Enter Supplier No  ..">
               </div>
               <div class="col-md-2">
                 <input type="text" [(ngModel)]="supplier_Name" disabled name="supplier_Name" class="form-control">
@@ -61,8 +61,8 @@
               <div class="col-md-2">
                 <select class="form-control" [(ngModel)]="status" id="status" name="status">
                   <option value="all">All</option>
-                  <option value="1">Closed</option>
-                  <option value="0">Not Closed</option>
+                  <option value="Y">Closed</option>
+                  <option value="N">Not Closed</option>
                 </select>
               </div>
               <div class="col-md-2">
@@ -102,9 +102,11 @@
             <tbody >
               <ng-container *ngFor="let item of materialLists; let index = index">
                 <tr>
-                  <td class="text-center vertical-middle" rowspan="2">{{item.status}}</td>
+                  <td class="text-center vertical-middle" rowspan="2"><button class="btn btn-primary">{{item.status}}</button></td>
                   <td class="text-center vertical-middle" rowspan="2">{{item.missing_No}}</td>
-                  <td class="text-center vertical-middle" rowspan="2">{{item.mO_No}}</td>
+                  <td class="text-center vertical-middle" rowspan="2"><button
+                    (click)="changePageAdd(item)"
+                     class="btn btn-primary">{{item.mO_No}}</button></td>
                   <th class="text-center vertical-middle">{{item.purchase_No}}</th>
                   <th class="text-center vertical-middle">{{item.model_No}}</th>
                   <th class="text-center vertical-middle">{{item.model_Name}}</th>
@@ -121,12 +123,12 @@
           <div class="d-flex float-right">
           </div>
         </div>
-        <div class="d-flex">
+        <!-- <div class="d-flex">
           <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [(ngModel)]="pagination.currentPage"
           [itemsPerPage]="pagination.itemsPerPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;"
           nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [maxSize]=5>
           </pagination>
-        </div>
+        </div> -->
       </div>
     </div>
     <!--/.col-->

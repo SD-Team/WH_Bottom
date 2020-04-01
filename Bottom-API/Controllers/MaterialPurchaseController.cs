@@ -22,10 +22,20 @@ namespace Bottom_API.Controllers
         }
 
         [HttpPost("search")]
-        public async Task<IActionResult> SearchByModel([FromQuery]PaginationParams param ,MaterialSearchViewModel model) {
-            var lists = await _server.SearchByModel(param, model);
-            Response.AddPagination(lists.CurrentPage, lists.PageSize, lists.TotalCount, lists.TotalPages);
+        // public async Task<IActionResult> SearchByModel([FromQuery]PaginationParams param ,MaterialSearchViewModel model) {
+        //     var lists = await _server.SearchByModel(param, model);
+        //     Response.AddPagination(lists.CurrentPage, lists.PageSize, lists.TotalCount, lists.TotalPages);
+        //     return Ok(lists);
+        // }
+        public async Task<IActionResult> SearchByModel([FromBody]MaterialSearchViewModel model) {
+            var lists = await _server.SearchByModel(model);
             return Ok(lists);
+        }
+
+        [HttpGet("search/{Purchase_No}")]
+        public async Task<IActionResult> FunctionTest(string Purchase_No) {
+            var data = await _server.MaterialMerging(Purchase_No);
+            return Ok(data);   
         }
     }
 }
