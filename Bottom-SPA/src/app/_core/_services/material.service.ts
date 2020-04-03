@@ -36,7 +36,7 @@ export class MaterialService {
   //   );
   // }
   search(materialSearch: MaterialSearch): Observable<MaterialModel[]> {
-    return this.http.post<any>(this.baseUrl + 'materialPurchase/search/', materialSearch);
+    return this.http.post<any>(this.baseUrl + 'receiving/search/', materialSearch);
   }
   changeMaterialModel(materialModel: MaterialModel) {
     this.materialSource.next(materialModel);
