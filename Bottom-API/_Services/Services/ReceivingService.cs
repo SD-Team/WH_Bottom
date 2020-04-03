@@ -42,11 +42,11 @@ namespace Bottom_API._Services.Services
         public async Task<object> MaterialMerging(MaterialMainViewModel model)
         {
             var listMaterial = new List<Material_Dto>();
-            if (model.Missing_No == "") {
+            if (model.Missing_No != "") {
                 listMaterial = await _repoMissing.GetAll().ProjectTo<Material_Dto>(_configMapper)
                 .Where(x => x.Purchase_No.Trim() == model.Purchase_No.Trim()).ToListAsync();
             } else {
-                await _repoPurchase.GetAll().ProjectTo<Material_Dto>(_configMapper)
+                listMaterial = await _repoPurchase.GetAll().ProjectTo<Material_Dto>(_configMapper)
                 .Where(x => x.Purchase_No.Trim() == model.Purchase_No.Trim()).ToListAsync();
             }
             listMaterial.OrderByDescending(x => x.MO_Seq);
