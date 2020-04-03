@@ -14,6 +14,9 @@ namespace Bottom_API.Helpers.AutoMapper
             CreateMap<CodeID_Detail_Dto, WMS_Code>();
             CreateMap<RackLocation_Main_Dto, WMSB_RackLocation_Main>();
             CreateMap<QRCode_Detail_Dto, WMSB_QRCode_Detail>();
+            CreateMap<Receiving_Dto, WMSB_Material_Purchase>();
+            CreateMap<Receiving_Dto, WMSB_Material_Missing>();
+
             CreateMap<HP_Material_Dto, HP_Material_j13>();
             CreateMap<HP_Style_Dto, HP_Style_j08>();
             CreateMap<HP_Vendor_Dto, HP_Vendor_u01>();

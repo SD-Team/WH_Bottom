@@ -41,7 +41,7 @@ namespace Bottom_API.Models
         public string HP_User {get;set;}
         public string Biz_Tflag {get;set;}
         public DateTime? HP_Time {get;set;}
-        public string Update_By {get;set;}
-        public DateTime? Update_Time {get;set;}
+        public string Updated_By {get;set;}
+        public DateTime? Updated_Time {get;set;}
     }
 }

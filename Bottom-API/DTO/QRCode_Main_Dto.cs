@@ -12,7 +12,8 @@ namespace Bottom_API.DTO
         public DateTime? Invalid_Date {get;set;}
         public DateTime? Updated_Time {get;set;}
         public string Updated_By {get;set;}
-        public QRCode_Main_Dto() {
+        public QRCode_Main_Dto() 
+        {
             this.Updated_Time = DateTime.Now;
         }
     }
