@@ -41,4 +41,7 @@ export class MaterialService {
   changeMaterialModel(materialModel: MaterialModel) {
     this.materialSource.next(materialModel);
   }
+  searchByPurchase(model: MaterialModel) {
+    return this.http.post<any>(this.baseUrl + 'receiving/searchTable/', model);
+  }
 }

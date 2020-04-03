@@ -33,82 +33,32 @@
                   <thead>
                     <tr class="text-center">
                       <th>Size</th>
-                      <th>03.5</th>
-                      <th>04</th>
-                      <th>05</th>
-                      <th>05.5</th>
-                      <th>06</th>
-                      <th>06.5</th>
-                      <th>07</th>
+                      <th *ngFor="let item of materialMerging"> {{item.order_Size}}</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr class="text-center">
                       <td>Purchase Qty</td>
-                      <td>300</td>
-                      <td>220</td>
-                      <td>100</td>
-                      <td>100</td>
-                      <td>300</td>
-                      <td>100</td>
-                      <td>50</td>
+                      <th *ngFor="let item of materialMerging"> {{item.purchase_Qty}}</th>
                     </tr>
                     <tr class="text-center">
                       <td>Accumated Qty</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
+                      <td *ngFor="let item of materialMerging">0</td>
                     </tr>
                     <tr class="text-center">
-                      <td>Receive Qty</td>
-                      <td><input type="text" class="input-table"></td>
-                      <td><input type="text" class="input-table"></td>
-                      <td><input type="text" class="input-table"></td>
-                      <td><input type="text" class="input-table"></td>
-                      <td><input type="text" class="input-table"></td>
-                      <td><input type="text" class="input-table"></td>
-                      <td><input type="text" class="input-table"></td>
+                      <td>Delivery Qty</td>
+                      <td *ngFor="let item of materialMerging"><input type="text" id="{{item.order_Size}}" class="input-table"></td>
                     </tr>
-                    <tr class="text-center">
-                      <td>-1</td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                    </tr>
-                    <tr class="text-center">
-                      <td>-2</td>
-                      <td><input type="text" disabled  class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                    </tr>
-                    <tr class="text-center">
-                      <td>-3</td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
+                    <tr *ngFor="let item of orderSizeByBatch" class="text-center">
+                      <td>{{item.mO_Seq}}</td>
+                      <td *ngFor="let item1 of item.purchase_Qty">
+                        <input value="{{item1}}" type="text" disabled class="input-table">
+                    </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              
             </div>
-
           </div>
         </form>
         <div class="card-footer">

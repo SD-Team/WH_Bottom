@@ -22,9 +22,9 @@ namespace Bottom_API.Controllers
             return Ok(lists);
         }
 
-        [HttpGet("search/{Purchase_No}")]
-        public async Task<IActionResult> FunctionTest(string Purchase_No) {
-            var data = await _service.MaterialMerging(Purchase_No);
+        [HttpPost("searchTable")]
+        public async Task<IActionResult> SearchByPurchase([FromBody]MaterialMainViewModel model) {
+            var data = await _service.MaterialMerging(model);
             return Ok(data);   
         }
     }

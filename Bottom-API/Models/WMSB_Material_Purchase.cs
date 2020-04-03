@@ -16,6 +16,7 @@ namespace Bottom_API.Models
         public string MO_Seq {get;set;}
         [Key][Column(Order = 3)]
         public string Order_Size {get;set;}
+        [Key][Column(Order = 4)]
         public string Material_ID {get;set;}
         public string Model_Size {get;set;}
         public string Tool_Size {get;set;}

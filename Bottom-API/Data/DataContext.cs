@@ -15,6 +15,7 @@ namespace Bottom_API.Data
         public DbSet<WMSB_Material_Missing> WMSB_Material_Missing {get;set;}
         public DbSet<WMSB_QRCode_Main> WMSB_QRCode_Main {get;set;}
         public DbSet<WMSB_QRCode_Detail> WMSB_QRCode_Detail {get;set;}
+        public DbSet<VM_WMSB_Material_Purchase> VM_WMSB_Material_Purchase {get;set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,6 +23,9 @@ namespace Bottom_API.Data
             modelBuilder.Entity<BTW_Packing_Missing>().HasKey(x => new{ x.Missing_No, x.Plan_No });
             modelBuilder.Entity<WMSB_Material_Purchase>().HasKey(x => new {x.Purchase_No, x.MO_No, x.MO_Seq, x.Order_Size, x.Material_ID});
             modelBuilder.Entity<WMSB_QRCode_Main>().HasKey(x => new {x.QRCode_ID, x.QRCode_Version});
+            modelBuilder.Entity<VM_WMSB_Material_Purchase>().HasKey(x => new {
+                x.Plan_No, x.Purchase_No, x.Mat_
+            });
         }
     }
 }

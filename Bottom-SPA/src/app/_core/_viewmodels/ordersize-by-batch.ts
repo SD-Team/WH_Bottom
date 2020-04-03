@@ -1,4 +1,4 @@
 export interface OrderSizeByBatch {
-        MO_Seq: string;
-        Purchase_Qty: number;
+        mO_Seq: string;
+        purchase_Qty: number[];
 }

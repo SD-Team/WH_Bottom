@@ -19,11 +19,16 @@ namespace Bottom_API._Services.Services
         private readonly MapperConfiguration _configMapper;
         private readonly IMaterialPurchaseRepository _repoPurchase;
         private readonly IMaterialMissingRepository _repoMissing;
-
-        public ReceivingService(IMaterialPurchaseRepository repoPurchase, IMaterialMissingRepository repoMissing, IMapper mapper, MapperConfiguration configMapper)
+        private readonly IMaterialViewRepository _repoMaterialView;
+        public ReceivingService(IMaterialPurchaseRepository repoPurchase,
+                                IMaterialMissingRepository repoMissing,
+                                IMaterialViewRepository repoMaterialView,
+                                IMapper mapper, 
+                                MapperConfiguration configMapper)
         {
             _repoMissing = repoMissing;
             _repoPurchase = repoPurchase;
+            _repoMaterialView = repoMaterialView;
             _configMapper = configMapper;
             _mapper = mapper;
 
@@ -34,15 +39,16 @@ namespace Bottom_API._Services.Services
             throw new System.NotImplementedException();
         }
 
-        public async Task<object> MaterialMerging(string Purchase_No)
+        public async Task<object> MaterialMerging(MaterialMainViewModel model)
         {
-            var materialPurchase = await _repoPurchase.GetAll().ProjectTo<Material_Dto>(_configMapper)
-                .Where(x => x.Purchase_No.Trim() == Purchase_No.Trim()).ToListAsync();
-            var materialMissing = await _repoMissing.GetAll().ProjectTo<Material_Dto>(_configMapper)
-                .Where(x => x.Purchase_No.Trim() == Purchase_No.Trim()).ToListAsync();
             var listMaterial = new List<Material_Dto>();
-            listMaterial.AddRange(materialPurchase);
-            listMaterial.AddRange(materialMissing);
+            if (model.Missing_No == "") {
+                listMaterial = await _repoMissing.GetAll().ProjectTo<Material_Dto>(_configMapper)
+                .Where(x => x.Purchase_No.Trim() == model.Purchase_No.Trim()).ToListAsync();
+            } else {
+                await _repoPurchase.GetAll().ProjectTo<Material_Dto>(_configMapper)
+                .Where(x => x.Purchase_No.Trim() == model.Purchase_No.Trim()).ToListAsync();
+            }
             listMaterial.OrderByDescending(x => x.MO_Seq);
             var listBatch = listMaterial.GroupBy(x => x.MO_Seq).Select(y => new {
                 MO_Seq = y.First().MO_Seq
@@ -102,55 +108,57 @@ namespace Bottom_API._Services.Services
         }
         public async Task<List<MaterialMainViewModel>> SearchByModel(MaterialSearchViewModel model)
         {
+            var listMaterialView = await _repoMaterialView.GetAll().ProjectTo<Material_View_Dto>(_configMapper).ToListAsync();
             var materialPurchaseList = await _repoPurchase.GetAll().ProjectTo<Material_Dto>(_configMapper)
             .Where(x => x.Confirm_Delivery >= Convert.ToDateTime(model.From_Date + " 00:00") &&
-                        x.Confirm_Delivery <= Convert.ToDateTime(model.To_Date + " 00:00"))
-            .Select(x => new MaterialMainViewModel() {
-                Status = x.Status,
-                Material_ID = x.Material_ID,
-                Missing_No = "",
-                MO_No = x.MO_No,
-                Purchase_No = x.Purchase_No,
-                Model_No = "",
-                Model_Name = "",
-                Article = "",
-                Material_Name = "",
-                Supplier_ID = x.Supplier_ID,
-                Supplier_Name = "",
-            }).Distinct().ToListAsync();
+                        x.Confirm_Delivery <= Convert.ToDateTime(model.To_Date + " 00:00")).Select(x => new {
+                            Purchase_No = x.Purchase_No,
+                            Status = x.Status,
+                            Missing_No = ""
+                        }).Distinct().ToListAsync();
             var materialMissingList = await _repoMissing.GetAll().ProjectTo<Material_Dto>(_configMapper)
             .Where(x => x.Confirm_Delivery >= Convert.ToDateTime(model.From_Date + " 00:00") &&
                         x.Confirm_Delivery <= Convert.ToDateTime(model.To_Date + " 00:00"))
-            .Select(x => new MaterialMainViewModel() {
-                Status = x.Status,
-                Material_ID = x.Material_ID,
-                Material_Name = x.Material_Name,
-                Missing_No = x.Missing_No,
-                MO_No = x.MO_No,
-                Purchase_No = x.Purchase_No,
-                Model_No = x.Model_No,
-                Model_Name = x.Model_Name,
-                Article = x.Article,
-                Supplier_ID = x.Supplier_ID,
-                Supplier_Name = x.Supplier_Name,
-            }).Distinct().ToListAsync();
-            var lists = new List<MaterialMainViewModel>();
-            lists.AddRange(materialPurchaseList);
-            lists.AddRange(materialMissingList);
+                        .Select(x => new {
+                            Purchase_No = x.Purchase_No,
+                            Status = x.Status,
+                            Missing_No = x.Missing_No
+                        }).Distinct().ToListAsync();
+            foreach (var item in materialMissingList)
+            {
+                materialPurchaseList.Add(item);
+            }
+            var listMaterial = (from a in materialPurchaseList join b in listMaterialView
+                                on a.Purchase_No.Trim() equals b.Purchase_No.Trim()
+                                select new MaterialMainViewModel {
+                                    Status = a.Status,
+                                    Material_ID = b.Mat_,
+                                    Material_Name = b.Mat__Name,
+                                    Missing_No = a.Missing_No == null? "" : a.Missing_No,
+                                    MO_No = b.Plan_No,
+                                    Purchase_No = a.Purchase_No,
+                                    Model_No = b.Model_No,
+                                    Model_Name = b.Model_Name,
+                                    Article = b.Article,
+                                    Supplier_ID = b.Supplier_No,
+                                    Supplier_Name = b.Supplier_Name
+                                }).ToList();
+            // var lists = new List<MaterialMainViewModel>();
+            // lists.AddRange(materialPurchaseList);
+            // lists.AddRange(materialMissingList);
             // var list2 =  Queryable.Union(test1.AsQueryable(), test2.AsQueryable());
             // var list4 = list2.AsQueryable();
             // var list3 = Queryable.Concat(materialPurchaseList.AsQueryable(),materialMissingList.AsQueryable());
             if(model.Purchase_No != null && model.Purchase_No != "") {
-                lists = lists.Where(x => x.Purchase_No.Trim() == model.Purchase_No.Trim()).ToList();
+                listMaterial = listMaterial.Where(x => x.Purchase_No.Trim() == model.Purchase_No.Trim()).ToList();
             }
             if(model.Supplier_ID != null && model.Supplier_ID != "") {
-                lists = lists.Where(x => x.Supplier_ID.Trim() == model.Supplier_ID.Trim()).ToList();
+                listMaterial = listMaterial.Where(x => x.Supplier_ID.Trim() == model.Supplier_ID.Trim()).ToList();
             }
             if (model.Status != "all") {
-                lists = lists.Where(x => x.Status.Trim() == model.Status.Trim()).ToList();
+                listMaterial = listMaterial.Where(x => x.Status.Trim() == model.Status.Trim()).ToList();
             }
-            return lists;
-            // return await PagedList<MaterialMainViewModel>.CreateAsync(list2, param.PageNumber, param.PageSize);
+            return listMaterial;
         }
         public Task<bool> Delete(object id)
         {

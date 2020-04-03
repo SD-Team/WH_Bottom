@@ -10,7 +10,7 @@ namespace Bottom_API._Services.Interfaces
     {
         Task<PagedList<Receiving_Dto>> Filter(PaginationParams param);
         Task<List<MaterialMainViewModel>> SearchByModel(MaterialSearchViewModel model);
-        Task<object> MaterialMerging(string Purchase_No);
+        Task<object> MaterialMerging(MaterialMainViewModel model);
 
     }
 }

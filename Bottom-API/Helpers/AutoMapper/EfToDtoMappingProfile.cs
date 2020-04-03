@@ -19,6 +19,7 @@ namespace Bottom_API.Helpers.AutoMapper
             CreateMap<HP_Vendor_u01, HP_Vendor_Dto>();
             CreateMap<WMSB_Material_Purchase, Material_Dto>();
             CreateMap<WMSB_Material_Missing, Material_Dto>();
+            CreateMap<VM_WMSB_Material_Purchase, Material_View_Dto>();
 
             CreateMap<WMSB_Material_Purchase, Receiving_Dto>();
             CreateMap<WMSB_Material_Missing, Receiving_Dto>();

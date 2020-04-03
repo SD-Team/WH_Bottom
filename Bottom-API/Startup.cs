@@ -56,6 +56,7 @@ namespace Bottom_API
             services.AddScoped<IHPVendorRepository, HPVendorRepository>();
             services.AddScoped<IMaterialPurchaseRepository, MaterialPurchaseRepository>();
             services.AddScoped<IMaterialMissingRepository, MaterialMissingRepository>();
+            services.AddScoped<IMaterialViewRepository, MaterialViewRepository>();
 
             // Service
             services.AddScoped<IPackingListService, PackingListService>();
