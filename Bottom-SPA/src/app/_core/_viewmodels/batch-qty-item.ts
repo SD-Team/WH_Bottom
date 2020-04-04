@@ -1,4 +1,6 @@
+import { OrderSizeAccumlate } from './ordersize-accumlate';
+
 export interface BatchQtyItem {
-    MO_Seq: string;
-    Purchase_Qty: number;
+    mO_Seq: string;
+    purchase_Qty: OrderSizeAccumlate[];
 }

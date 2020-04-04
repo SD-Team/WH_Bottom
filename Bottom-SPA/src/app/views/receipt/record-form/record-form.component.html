@@ -43,16 +43,21 @@
                     </tr>
                     <tr class="text-center">
                       <td>Accumated Qty</td>
-                      <td *ngFor="let item of materialMerging">0</td>
+                      <td *ngFor="let item of materialMerging">{{item.accumlated_In_Qty}}</td>
                     </tr>
                     <tr class="text-center">
                       <td>Delivery Qty</td>
-                      <td *ngFor="let item of materialMerging"><input (change)="changeInput(item.order_Size)" type="text" id="{{item.order_Size}}" class="input-table"></td>
+                      <td *ngFor="let item of materialMerging">
+                        <input (change)="changeInput(item.order_Size)"
+                        value="{{item.delivery_Qty}}"
+                        type="text" id="{{item.order_Size}}" class="input-table">
+                      </td>
                     </tr>
                     <tr *ngFor="let item of orderSizeByBatch" class="text-center">
-                      <td>{{item.mO_Seq}}</td>
+                      <td *ngIf="item.mO_Seq !== ''; else elseContent">{{item.mO_Seq}}</td>
+                      <ng-template #elseContent>No Batch</ng-template>
                       <td *ngFor="let item1 of item.purchase_Qty">
-                        <input value="{{item1}}" type="text" disabled class="input-table">
+                        <input value="{{item1.purchase_Qty}}" type="text" disabled class="input-table">
                     </td>
                     </tr>
                   </tbody>

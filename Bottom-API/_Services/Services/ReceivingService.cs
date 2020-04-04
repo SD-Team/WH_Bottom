@@ -58,11 +58,14 @@ namespace Bottom_API._Services.Services
             {
                 var item1 = new OrderSizeByBatch();
                 item1.MO_Seq = item.MO_Seq;
-                var item3 = new List<decimal?>();
+                var item3 = new List<OrderSizeAccumlate>();
                 foreach (var item2 in listMaterial)
                 {
                     if (item2.MO_Seq == item.MO_Seq) {
-                        item3.Add(item2.Purchase_Qty);
+                        var item4 = new OrderSizeAccumlate();
+                        item4.Purchase_Qty = item2.Purchase_Qty;
+                        item4.Accumlated_In_Qty = item2.Accumlated_In_Qty;
+                        item3.Add(item4);
                     };
                     item1.Purchase_Qty = item3;
                 }
@@ -72,7 +75,9 @@ namespace Bottom_API._Services.Services
             var list1 = listMaterial.GroupBy(l => l.Order_Size)
                 .Select(cl => new  {
                     Order_Size = cl.First().Order_Size,
-                    Purchase_Qty = cl.Sum(c => c.Purchase_Qty)
+                    Accumlated_In_Qty = cl.Sum(c => c.Accumlated_In_Qty),
+                    Purchase_Qty = cl.Sum(c => c.Purchase_Qty),
+                    Delivery_Qty = cl.Sum(c => c.Purchase_Qty) - cl.Sum(c => c.Accumlated_In_Qty)
                 }).ToList();
             var list2 = listMaterial.GroupBy(x => new {x.Order_Size, x.Purchase_Qty, x.MO_Seq})
             .Select(y => new {
@@ -86,6 +91,8 @@ namespace Bottom_API._Services.Services
                 var arrayItem = new MaterialMergingViewMode();
                 arrayItem.Order_Size = item.Order_Size;
                 arrayItem.Purchase_Qty = item.Purchase_Qty;
+                arrayItem.Accumlated_In_Qty = item.Accumlated_In_Qty;
+                arrayItem.Delivery_Qty = item.Delivery_Qty;
                 var array1 = new List<BatchQtyItem>();
                 foreach (var item1 in list2)
                 {
