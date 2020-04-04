@@ -58,11 +58,15 @@ export class RecordFormComponent implements OnInit {
     let n;
     for (let x = 0; x < listInput.length; x++) {
       if (x === 0) {
-        if (parseFloat(valueInput) <= parseFloat(listInput[x])) {
+        debugger
+        if (parseFloat(valueInput) < parseFloat(listInput[x]) || parseFloat(valueInput) === parseFloat(listInput[x])) {
+          debugger
           listInput[0] = valueInput;
           for (let y = 1; y < listInput.length; y++) {
             listInput[y] = 0;
           }
+          // listInput[1] = 0;
+          break;
         } else {
           n = parseFloat(valueInput) - parseFloat(listInput[x]);
         }
@@ -74,6 +78,7 @@ export class RecordFormComponent implements OnInit {
           for (let z = x + 1; z < listInput.length; z++) {
             listInput[z] = 0;
           }
+          break;
         }
       };
     };
@@ -85,10 +90,37 @@ export class RecordFormComponent implements OnInit {
         }
       }
     }
-    console.log(listInput);
+    // console.log(listInput);
   }
+  // functionTest() {
+  //   let n;
+  //   let listInput = ['100', '500', '600'];
+  //   let valueInput = '90';
+  //   for (let x = 0; x < listInput.length; x++) {
+  //     if (x === 0) {
+  //       if (parseFloat(valueInput) <= parseFloat(listInput[x])) {
+  //         listInput[0] = valueInput;
+  //         for (let y = 1; y < listInput.length; y++) {
+  //           listInput[y] = '0';
+  //         }
+  //       } else {
+  //         n = parseFloat(valueInput) - parseFloat(listInput[x]);
+  //       }
+  //     } else {
+  //       if (n >= parseFloat(listInput[x])) {
+  //         n = n - parseFloat(listInput[x]);
+  //       } else {
+  //         listInput[x] = n;
+  //         for (let z = x + 1; z < listInput.length; z++) {
+  //           listInput[z] = '0';
+  //         }
+  //       }
+  //     };
+  //   };
+  //   console.log(listInput);
+  // }
   backForm() {
-    // this.router.navigate(['/receipt/record/']);
+    this.router.navigate(['/receipt/record/']);
     // let test = (<HTMLInputElement>document.getElementById('04')).value;
   }
 }
