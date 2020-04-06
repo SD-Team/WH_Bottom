@@ -39,7 +39,9 @@
                   <tbody>
                     <tr class="text-center">
                       <td>Purchase Qty</td>
-                      <th *ngFor="let item of materialMerging"> {{item.purchase_Qty}}</th>
+                      <th *ngFor="let item of materialMerging">
+                        {{item.purchase_Qty}}
+                      </th>
                     </tr>
                     <tr class="text-center">
                       <td>Accumated Qty</td>
@@ -57,6 +59,8 @@
                       <td *ngIf="item.mO_Seq !== ''; else elseContent">{{item.mO_Seq}}</td>
                       <ng-template #elseContent>No Batch</ng-template>
                       <td *ngFor="let item1 of item.purchase_Qty">
+                        <!-- <input *ngIf="item1.purchase_Qty !== 0; else elseContent1" value="{{item1.purchase_Qty}}" type="text" disabled class="input-table">
+                        <ng-template #elseContent1><i style="color: #20a8d8;" class="fa fa-check fa-lg"></i></ng-template> -->
                         <input value="{{item1.purchase_Qty}}" type="text" disabled class="input-table">
                     </td>
                     </tr>
@@ -68,7 +72,7 @@
         </form>
         <div class="card-footer">
           <button type="button" class="btn btn-danger"><i class="fa fa-ban"></i> Cancel</button>
-          <button type="button" class="btn btn-success" [disabled]="!addAuditTypeForm.valid"><i
+          <button type="button" (click)="submitTable()" class="btn btn-success" [disabled]="!addAuditTypeForm.valid"><i
               class="fa fa-check"></i> Save</button>
         </div>
       </div>

@@ -30,90 +30,43 @@
                   <thead>
                     <tr class="text-center">
                       <th>Size</th>
-                      <th>03.5</th>
-                      <th>04</th>
-                      <th>05</th>
-                      <th>05.5</th>
-                      <th>06</th>
-                      <th>06.5</th>
-                      <th>07</th>
+                      <th *ngFor="let item of materialMerging"> {{item.order_Size}}</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr class="text-center">
                       <td>Purchase Qty</td>
-                      <td>300</td>
-                      <td>220</td>
-                      <td>100</td>
-                      <td>100</td>
-                      <td>300</td>
-                      <td>100</td>
-                      <td>50</td>
+                      <th *ngFor="let item of materialMerging">
+                        {{item.purchase_Qty}}
+                      </th>
                     </tr>
                     <tr class="text-center">
                       <td>Accumated Qty</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
+                      <td *ngFor="let item of materialMerging">{{item.accumlated_In_Qty}}</td>
                     </tr>
                     <tr class="text-center">
-                      <td>Receive Qty</td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
+                      <td>Delivery Qty</td>
+                      <td *ngFor="let item of materialMerging">
+                        <input
+                        value="{{item.accumlated_In_Qty}}"
+                        type="text" id="{{item.order_Size}}" disabled class="input-table">
+                      </td>
                     </tr>
-                    <tr class="text-center">
+                    <tr *ngFor="let item of orderSizeByBatch" class="text-center">
                       <td>
                         <div style="display: flex;">
-                          <button style="width: 70px;" class="btn btn-pill btn-block btn-secondary">Insert</button>
-                          <span style="padding-left: 25px;">-1</span>
+                          <button style="width: 70px;" id="{{item.mO_Seq}}" (click)="insertMaterial(item.mO_Seq)" class="btn btn-pill btn-block btn-secondary">Insert</button>
+                          <span *ngIf="item.mO_Seq !== ''; else elseContent" style="padding-left: 25px;">
+                            {{item.mO_Seq}}
+                          </span>
+                          <ng-template #elseContent>No Batch</ng-template>
                         </div>
-                        </td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                    </tr>
-                    <tr class="text-center">
-                      <td>
-                        <div style="display: flex;">
-                          <button style="width: 70px;" class="btn btn-pill btn-block btn-secondary">Insert</button>
-                          <span style="padding-left: 25px;">-2</span>
-                        </div>
-                        </td>
-                      <td><input type="text" disabled  class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                    </tr>
-                    <tr class="text-center">
-                      <td>
-                        <div style="display: flex;">
-                          <button style="width: 70px;" class="btn btn-pill btn-block btn-secondary">Insert</button>
-                          <span style="padding-left: 25px;">-3</span>
-                        </div>
-                        </td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
-                      <td><input type="text" disabled class="input-table"></td>
+                      </td>
+                      <td *ngFor="let item1 of item.purchase_Qty">
+                        <!-- <input *ngIf="item1.purchase_Qty !== 0; else elseContent1" value="{{item1.purchase_Qty}}" type="text" disabled class="input-table">
+                        <ng-template #elseContent1><i style="color: #20a8d8;" class="fa fa-check fa-lg"></i></ng-template> -->
+                        <input value="{{item1.purchase_Qty}}" type="text" disabled class="input-table">
+                    </td>
                     </tr>
                   </tbody>
                 </table>

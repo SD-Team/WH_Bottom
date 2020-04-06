@@ -53,7 +53,7 @@ namespace Bottom_API._Services.Services
                 var packing = await _repoPacking.GetAll().Where(x => x.Receive_No.Trim() == item.Trim()).FirstOrDefaultAsync();
                 packing.Generated_QRCode = "Y";
                 int so = ran.Next(100,999);
-                string qrCodeId = "B" + packing.MO_No + so.ToString();
+                string qrCodeId = "B" + packing.MO_No.Trim() + so.ToString();
                 qrCodeDto.QRCode_ID = qrCodeId;
                 qrCodeDto.Receive_No = packing.Receive_No;
                 qrCodeDto.QRCode_Version = 1;

@@ -58,12 +58,15 @@ namespace Bottom_API._Services.Services
             {
                 var item1 = new OrderSizeByBatch();
                 item1.MO_Seq = item.MO_Seq;
+                item1.Purchase_No = model.Purchase_No;
+                item1.Missing_No = model.Missing_No;
                 var item3 = new List<OrderSizeAccumlate>();
                 foreach (var item2 in listMaterial)
                 {
                     if (item2.MO_Seq == item.MO_Seq) {
                         var item4 = new OrderSizeAccumlate();
-                        item4.Purchase_Qty = item2.Purchase_Qty;
+                        item4.Order_Size = item2.Order_Size;
+                        item4.Purchase_Qty = item2.Purchase_Qty - item2.Accumlated_In_Qty;
                         item4.Accumlated_In_Qty = item2.Accumlated_In_Qty;
                         item3.Add(item4);
                     };
@@ -200,6 +203,38 @@ namespace Bottom_API._Services.Services
         public Task<bool> Update(Receiving_Dto model)
         {
             throw new System.NotImplementedException();
+        }
+
+        public async Task<bool> UpdateMaterial(List<OrderSizeByBatch> data)
+        {   var Purchase_No = data[0].Purchase_No;
+            if (data[0].Missing_No == "") {
+
+                foreach (var item in data)
+                {
+                    foreach (var item1 in item.Purchase_Qty)
+                    {
+                        var materialItem = await _repoPurchase.FindAll()
+                            .Where(x => x.Purchase_No.Trim() == Purchase_No.Trim() &&
+                                    x.Order_Size == item1.Order_Size &&
+                                    x.MO_Seq == item.MO_Seq).FirstOrDefaultAsync();
+                        materialItem.Accumlated_In_Qty = item1.Accumlated_In_Qty;
+                    }
+                }
+                return await _repoPurchase.SaveAll();
+            } else {
+                foreach (var item in data)
+                {
+                    foreach (var item1 in item.Purchase_Qty)
+                    {
+                        var materialItem = await _repoMissing.FindAll()
+                            .Where(x => x.Purchase_No.Trim() == Purchase_No.Trim() &&
+                                    x.Order_Size == item1.Order_Size &&
+                                    x.MO_Seq == item.MO_Seq).FirstOrDefaultAsync();
+                        materialItem.Accumlated_In_Qty = item1.Accumlated_In_Qty;
+                    }
+                }
+                return await _repoPurchase.SaveAll();
+            }
         }
     }
 }
