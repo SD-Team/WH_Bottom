@@ -4,6 +4,7 @@ import { MaterialService } from '../../../_core/_services/material.service';
 import { MaterialModel } from '../../../_core/_viewmodels/material-model';
 import { BatchQtyItem } from '../../../_core/_viewmodels/batch-qty-item';
 import { MaterialMergingViewModel } from '../../../_core/_viewmodels/material-merging';
+import { AlertifyService } from '../../../_core/_services/alertify.service';
 
 @Component({
   selector: 'app-record-form-batches',
@@ -17,7 +18,8 @@ export class RecordFormBatchesComponent implements OnInit {
   orderSizeByBatch: BatchQtyItem[];
   materialMerging: MaterialMergingViewModel[];
   constructor(private router: Router,
-              private materialService: MaterialService) { }
+              private materialService: MaterialService,
+              private alertiryService: AlertifyService) { }
 
   ngOnInit() {
     this.materialService.currentMaterial.subscribe(res => this.materialModel = res);
@@ -32,6 +34,7 @@ export class RecordFormBatchesComponent implements OnInit {
     this.materialService.searchByPurchase(this.materialModel).subscribe(res => {
       this.orderSizeByBatch = res.list3;
       this.materialMerging = res.list4;
+      
     })
   }
   insertMaterial(mO_Seq) {
@@ -46,19 +49,41 @@ export class RecordFormBatchesComponent implements OnInit {
     materialByBatch.purchase_Qty.forEach(item => {
       this.materialMerging.forEach(item1 => {
         if (item1.order_Size === item.order_Size) {
-          item1.accumlated_In_Qty = item1.accumlated_In_Qty + item.purchase_Qty;
+          item1.delivery_Qty_Batches = item1.delivery_Qty_Batches + item.purchase_Qty;
         };
       });
     });
     this.orderSizeByBatch.forEach(item => {
       if(item.mO_Seq === idButton) {
+        let itemPurchase = [] ;
         item.purchase_Qty.forEach(item1 => {
-
+          let item2 = {
+            order_Size: item1.order_Size,
+            purchase_Qty: item1.purchase_Qty,
+            accumlated_In_Qty: item1.purchase_Qty
+          };
+          itemPurchase.push(item2);
         });
-        // this.materialByBatchList.push(item);
+        let materialItem = {
+          mO_Seq: item.mO_Seq,
+          purchase_No: item.purchase_No,
+          missing_No: item.missing_No,
+          purchase_Qty: itemPurchase,
+          checkInsert: item.checkInsert
+        }
+        this.materialByBatchList.push(materialItem);
       }
     });
     console.log(this.materialByBatchList);
+  }
+  submitData() {
+    if (this.materialByBatchList.length !== 0) {
+      this.materialService.updateMaterial(this.materialByBatchList).subscribe(res => {
+        this.alertiryService.success('Insert success');
+      });
+    } else {
+      this.alertiryService.error('Please click insert');
+    }
   }
   backForm() {
     this.router.navigate(['/receipt/record']);

@@ -60,6 +60,16 @@ namespace Bottom_API._Services.Services
                 item1.MO_Seq = item.MO_Seq;
                 item1.Purchase_No = model.Purchase_No;
                 item1.Missing_No = model.Missing_No;
+                item1.CheckInsert = "1";
+                foreach (var item4 in listMaterial)
+                {
+                    if(item4.MO_Seq == item.MO_Seq) {
+                        if (item4.Accumlated_In_Qty != item4.Purchase_Qty) {
+                            item1.CheckInsert = "0";
+                            break;
+                        }
+                    }
+                }
                 var item3 = new List<OrderSizeAccumlate>();
                 foreach (var item2 in listMaterial)
                 {
@@ -79,6 +89,7 @@ namespace Bottom_API._Services.Services
                 .Select(cl => new  {
                     Order_Size = cl.First().Order_Size,
                     Accumlated_In_Qty = cl.Sum(c => c.Accumlated_In_Qty),
+                    Delivery_Qty_Batches = cl.Sum(x => x.Accumlated_In_Qty),
                     Purchase_Qty = cl.Sum(c => c.Purchase_Qty),
                     Delivery_Qty = cl.Sum(c => c.Purchase_Qty) - cl.Sum(c => c.Accumlated_In_Qty)
                 }).ToList();
@@ -96,6 +107,7 @@ namespace Bottom_API._Services.Services
                 arrayItem.Purchase_Qty = item.Purchase_Qty;
                 arrayItem.Accumlated_In_Qty = item.Accumlated_In_Qty;
                 arrayItem.Delivery_Qty = item.Delivery_Qty;
+                arrayItem.Delivery_Qty_Batches = item.Delivery_Qty_Batches;
                 var array1 = new List<BatchQtyItem>();
                 foreach (var item1 in list2)
                 {

@@ -48,14 +48,21 @@
                       <td>Delivery Qty</td>
                       <td *ngFor="let item of materialMerging">
                         <input
-                        value="{{item.accumlated_In_Qty}}"
+                        value="{{item.delivery_Qty_Batches}}"
                         type="text" id="{{item.order_Size}}" disabled class="input-table">
                       </td>
                     </tr>
                     <tr *ngFor="let item of orderSizeByBatch" class="text-center">
                       <td>
                         <div style="display: flex;">
-                          <button style="width: 70px;" id="{{item.mO_Seq}}" (click)="insertMaterial(item.mO_Seq)" class="btn btn-pill btn-block btn-secondary">Insert</button>
+                          <button style="width: 70px;" *ngIf="item.checkInsert === '0'" id="{{item.mO_Seq}}" (click)="insertMaterial(item.mO_Seq)" class="btn btn-pill btn-block btn-secondary">Insert</button>
+                          <button style="width: 70px;" *ngIf="item.checkInsert !== '0'" id="{{item.mO_Seq}}" (click)="insertMaterial(item.mO_Seq)" disabled class="btn btn-pill btn-block btn-secondary">Insert</button>
+                          <!-- <ng-template #elseButton>
+                            <button *ngIf="item.checkInsert === '1'; else elseButton" 
+                          style="width: 70px;" id="{{item.mO_Seq}}" 
+                          (click)="insertMaterial(item.mO_Seq)"
+                          class="btn btn-pill btn-block btn-secondary">Insert</button>
+                          </ng-template> -->
                           <span *ngIf="item.mO_Seq !== ''; else elseContent" style="padding-left: 25px;">
                             {{item.mO_Seq}}
                           </span>
@@ -71,15 +78,13 @@
                   </tbody>
                 </table>
               </div>
-              
             </div>
-
           </div>
         </form>
 
         <div class="card-footer">
           <button type="button" class="btn btn-danger"><i class="fa fa-ban"></i> Cancel</button>
-          <button type="button" class="btn btn-success" [disabled]="!addAuditTypeForm.valid"><i
+          <button type="button" (click)="submitData()" class="btn btn-success" [disabled]="!addAuditTypeForm.valid"><i
               class="fa fa-check"></i> Save</button>
         </div>
       </div>

@@ -4,5 +4,7 @@ export interface MaterialMergingViewModel {
     purchase_Qty: number;
     accumlated_In_Qty: number;
     delivery_Qty: number;
+    elivery_Qty_Batches: number;
+    delivery_Qty_Batches: number;
     purchase_Qty_Item: BatchQtyItem[]
 }
