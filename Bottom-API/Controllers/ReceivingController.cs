@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Bottom_API._Services.Interfaces;
 using Bottom_API.Helpers;
@@ -26,6 +27,12 @@ namespace Bottom_API.Controllers
         public async Task<IActionResult> SearchByPurchase([FromBody]MaterialMainViewModel model) {
             var data = await _service.MaterialMerging(model);
             return Ok(data);   
+        }
+
+        [HttpPost("updateMaterial")]
+        public async Task<IActionResult> UpdateMaterial([FromBody] List<OrderSizeByBatch> model) {
+            var data  = await _service.UpdateMaterial(model);
+            return Ok(data);
         }
     }
 }

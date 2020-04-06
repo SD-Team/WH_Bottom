@@ -6,6 +6,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { PaginatedResult } from '../_models/pagination';
 import { map } from 'rxjs/operators';
 import { MaterialModel } from '../_viewmodels/material-model';
+import { BatchQtyItem } from '../_viewmodels/batch-qty-item';
 
 @Injectable({
   providedIn: 'root'
@@ -43,5 +44,8 @@ export class MaterialService {
   }
   searchByPurchase(model: MaterialModel) {
     return this.http.post<any>(this.baseUrl + 'receiving/searchTable/', model);
+  }
+  updateMaterial(model: BatchQtyItem[]) {
+    return this.http.post<any>(this.baseUrl + 'receiving/updateMaterial/', model);
   }
 }
