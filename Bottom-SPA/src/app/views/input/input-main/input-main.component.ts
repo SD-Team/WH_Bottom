@@ -1,5 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { InputM } from '../../../_core/_models/inputM';
+import { AlertifyService } from '../../../_core/_services/alertify.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { InputService } from '../../../_core/_services/input.service';
 
 @Component({
   selector: 'app-input-main',
@@ -7,30 +10,38 @@ import { InputM } from '../../../_core/_models/inputM';
   styleUrls: ['./input-main.component.scss']
 })
 export class InputMainComponent implements OnInit {
-  result = [];
-  constructor() { }
+  result: InputM[];
+  qrCodeID = "";
+  constructor(private inputService: InputService,
+    private alertify: AlertifyService,
+    private route: ActivatedRoute,
+    private router: Router) { }
 
   ngOnInit() {
+    this.result = [];
   }
 
 
-  search() {
-
-    for (let index = 1; index < 3; index++) {
-      let item = new InputM()
-      item.seq = index;
-      item.qrCodeID = "202020212asd";
-      item.planNo = "013251566132566";
-      item.purchaNo = "PW1956232YC";
-      item.betch = -1;
-      item.rackLocation = "A-01-02";
-      item.receivdeQty = 1050;
-      item.inputQty = 1050;
-      item.stockQty = 1050;
-      item.description = "SKYJ17S00A - (35876)(65A 80 SO RERUB NM EPM3) BLK"
-      this.result.push(item);
+  getInputMain(e) {
+    console.log(e.length);
+    if (e.length === 14) {
+      let flag = true;
+      this.result.forEach(item => {
+        if (item.qrCode_Id === e)
+          flag = false;
+      });
+      if (flag) {
+        this.inputService.getMainByQrCodeID(this.qrCodeID)
+          .subscribe((res) => {
+            if (res != null) 
+              this.result.push(res);
+          }, error => {
+            this.alertify.error(error);
+          });
+      } else
+        this.alertify.error("This QRCode scanded!");
+      this.qrCodeID = ""
     }
-
   }
 
 }

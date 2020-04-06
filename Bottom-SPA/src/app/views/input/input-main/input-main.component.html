@@ -29,11 +29,8 @@
                   <span class="input-group-prepend">
                     <button class="btn btn-primary" type="button" disabled>SCAN</button>
                   </span>
-                  <input type="text" placeholder="QRCode" class="form-control">
+                  <input type="text" placeholder="QRCode" [(ngModel)]="qrCodeID" name="qrCodeID" class="form-control" (ngModelChange)="getInputMain($event)">
                 </div>
-              </div>
-              <div class="col-md-2">
-                <button class="btn btn-success float-right" (click)="search()">Search</button>
               </div>
             </div>
           </div>
@@ -53,40 +50,36 @@
               <thead>
                 <tr>
                   <th>SEQ</th>
-                  <th>Input Sheet No</th>
                   <th>QRcode Id</th>
                   <th>Plan No</th>
-                  <th>Purchase No</th>
+                  <th>Suplier</th>
                   <th>Batch</th>
-                  <th>Rack Location</th>
-                  <th>Recevied Qty</th>
-                  <th>Input Qty</th>
-                  <th>Stock Qty</th>
-                  <th></th>
+                  <th>Accumated Qty</th>
+                  <th>Trans in Qty</th>
+                  <th>In Stock Qty</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
-              <tbody>
-                <ng-container *ngFor="let item of result">
-                  <tr>
-                    <td>
-                      {{item.seq}}
+              <tbody *ngIf="result!== undefined">
+                <ng-container *ngFor="let item of result; let i = index">
+                  <tr >
+                    <td rowspan="2"  class="text-center vertical-middle">
+                      {{i + 1}}
                     </td>
-                    <td>{{item.inputShetNo}}</td>
-                    <td>{{item.qrCodeID}}</td>
-                    <td>{{item.planNo}}</td>
-                    <td>{{item.purchaNo}}</td>
-                    <td>{{item.betch}}</td>
-                    <td>{{item.rackLocation}}</td>
-                    <td>{{item.receivdeQty}}</td>
-                    <td>{{item.inputQty}}</td>
-                    <td>{{item.stockQty}}</td>
-                    <td rowspan="2">
+                    <td>{{item.qrCode_Id}}</td>
+                    <td>{{item.plan_No}}</td>
+                    <td>{{item.suplier_No}} - {{item.suplier_Name}}</td>
+                    <td>{{item.batch}}</td>
+                    <td>{{item.accumated_Qty}}</td>
+                    <td>{{item.trans_In_Qty}}</td>
+                    <td>{{item.inStock_Qty}}</td>
+                    <td rowspan="2" class="text-center vertical-middle">
                       <button class="btn btn-warning mr-2"><i class="fa fa-search-plus"></i>  Detail</button>
                       <button class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button>
                     </td>
                   </tr>
                   <tr>
-                    <td colspan="10">{{item.description}}</td>
+                    <td colspan="7" class="text-center vertical-middle">{{item.mat_Id}} - {{item.mat_Name}}</td>
                   </tr>
                 </ng-container>
               </tbody>

@@ -69,6 +69,7 @@ namespace Bottom_API
             services.AddScoped<IHPStyleService, HPStyleService>();
             services.AddScoped<IHPVendorService, HPVendorService>();
             services.AddScoped<IReceivingService, ReceivingService>();
+            services.AddScoped<IInputService, InputService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

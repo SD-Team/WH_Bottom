@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bottom_API.Models
 {
@@ -13,6 +14,7 @@ namespace Bottom_API.Models
         public string Order_Size {get;set;}
         public string Model_Size {get;set;}
         public string Spec_Size {get;set;}
+        [Column(TypeName = "decimal(9,2)")]
         public decimal? Qty {get;set;}
         public string Seq {get;set;}
         public string Serial_Num {get;set;}

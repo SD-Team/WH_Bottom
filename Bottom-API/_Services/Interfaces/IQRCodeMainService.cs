@@ -10,5 +10,7 @@ namespace Bottom_API._Services.Interfaces
     {
         Task<bool> AddListQRCode(List<string> listReceiveNo);
         Task<PagedList<QRCodeMainViewModel>> SearchByPlanNo(PaginationParams param, QRCodeSearchViewModel dataSearch);
+
+       
     }
 }

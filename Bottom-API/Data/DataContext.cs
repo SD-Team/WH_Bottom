@@ -16,6 +16,8 @@ namespace Bottom_API.Data
         public DbSet<WMSB_QRCode_Main> WMSB_QRCode_Main {get;set;}
         public DbSet<WMSB_QRCode_Detail> WMSB_QRCode_Detail {get;set;}
         public DbSet<VM_WMSB_Material_Purchase> VM_WMSB_Material_Purchase {get;set;}
+        public DbSet<WMSB_Transaction_Main> WMSB_Transaction_Main { get; set; }
+        public DbSet<WMSB_Transaction_Detail> WMSB_Transaction_Detail { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,13 +1,14 @@
 export class InputM {
     seq: number;
-    inputShetNo: string;
-    qrCodeID: string;
-    planNo: string;
-    purchaNo: string;
-    betch: number;
-    rackLocation: string;
-    receivdeQty: number;
-    inputQty: number;
-    stockQty: number;
-    description:string;
+    input_No: string;
+    qrCode_Id: string;
+    plan_No: string;
+    suplier_No: string;
+    suplier_Name: number;
+    batch: string;
+    accumated_Qty: number;
+    trans_In_Qty: number;
+    inStock_Qty: number;
+    mat_Id: string;
+    mat_Name: string;
 }
