@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using Bottom_API.ViewModel;
 using System;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace Bottom_API._Services.Services
 {
@@ -20,15 +21,18 @@ namespace Bottom_API._Services.Services
         private readonly IMaterialPurchaseRepository _repoPurchase;
         private readonly IMaterialMissingRepository _repoMissing;
         private readonly IMaterialViewRepository _repoMaterialView;
+        private readonly IPackingListService _packingListService;
         public ReceivingService(IMaterialPurchaseRepository repoPurchase,
                                 IMaterialMissingRepository repoMissing,
                                 IMaterialViewRepository repoMaterialView,
+                                IPackingListService packingListService,
                                 IMapper mapper, 
                                 MapperConfiguration configMapper)
         {
             _repoMissing = repoMissing;
             _repoPurchase = repoPurchase;
             _repoMaterialView = repoMaterialView;
+            _packingListService = packingListService;
             _configMapper = configMapper;
             _mapper = mapper;
 
@@ -65,6 +69,18 @@ namespace Bottom_API._Services.Services
                 item1.MO_Seq = item.MO_Seq;
                 item1.Purchase_No = model.Purchase_No;
                 item1.Missing_No = model.Missing_No;
+                item1.Material_ID = model.Material_ID;
+                item1.Material_Name = model.Material_Name;
+                item1.Model_No = model.Model_No;
+                item1.Model_Name = model.Model_Name;
+                item1.MO_No = model.MO_No;
+                item1.Article = model.Article;
+                item1.Supplier_ID = model.Supplier_ID;
+                item1.Supplier_Name = model.Supplier_Name;
+                item1.Subcon_No = model.Subcon_No;
+                item1.Subcon_Name = model.Subcon_Name;
+                item1.T3_Supplier = model.T3_Supplier;
+                item1.T3_Supplier_Name = model.T3_Supplier_Name;
                 item1.CheckInsert = "1";
                 foreach (var item4 in listMaterial)
                 {
@@ -194,7 +210,11 @@ namespace Bottom_API._Services.Services
                                     Model_Name = b.Model_Name,
                                     Article = b.Article,
                                     Supplier_ID = b.Supplier_No,
-                                    Supplier_Name = b.Supplier_Name
+                                    Supplier_Name = b.Supplier_Name,
+                                    Subcon_No = b.Subcon_No,
+                                    Subcon_Name = b.Subcon_Name,
+                                    T3_Supplier = b.T3_Supplier,
+                                    T3_Supplier_Name = b.T3_Supplier_Name
                                 }).ToList();
             // var lists = new List<MaterialMainViewModel>();
             // lists.AddRange(materialPurchaseList);
@@ -263,6 +283,8 @@ namespace Bottom_API._Services.Services
                         materialItem.Accumlated_In_Qty = item1.Accumlated_In_Qty;
                     }
                 }
+
+                // Update giá trị Status
                 foreach (var item in data)
                 {
                     var checkStatus = "Y";
@@ -287,6 +309,45 @@ namespace Bottom_API._Services.Services
                         }
                     }
                 }
+
+                foreach (var item in data)
+                {
+                    var checkAdd = false;
+                    foreach (var item1 in item.Purchase_Qty)
+                    {
+                        // Kiểm tra nếu tồn tại Accumlated_In_Qty lớn hơn 0,có nghĩa là tồn tại 1 Order_Size trong batch đó 
+                        // có nhận hàng
+                        if (item1.Accumlated_In_Qty > 0) {
+                            checkAdd = true;
+                            break;
+                        }
+                    }
+                    if (checkAdd == true) {
+                        var packing_List = new Packing_List_Dto();
+                        packing_List.Sheet_Type = "R";
+                        packing_List.Missing_No = item.Missing_No;
+                        packing_List.Supplier_ID = item.Supplier_ID;
+                        packing_List.Supplier_Name = item.Supplier_Name;
+                        packing_List.MO_No = item.MO_No;
+                        packing_List.Purchase_No = item.Purchase_No;
+                        packing_List.MO_Seq = item.MO_Seq;
+                        packing_List.Material_ID = item.Material_ID;
+                        packing_List.Material_Name = item.Material_Name;
+                        packing_List.Model_No = item.Model_No;
+                        packing_List.Model_Name = item.Model_Name;
+                        packing_List.Article = item.Article;
+                        packing_List.Subcon_ID = item.Subcon_No;
+                        packing_List.Subcon_Name = item.Subcon_Name;
+                        packing_List.T3_Supplier = item.T3_Supplier;
+                        packing_List.T3_Supplier_Name = item.T3_Supplier_Name;
+                        packing_List.Generated_QRCode = "N";
+                        packing_List.Receive_Date = DateTime.Now;
+                        packing_List.Receive_No = this.RandomString(2);
+                        await _packingListService.Add(packing_List);
+                    }
+                }
+                // Thêm vào bảng Packing_List
+
                 return await _repoPurchase.SaveAll();
             } else {
                 // Update lại Accumlated_In_Qty theo Purchase_No,Order_Size và Mo_Seq ở bảng Material_Missing
@@ -301,8 +362,68 @@ namespace Bottom_API._Services.Services
                         materialItem.Accumlated_In_Qty = item1.Accumlated_In_Qty;
                     }
                 }
+
+                // Update lại Status
+                foreach (var item in data)
+                {
+                    var checkStatus = "Y";
+                    var purchaseForBatch = await _repoMissing.FindAll()
+                                    .Where(x => x.Purchase_No.Trim() == Purchase_No.Trim() &&
+                                    x.MO_Seq == item.MO_Seq).ToListAsync();
+                    foreach (var item1 in purchaseForBatch)
+                    {
+                        // Kiểm tra thì cần 1 dòng mà Accumlated_In_Qty khác Purchase_Qty thì checkStatus = N
+                        // Và thoát khỏi vòng lặp hiện tại 
+                        if (item1.Accumlated_In_Qty != item1.Purchase_Qty) {
+                            checkStatus = "N";
+                            break;
+                        }
+                    }
+                    // Nếu mà Accumlated_In_Qty đều bằng Purchase_Qty có nghĩa là batch đó đã nhận đủ hàng.
+                    // Cập nhập lại Status trong table của batch đó là Y.
+                    if (checkStatus == "Y") {
+                        foreach (var item3 in purchaseForBatch)
+                        {
+                            item3.Status = "Y";
+                        }
+                    }
+                }
                 return await _repoPurchase.SaveAll();
             }
+        }
+
+
+        // Hàm lấy random string
+        public string RandomString(int size)    
+        {   var datetimeNow = DateTime.Now;
+            var year = datetimeNow.Year.ToString();
+            var month = datetimeNow.Month;
+            var day = datetimeNow.Day;
+            var arrayYear = year.ToCharArray().Select(c => c.ToString()).ToArray();
+            var yearString = arrayYear[2] + arrayYear[3];
+            var monthString = "";
+            var dayString = "";
+            if (month >=10) {
+                monthString = month.ToString();
+            } else {
+                monthString = "0" + month;
+            }
+
+            if (day >= 10) {
+                dayString = day.ToString();
+            } else {
+                dayString = "0" + day;
+            }
+            StringBuilder builder = new StringBuilder();    
+            Random random = new Random();    
+            char ch;    
+            for (int i = 0; i < size; i++)    
+            {    
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));    
+                builder.Append(ch);    
+            }
+            var stringResult = "RW" + yearString + monthString + dayString + builder.ToString().ToUpper();  
+            return stringResult; 
         }
     }
 }

@@ -76,7 +76,19 @@ export class RecordFormBatchesComponent implements OnInit {
           purchase_No: item.purchase_No,
           missing_No: item.missing_No,
           purchase_Qty: itemPurchase,
-          checkInsert: item.checkInsert
+          checkInsert: item.checkInsert,
+          material_ID: item.material_ID,
+          material_Name: item.material_Name,
+          model_No: item.model_No,
+          model_Name: item.model_Name,
+          mO_No: item.mO_No,
+          article: item.article,
+          supplier_ID: item.supplier_ID,
+          supplier_Name: item.supplier_Name,
+          subcon_No: item.subcon_No,
+          subcon_Name: item.subcon_Name,
+          t3_Supplier: item.t3_Supplier,
+          t3_Supplier_Name: item.t3_Supplier_Name,
         }
         this.materialByBatchList.push(materialItem);
       }

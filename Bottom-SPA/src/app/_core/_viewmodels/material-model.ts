@@ -10,5 +10,9 @@ export interface MaterialModel {
     article: string;
     supplier_ID: string;
     supplier_Name: string;
-    confirm_Delivery: Date;
+    subcon_No: string;
+    subcon_Name: string;
+    t3_Supplier: string;
+    t3_Supplier_Name: string;
+    // confirm_Delivery: Date;
 }

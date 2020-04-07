@@ -4,6 +4,7 @@ import { MaterialService } from '../../../_core/_services/material.service';
 import { MaterialModel } from '../../../_core/_viewmodels/material-model';
 import { MaterialMergingViewModel } from '../../../_core/_viewmodels/material-merging';
 import { BatchQtyItem } from '../../../_core/_viewmodels/batch-qty-item';
+import { AlertifyService } from '../../../_core/_services/alertify.service';
 declare var $: any;
 @Component({
   selector: 'app-record-form',
@@ -20,6 +21,7 @@ export class RecordFormComponent implements OnInit {
   // Mảng order_size khi input ko đc nhập gì cả.
   listOrderSizeInputChange: any[] = [];
   constructor(private router: Router,
+              private alertifyService: AlertifyService,
               private materialService: MaterialService) { }
 
   ngOnInit() {
@@ -69,8 +71,8 @@ export class RecordFormComponent implements OnInit {
         // Khi accumlated_In_Qty ở dòng đầu tiên  = 0 có nghĩa là chưa nhận lô hàng nào.
         if (parseFloat(listInput[x].accumlated_In_Qty) === 0) {
           if (parseFloat(valueInput) <= parseFloat(listInput[x].purchase_Qty)) {
-            listInput[0].purchase_Qty = valueInput;
-            listInput[0].accumlated_In_Qty = valueInput;
+            listInput[0].purchase_Qty = parseFloat(valueInput);
+            listInput[0].accumlated_In_Qty = parseFloat(valueInput);
             for (let y = 1; y < listInput.length; y++) {
               listInput[y].purchase_Qty = 0;
             }
@@ -88,7 +90,7 @@ export class RecordFormComponent implements OnInit {
         // Lượng nhận vào + lượng đã nhận nhỏ thua hoặc bằng lượng cần nhận để đủ.
         if (parseFloat(valueInput) <= parseFloat(listInput[x].purchase_Qty)) {
           // Cần nhận từng này nữa mới đủ số lượng cần nhận vào.
-          listInput[0].purchase_Qty = parseFloat(listInput[x].purchase_Qty) - parseFloat(valueInput) ;
+          listInput[0].purchase_Qty = parseFloat(listInput[x].purchase_Qty) + parseFloat(valueInput) ;
           listInput[0].accumlated_In_Qty = parseFloat(valueInput) + parseFloat(listInput[x].accumlated_In_Qty);
           for (let t = x + 1; t < listInput.length; t++) {
             listInput[t].purchase_Qty = 0;
@@ -126,7 +128,7 @@ export class RecordFormComponent implements OnInit {
          // Lượng nhận vào + lượng đã nhận nhỏ thua hoặc bằng lượng cần nhận để đủ.
         if (n <= parseFloat(listInput[x].purchase_Qty)) {
 
-          listInput[x].purchase_Qty = listInput[x].purchase_Qty - n;
+          listInput[x].purchase_Qty = n;
           listInput[x].accumlated_In_Qty = n + parseFloat(listInput[x].accumlated_In_Qty);
           for (let z = x + 1; z < listInput.length; z++) {
             listInput[z].purchase_Qty = 0;
@@ -159,8 +161,11 @@ export class RecordFormComponent implements OnInit {
         });
       });
     });
-    this.materialService.updateMaterial(this.orderSizeByBatch).subscribe(res => {
-      console.log(res);
+    console.log(this.orderSizeByBatch);
+    this.materialService.updateMaterial(this.orderSizeByBatch).subscribe(res => { 
+      this.alertifyService.success('Submit success');
+    }, error => {
+      this.alertifyService.error(error);
     });
     // console.log(this.orderSizeByBatch);
   }

@@ -8,6 +8,7 @@ using Bottom_API._Repositories.Interfaces;
 using Bottom_API._Services.Interfaces;
 using Bottom_API.DTO;
 using Bottom_API.Helpers;
+using Bottom_API.Models;
 using Bottom_API.ViewModel;
 using Microsoft.EntityFrameworkCore;
 
@@ -69,9 +70,11 @@ namespace Bottom_API._Services.Services
             return await PagedList<Packing_List_Dto>.CreateAsync(packingSearch, param.PageNumber, param.PageSize);
         }
 
-        public Task<bool> Add(Packing_List_Dto model)
+        public async Task<bool> Add(Packing_List_Dto model)
         {
-            throw new NotImplementedException();
+            var data = _mapper.Map<WMSB_Packing_List>(model);
+            _repo.Add(data);
+            return await _repo.SaveAll();
         }
 
         public Task<bool> Update(Packing_List_Dto model)
