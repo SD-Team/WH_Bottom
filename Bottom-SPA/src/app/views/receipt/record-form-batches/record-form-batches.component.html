@@ -57,12 +57,6 @@
                         <div style="display: flex;">
                           <button style="width: 70px;" *ngIf="item.checkInsert === '0'" id="{{item.mO_Seq}}" (click)="insertMaterial(item.mO_Seq)" class="btn btn-pill btn-block btn-secondary">Insert</button>
                           <button style="width: 70px;" *ngIf="item.checkInsert !== '0'" id="{{item.mO_Seq}}" (click)="insertMaterial(item.mO_Seq)" disabled class="btn btn-pill btn-block btn-secondary">Insert</button>
-                          <!-- <ng-template #elseButton>
-                            <button *ngIf="item.checkInsert === '1'; else elseButton" 
-                          style="width: 70px;" id="{{item.mO_Seq}}" 
-                          (click)="insertMaterial(item.mO_Seq)"
-                          class="btn btn-pill btn-block btn-secondary">Insert</button>
-                          </ng-template> -->
                           <span *ngIf="item.mO_Seq !== ''; else elseContent" style="padding-left: 25px;">
                             {{item.mO_Seq}}
                           </span>

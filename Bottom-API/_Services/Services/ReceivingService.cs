@@ -135,8 +135,8 @@ namespace Bottom_API._Services.Services
         }
         public async Task<List<MaterialMainViewModel>> SearchByModel(MaterialSearchViewModel model)
         {
-            var listMaterialView = await _repoMaterialView.GetAll().ProjectTo<Material_View_Dto>(_configMapper).ToListAsync();
-            var materialPurchaseList = await _repoPurchase.GetAll().ProjectTo<Material_Dto>(_configMapper)
+            var listMaterialView = await _repoMaterialView.FindAll().ToListAsync();
+            var materialPurchaseList = await _repoPurchase.FindAll()
             .Where(x => x.Confirm_Delivery >= Convert.ToDateTime(model.From_Date + " 00:00") &&
                         x.Confirm_Delivery <= Convert.ToDateTime(model.To_Date + " 00:00")).Select(x => new {
                             Purchase_No = x.Purchase_No,
@@ -144,7 +144,7 @@ namespace Bottom_API._Services.Services
                             Missing_No = ""
                         }).Distinct().ToListAsync();
 
-            var materialMissingList = await _repoMissing.GetAll().ProjectTo<Material_Dto>(_configMapper)
+            var materialMissingList = await _repoMissing.GetAll()
             .Where(x => x.Confirm_Delivery >= Convert.ToDateTime(model.From_Date + " 00:00") &&
                         x.Confirm_Delivery <= Convert.ToDateTime(model.To_Date + " 00:00"))
                         .Select(x => new {
@@ -156,7 +156,6 @@ namespace Bottom_API._Services.Services
             {
                 materialPurchaseList.Add(item);
             }
-
             // Nếu purchase đó có 1 batch là N thì status show ra sẽ là N. Còn Y hết thì là Y
             // Tạo ra 1 mảng đối tượng mới
             var materialPurchaseListConvert = new List<PurchaseConvert>();
@@ -179,9 +178,10 @@ namespace Bottom_API._Services.Services
                     }
                 }
             }
-            materialPurchaseListConvert.Distinct().ToList();
+            // Distinct lại mảng.Do ko xài Distinct ở trong câu lệnh 1 list Object được.
+            var listData = materialPurchaseListConvert.GroupBy(x => new{ x.Purchase_No, x.Missing_No}).Select(y => y.First());
             // --------------------------------------------------------------------------
-            var listMaterial = (from a in materialPurchaseListConvert join b in listMaterialView
+            var listMaterial = (from a in listData join b in listMaterialView
                                 on a.Purchase_No.Trim() equals b.Purchase_No.Trim()
                                 select new MaterialMainViewModel {
                                     Status = a.Status,
@@ -251,7 +251,7 @@ namespace Bottom_API._Services.Services
         public async Task<bool> UpdateMaterial(List<OrderSizeByBatch> data)
         {   var Purchase_No = data[0].Purchase_No;
             if (data[0].Missing_No == "") {
-
+                // Update lại Accumlated_In_Qty theo Purchase_No,Order_Size và Mo_Seq ở bảng Material_Purchase
                 foreach (var item in data)
                 {
                     foreach (var item1 in item.Purchase_Qty)
@@ -263,8 +263,33 @@ namespace Bottom_API._Services.Services
                         materialItem.Accumlated_In_Qty = item1.Accumlated_In_Qty;
                     }
                 }
+                foreach (var item in data)
+                {
+                    var checkStatus = "Y";
+                    var purchaseForBatch = await _repoPurchase.FindAll()
+                                    .Where(x => x.Purchase_No.Trim() == Purchase_No.Trim() &&
+                                    x.MO_Seq == item.MO_Seq).ToListAsync();
+                    foreach (var item1 in purchaseForBatch)
+                    {
+                        // Kiểm tra thì cần 1 dòng mà Accumlated_In_Qty khác Purchase_Qty thì checkStatus = N
+                        // Và thoát khỏi vòng lặp hiện tại 
+                        if (item1.Accumlated_In_Qty != item1.Purchase_Qty) {
+                            checkStatus = "N";
+                            break;
+                        }
+                    }
+                    // Nếu mà Accumlated_In_Qty đều bằng Purchase_Qty có nghĩa là batch đó đã nhận đủ hàng.
+                    // Cập nhập lại Status trong table của batch đó là Y.
+                    if (checkStatus == "Y") {
+                        foreach (var item3 in purchaseForBatch)
+                        {
+                            item3.Status = "Y";
+                        }
+                    }
+                }
                 return await _repoPurchase.SaveAll();
             } else {
+                // Update lại Accumlated_In_Qty theo Purchase_No,Order_Size và Mo_Seq ở bảng Material_Missing
                 foreach (var item in data)
                 {
                     foreach (var item1 in item.Purchase_Qty)
