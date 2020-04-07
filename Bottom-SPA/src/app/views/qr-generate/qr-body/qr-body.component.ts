@@ -10,6 +10,7 @@ import { PackingListDetailService } from '../../../_core/_services/packing-list-
 import { PackingListDetailModel } from '../../../_core/_viewmodels/packing-list-detail-model';
 import { PackingPrintAll } from '../../../_core/_viewmodels/packing-print-all';
 declare var $: any;
+import * as _ from 'lodash';
 @Component({
   selector: 'app-qr-body',
   templateUrl: './qr-body.component.html',
@@ -132,7 +133,7 @@ export class QrBodyComponent implements OnInit {
     if (e.target.checked) {
       $('input:checkbox').not(this).prop('checked', true);
       this.listQrCodeMainModel.forEach(item => {
-        arrayCheck.push(item.receive_No);
+        arrayCheck.push(item.qrCode_ID);
       });
       this.checkArray.length = 0;
       this.checkArray = arrayCheck;
@@ -142,18 +143,27 @@ export class QrBodyComponent implements OnInit {
     }
   }
   onCheckboxChange(e) {
+    let arrayCheck = [];
     if (e.target.checked) {
       this.checkArray.push(e.target.value);
+      this.listQrCodeMainModel.forEach(item => {
+        arrayCheck.push(item.qrCode_ID);
+      });
+      let difference = _.difference(arrayCheck,this.checkArray);
+      if (difference.length < 1) {
+        $('#all').prop('checked', true);
+      }
     } else {
+      $('#all').prop('checked', false);
       let i = this.checkArray.findIndex(element => element === e.target.value);
       this.checkArray.splice(i, 1);
     }
   }
   printAll() {
     window.sessionStorage.setItem('checkPrint', '1');
-    console.log(this.checkArray);
     this.totalQtyList.length = 0;
     this.packingListDetailAll.length = 0;
+    console.log(this.checkArray);
     if (this.checkArray.length > 0) {
       this.packingListDetailService.findByRecevieNoList(this.checkArray).subscribe(res => {
         this.packingPrintAll = res;

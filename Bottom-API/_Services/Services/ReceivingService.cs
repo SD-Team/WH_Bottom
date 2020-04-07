@@ -39,6 +39,11 @@ namespace Bottom_API._Services.Services
             throw new System.NotImplementedException();
         }
 
+        public class PurchaseConvert {
+            public string Purchase_No {get;set;}
+            public string Status {get;set;}
+            public string Missing_No {get;set;}
+        }
         public async Task<object> MaterialMerging(MaterialMainViewModel model)
         {
             var listMaterial = new List<Material_Dto>();
@@ -138,6 +143,7 @@ namespace Bottom_API._Services.Services
                             Status = x.Status,
                             Missing_No = ""
                         }).Distinct().ToListAsync();
+
             var materialMissingList = await _repoMissing.GetAll().ProjectTo<Material_Dto>(_configMapper)
             .Where(x => x.Confirm_Delivery >= Convert.ToDateTime(model.From_Date + " 00:00") &&
                         x.Confirm_Delivery <= Convert.ToDateTime(model.To_Date + " 00:00"))
@@ -150,7 +156,32 @@ namespace Bottom_API._Services.Services
             {
                 materialPurchaseList.Add(item);
             }
-            var listMaterial = (from a in materialPurchaseList join b in listMaterialView
+
+            // Nếu purchase đó có 1 batch là N thì status show ra sẽ là N. Còn Y hết thì là Y
+            // Tạo ra 1 mảng đối tượng mới
+            var materialPurchaseListConvert = new List<PurchaseConvert>();
+            foreach (var item in materialPurchaseList)
+            {
+                var item1 = new PurchaseConvert {
+                    Purchase_No = item.Purchase_No,
+                    Status = item.Status,
+                    Missing_No = item.Missing_No
+                };
+                materialPurchaseListConvert.Add(item1);
+            }
+            foreach (var item in materialPurchaseListConvert)
+            {
+                if (item.Status.Trim() == "N") {
+                    foreach (var item1 in materialPurchaseListConvert)
+                    {
+                        if(item1.Purchase_No.Trim() == item.Purchase_No.Trim() && item1.Missing_No == item.Missing_No)
+                        item1.Status = "N";
+                    }
+                }
+            }
+            materialPurchaseListConvert.Distinct().ToList();
+            // --------------------------------------------------------------------------
+            var listMaterial = (from a in materialPurchaseListConvert join b in listMaterialView
                                 on a.Purchase_No.Trim() equals b.Purchase_No.Trim()
                                 select new MaterialMainViewModel {
                                     Status = a.Status,

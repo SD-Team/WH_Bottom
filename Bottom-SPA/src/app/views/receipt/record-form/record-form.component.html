@@ -57,7 +57,7 @@
                     </tr>
                     <tr *ngFor="let item of orderSizeByBatch" class="text-center">
                       <td *ngIf="item.mO_Seq !== ''; else elseContent">{{item.mO_Seq}}</td>
-                      <ng-template #elseContent>No Batch</ng-template>
+                      <ng-template #elseContent><td>No Batch</td></ng-template>
                       <td *ngFor="let item1 of item.purchase_Qty">
                         <!-- <input *ngIf="item1.purchase_Qty !== 0; else elseContent1" value="{{item1.purchase_Qty}}" type="text" disabled class="input-table">
                         <ng-template #elseContent1><i style="color: #20a8d8;" class="fa fa-check fa-lg"></i></ng-template> -->

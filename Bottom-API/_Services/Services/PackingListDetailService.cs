@@ -67,7 +67,7 @@ namespace Bottom_API._Services.Services
             return result;
         }
 
-        public async Task<List<object>> FindByRecevieNoList(List<string> data)
+        public async Task<List<object>> FindByQRCodeIDList(List<string> data)
         {
             var listPackingList =  _repoPacking.GetAll();
             var listQrCodeMain = _repoQrcode.GetAll();
@@ -95,7 +95,7 @@ namespace Bottom_API._Services.Services
             foreach (var item in data)
             {  
                 var object1 = await this.FindByReceiveNo(item);
-                var qrCodeMainItem = await listQrCodeModel.Where(x => x.Receive_No.Trim() == item.Trim()).FirstOrDefaultAsync();
+                var qrCodeMainItem = await listQrCodeModel.Where(x => x.QRCode_ID.Trim() == item.Trim()).FirstOrDefaultAsync();
                 var objectItem = new {
                     object1,
                     qrCodeMainItem

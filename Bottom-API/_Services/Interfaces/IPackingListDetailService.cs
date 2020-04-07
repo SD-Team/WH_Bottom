@@ -8,6 +8,6 @@ namespace Bottom_API._Services.Interfaces
     public interface IPackingListDetailService : IBottomService<Packing_List_Detail_Dto>
     {
         Task<object> FindByReceiveNo(string Receive_No);
-        Task<List<object>> FindByRecevieNoList(List<string> data);
+        Task<List<object>> FindByQRCodeIDList(List<string> data);
     }
 }

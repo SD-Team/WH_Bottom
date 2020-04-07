@@ -34,7 +34,14 @@ export class RecordFormBatchesComponent implements OnInit {
     this.materialService.searchByPurchase(this.materialModel).subscribe(res => {
       this.orderSizeByBatch = res.list3;
       this.materialMerging = res.list4;
-      
+      let count = this.orderSizeByBatch.length;
+      for (let i = 0; i < this.orderSizeByBatch.length; i++) {
+        if (this.orderSizeByBatch[i].checkInsert === '1') {
+          let orderSizeByBatchItem = this.orderSizeByBatch[count - (i +1)];
+          this.orderSizeByBatch[count - (i +1)] = this.orderSizeByBatch[i];
+          
+        }
+      }
     })
   }
   insertMaterial(mO_Seq) {

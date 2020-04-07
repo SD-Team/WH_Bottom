@@ -49,6 +49,7 @@
     "flag-icon-css": "^3.4.5",
     "font-awesome": "^4.7.0",
     "jquery": "^3.4.1",
+    "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "mutationobserver-shim": "^0.3.3",
     "ng2-charts": "^2.3.0",
