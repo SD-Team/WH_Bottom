@@ -12,6 +12,7 @@ import { ReceiptMainComponent } from './receipt-main/receipt-main.component';
 import { RecordComponent } from './record/record.component';
 import { RecordFormComponent } from './record-form/record-form.component';
 import { RecordFormBatchesComponent } from './record-form-batches/record-form-batches.component';
+import { RecordDetailComponent } from './record-detail/record-detail.component';
 
 @NgModule({
     imports: [
@@ -28,7 +29,8 @@ import { RecordFormBatchesComponent } from './record-form-batches/record-form-ba
         ReceiptMainComponent,
         RecordComponent,
         RecordFormComponent,
-        RecordFormBatchesComponent
+        RecordFormBatchesComponent,
+        RecordDetailComponent
     ]
 })
 

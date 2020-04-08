@@ -8,8 +8,8 @@ namespace Bottom_API.ViewModel
         public string Purchase_No {get;set;}
         public string Missing_No {get;set;}
         public string CheckInsert {get;set;}
-
         public string MO_No {get;set;}
+        public string Delivery_No {get;set;}
         public string Material_ID {get;set;}
         public string Material_Name {get;set;}
         public string Model_No {get;set;}

@@ -7,6 +7,7 @@ using Bottom_API._Repositories.Interfaces;
 using Bottom_API._Services.Interfaces;
 using Bottom_API.DTO;
 using Bottom_API.Helpers;
+using Bottom_API.Models;
 using Bottom_API.ViewModel;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,9 +31,11 @@ namespace Bottom_API._Services.Services
             _mapper = mapper;
             _configMapper = configMapper;
         }
-        public Task<bool> Add(Packing_List_Detail_Dto model)
+        public async Task<bool> Add(Packing_List_Detail_Dto model)
         {
-            throw new System.NotImplementedException();
+            var data = _mapper.Map<WMSB_PackingList_Detail>(model);
+            _repo.Add(data);
+            return await _repo.SaveAll();
         }
 
         public Task<bool> Delete(object id)

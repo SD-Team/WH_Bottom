@@ -14,5 +14,4 @@ export interface MaterialModel {
     subcon_Name: string;
     t3_Supplier: string;
     t3_Supplier_Name: string;
-    // confirm_Delivery: Date;
 }

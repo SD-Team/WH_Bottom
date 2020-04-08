@@ -4,6 +4,7 @@ export interface BatchQtyItem {
     purchase_No: string;
     missing_No: string;
     checkInsert: string;
+    delivery_No: string;
     material_ID: string; 
     material_Name: string; 
     model_No: string; 

@@ -7,10 +7,17 @@
         <div class="card-header">
           <i class="fa fa-align-justify"></i> Manage
           <div class="float-right">
-            <button type="button" (click)="changeForm()" class="btn btn-sm btn-primary">
+            <button type="button" *ngIf="materialModel.status === 'N'; else elseStatus" 
+            (click)="changeForm()" class="btn btn-sm btn-primary">
               <i class="fa fa-plus"></i>
               Add new
             </button>
+            <ng-template #elseStatus>
+              <button type="button" disabled class="btn btn-sm btn-primary">
+                <i class="fa fa-plus"></i>
+                Add new
+              </button>
+            </ng-template>
             <button (click)="backForm()" type="button" class="btn btn-sm btn-secondary">
               <i class="fa fa-chevron-left"></i>
               Back
@@ -27,13 +34,31 @@
                 <th>Batch</th>
                 <th>Receive Time</th>
                 <th>Purchase Qty</th>
-                <th>Received Qty</th>
+                <th>Accumated Qty</th>
+                <th>Type</th>
                 <th>Update By</th>
                 <th>Actions</th>
               </tr>
             </thead>
-            <tbody>
-              
+            <tbody *ngIf="receiveNoMain !== undefined">
+             <ng-container *ngFor="let item of receiveNoMain; let index = index">
+              <tr>
+                <td class="text-center vertical-middle">{{item.mO_No}}</td>
+                <td class="text-center vertical-middle">{{item.purchase_No}}</td>
+                <td class="text-center vertical-middle">{{item.receive_No}}</td>
+                <td class="text-center vertical-middle">{{item.mO_Seq}}</td>
+                <td class="text-center vertical-middle">{{item.receive_Date | date: "MM/dd/yyyy, HH:mm:ss"}}</td>
+                <td class="text-center vertical-middle">{{item.purchase_Qty}}</td>
+                <td class="text-center vertical-middle">{{item.accumated_Qty}}</td>
+                <td class="text-center vertical-middle">{{item.sheet_Type}}</td>
+                <td class="text-center vertical-middle">{{item.updated_By}}</td>
+                <td class="text-center vertical-middle">
+                  <button class="btn btn-block btn-success">Show Detail</button>
+                  <button class="btn btn-block btn-warning" *ngIf="materialModel.status === 'N'">Edit</button>
+                  <button class="btn btn-block btn-danger" *ngIf="materialModel.status === 'N'">Delete</button>
+                </td>
+              </tr>
+            </ng-container>
             </tbody>
           </table>
           <div class="d-flex">

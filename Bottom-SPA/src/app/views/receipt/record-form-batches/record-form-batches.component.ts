@@ -17,6 +17,7 @@ export class RecordFormBatchesComponent implements OnInit {
   materialByBatchList: BatchQtyItem[] = [];
   orderSizeByBatch: BatchQtyItem[];
   materialMerging: MaterialMergingViewModel[];
+  delivery_No: string;
   constructor(private router: Router,
               private materialService: MaterialService,
               private alertiryService: AlertifyService) { }
@@ -60,6 +61,7 @@ export class RecordFormBatchesComponent implements OnInit {
         };
       });
     });
+    // Những batch nào được nhấn insert thì sẽ được thêm vào mảng materialByBatchList để update vào DB
     this.orderSizeByBatch.forEach(item => {
       if(item.mO_Seq === idButton) {
         let itemPurchase = [] ;
@@ -67,7 +69,13 @@ export class RecordFormBatchesComponent implements OnInit {
           let item2 = {
             order_Size: item1.order_Size,
             purchase_Qty: item1.purchase_Qty,
-            accumlated_In_Qty: item1.purchase_Qty
+            accumlated_In_Qty: item1.purchase_Qty,
+            model_Size: item1.model_Size,
+            tool_Size: item1.tool_Size,
+            spec_Size: item1.spec_Size,
+            mO_Qty: item1.mO_Qty,
+            purchase_Qty_Const: item1.purchase_Qty_Const,
+            received_Qty: item1.purchase_Qty_Const
           };
           itemPurchase.push(item2);
         });
@@ -77,6 +85,7 @@ export class RecordFormBatchesComponent implements OnInit {
           missing_No: item.missing_No,
           purchase_Qty: itemPurchase,
           checkInsert: item.checkInsert,
+          delivery_No: this.delivery_No,
           material_ID: item.material_ID,
           material_Name: item.material_Name,
           model_No: item.model_No,
@@ -93,15 +102,23 @@ export class RecordFormBatchesComponent implements OnInit {
         this.materialByBatchList.push(materialItem);
       }
     });
-    console.log(this.materialByBatchList);
   }
   submitData() {
-    if (this.materialByBatchList.length !== 0) {
-      this.materialService.updateMaterial(this.materialByBatchList).subscribe(res => {
-        this.alertiryService.success('Insert success');
-      });
+    console.log(this.materialByBatchList);
+    if (this.delivery_No === undefined || this.delivery_No === '') {
+      this.alertiryService.error('Please enter Delivery No');
     } else {
-      this.alertiryService.error('Please click insert');
+      if (this.materialByBatchList.length !== 0) {
+        this.materialByBatchList.map(item => {
+          item.delivery_No = this.delivery_No;
+          return item;
+        });
+        this.materialService.updateMaterial(this.materialByBatchList).subscribe(res => {
+          this.alertiryService.success('Insert success');
+        });
+      } else {
+        this.alertiryService.error('Please click insert');
+      }
     }
   }
   backForm() {

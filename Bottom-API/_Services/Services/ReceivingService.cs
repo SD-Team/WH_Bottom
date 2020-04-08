@@ -22,10 +22,12 @@ namespace Bottom_API._Services.Services
         private readonly IMaterialMissingRepository _repoMissing;
         private readonly IMaterialViewRepository _repoMaterialView;
         private readonly IPackingListService _packingListService;
+        private readonly IPackingListDetailService _packingListDetailService;
         public ReceivingService(IMaterialPurchaseRepository repoPurchase,
                                 IMaterialMissingRepository repoMissing,
                                 IMaterialViewRepository repoMaterialView,
                                 IPackingListService packingListService,
+                                IPackingListDetailService packingListDetailService,
                                 IMapper mapper, 
                                 MapperConfiguration configMapper)
         {
@@ -33,6 +35,7 @@ namespace Bottom_API._Services.Services
             _repoPurchase = repoPurchase;
             _repoMaterialView = repoMaterialView;
             _packingListService = packingListService;
+            _packingListDetailService = packingListDetailService;
             _configMapper = configMapper;
             _mapper = mapper;
 
@@ -97,8 +100,14 @@ namespace Bottom_API._Services.Services
                     if (item2.MO_Seq == item.MO_Seq) {
                         var item4 = new OrderSizeAccumlate();
                         item4.Order_Size = item2.Order_Size;
+                        item4.Model_Size = item2.Model_Size;
+                        item4.Tool_Size = item2.Tool_Size;
+                        item4.Spec_Size = item2.Spec_Size;
+                        item4.Purchase_Qty_Const = item2.Purchase_Qty;
+                        item4.MO_Qty = item2.MO_Qty;
                         item4.Purchase_Qty = item2.Purchase_Qty - item2.Accumlated_In_Qty;
                         item4.Accumlated_In_Qty = item2.Accumlated_In_Qty;
+                        item4.Received_Qty = 0;
                         item3.Add(item4);
                     };
                     item1.Purchase_Qty = item3;
@@ -268,10 +277,12 @@ namespace Bottom_API._Services.Services
             throw new System.NotImplementedException();
         }
 
-        public async Task<bool> UpdateMaterial(List<OrderSizeByBatch> data)
-        {   var Purchase_No = data[0].Purchase_No;
+        public async Task<List<ReceiveNoMain>> UpdateMaterial(List<OrderSizeByBatch> data)
+        {   
+            var Purchase_No = data[0].Purchase_No;
+            // --------------------------------------------------------------------------------------------//
             if (data[0].Missing_No == "") {
-                // Update lại Accumlated_In_Qty theo Purchase_No,Order_Size và Mo_Seq ở bảng Material_Purchase
+                // --------Update lại Accumlated_In_Qty theo Purchase_No,Order_Size và Mo_Seq ở bảng Material_Purchase----//
                 foreach (var item in data)
                 {
                     foreach (var item1 in item.Purchase_Qty)
@@ -284,7 +295,7 @@ namespace Bottom_API._Services.Services
                     }
                 }
 
-                // Update giá trị Status
+                //------------------------- Update giá trị Status--------------------------------------------//
                 foreach (var item in data)
                 {
                     var checkStatus = "Y";
@@ -309,46 +320,7 @@ namespace Bottom_API._Services.Services
                         }
                     }
                 }
-
-                foreach (var item in data)
-                {
-                    var checkAdd = false;
-                    foreach (var item1 in item.Purchase_Qty)
-                    {
-                        // Kiểm tra nếu tồn tại Accumlated_In_Qty lớn hơn 0,có nghĩa là tồn tại 1 Order_Size trong batch đó 
-                        // có nhận hàng
-                        if (item1.Accumlated_In_Qty > 0) {
-                            checkAdd = true;
-                            break;
-                        }
-                    }
-                    if (checkAdd == true) {
-                        var packing_List = new Packing_List_Dto();
-                        packing_List.Sheet_Type = "R";
-                        packing_List.Missing_No = item.Missing_No;
-                        packing_List.Supplier_ID = item.Supplier_ID;
-                        packing_List.Supplier_Name = item.Supplier_Name;
-                        packing_List.MO_No = item.MO_No;
-                        packing_List.Purchase_No = item.Purchase_No;
-                        packing_List.MO_Seq = item.MO_Seq;
-                        packing_List.Material_ID = item.Material_ID;
-                        packing_List.Material_Name = item.Material_Name;
-                        packing_List.Model_No = item.Model_No;
-                        packing_List.Model_Name = item.Model_Name;
-                        packing_List.Article = item.Article;
-                        packing_List.Subcon_ID = item.Subcon_No;
-                        packing_List.Subcon_Name = item.Subcon_Name;
-                        packing_List.T3_Supplier = item.T3_Supplier;
-                        packing_List.T3_Supplier_Name = item.T3_Supplier_Name;
-                        packing_List.Generated_QRCode = "N";
-                        packing_List.Receive_Date = DateTime.Now;
-                        packing_List.Receive_No = this.RandomString(2);
-                        await _packingListService.Add(packing_List);
-                    }
-                }
-                // Thêm vào bảng Packing_List
-
-                return await _repoPurchase.SaveAll();
+                await _repoPurchase.SaveAll();
             } else {
                 // Update lại Accumlated_In_Qty theo Purchase_No,Order_Size và Mo_Seq ở bảng Material_Missing
                 foreach (var item in data)
@@ -388,10 +360,85 @@ namespace Bottom_API._Services.Services
                         }
                     }
                 }
-                return await _repoPurchase.SaveAll();
+                
+                await _repoPurchase.SaveAll();
             }
-        }
 
+               //------------------------Thêm vào 2 bảng Packing_List và Packing_List_Detail------------------//
+            var ReceiveNoMain = new List<ReceiveNoMain>();
+            foreach (var item in data)
+            {
+                // Check xem có tiến hành thêm hay ko
+                var checkAdd = false;
+                foreach (var item1 in item.Purchase_Qty)
+                {
+                // Kiểm tra nếu tồn tại Received_Qty lớn hơn 0,có nghĩa là tồn tại 1 Order_Size trong batch đó có nhận hàng
+                    if (item1.Received_Qty > 0) {
+                        checkAdd = true;
+                        break;
+                    }
+                }
+                    // Tiến hành thêm vào bảng Packing_List và Packing_List_Detail
+                if (checkAdd == true) {
+                    var packing_List = new Packing_List_Dto();
+                    packing_List.Sheet_Type = "R";
+                    packing_List.Missing_No = item.Missing_No;
+                    packing_List.Supplier_ID = item.Supplier_ID;
+                    packing_List.Supplier_Name = item.Supplier_Name;
+                    packing_List.MO_No = item.MO_No;
+                    packing_List.Purchase_No = item.Purchase_No;
+                    packing_List.MO_Seq = item.MO_Seq;
+                    packing_List.Delivery_No = item.Delivery_No;
+                    packing_List.Material_ID = item.Material_ID;
+                    packing_List.Material_Name = item.Material_Name;
+                    packing_List.Model_No = item.Model_No;
+                    packing_List.Model_Name = item.Model_Name;
+                    packing_List.Article = item.Article;
+                    packing_List.Subcon_ID = item.Subcon_No;
+                    packing_List.Subcon_Name = item.Subcon_Name;
+                    packing_List.T3_Supplier = item.T3_Supplier;
+                    packing_List.T3_Supplier_Name = item.T3_Supplier_Name;
+                    packing_List.Generated_QRCode = "N";
+                    packing_List.Receive_Date = DateTime.Now;
+                    packing_List.Updated_By = "Phi Long";
+                    packing_List.Receive_No = this.RandomString(2);
+
+                    // Tạo ra thông tin của 1 Receive No
+                    var ReceiveNoItem = new ReceiveNoMain();
+                    ReceiveNoItem.MO_No = item.MO_No;
+                    ReceiveNoItem.Purchase_No = item.Purchase_No;
+                    ReceiveNoItem.Receive_No = packing_List.Receive_No;
+                    ReceiveNoItem.MO_Seq = item.MO_Seq;
+                    ReceiveNoItem.Receive_Date = packing_List.Receive_Date;
+                    ReceiveNoItem.Sheet_Type = packing_List.Sheet_Type;
+                    ReceiveNoItem.Updated_By = packing_List.Updated_By;
+                    ReceiveNoItem.Purchase_Qty = 0;
+                    ReceiveNoItem.Accumated_Qty = 0;
+                    await _packingListService.Add(packing_List);
+
+                    foreach (var item2 in item.Purchase_Qty)
+                    {
+                        var packing_List_detail = new Packing_List_Detail_Dto();
+                        packing_List_detail.Receive_No = packing_List.Receive_No;
+                        packing_List_detail.Order_Size = item2.Order_Size;
+                        packing_List_detail.Model_Size = item2.Model_Size;
+                        packing_List_detail.Tool_Size = item2.Tool_Size;
+                        packing_List_detail.Spec_Size = item2.Spec_Size;
+                        packing_List_detail.MO_Qty = item2.MO_Qty;
+                        packing_List_detail.Purchase_Qty = item2.Purchase_Qty_Const;
+                        packing_List_detail.Received_Qty = item2.Received_Qty;
+                        packing_List_detail.Updated_Time = DateTime.Now;
+                        packing_List_detail.Updated_By = "Phi Long";
+
+                        ReceiveNoItem.Purchase_Qty = ReceiveNoItem.Purchase_Qty + item2.Purchase_Qty_Const;
+                        ReceiveNoItem.Accumated_Qty = ReceiveNoItem.Accumated_Qty + item2.Received_Qty;
+                        await _packingListDetailService.Add(packing_List_detail);
+                    }
+                    ReceiveNoMain.Add(ReceiveNoItem);
+                }
+            }
+            return ReceiveNoMain;
+        }
 
         // Hàm lấy random string
         public string RandomString(int size)    
@@ -424,6 +471,27 @@ namespace Bottom_API._Services.Services
             }
             var stringResult = "RW" + yearString + monthString + dayString + builder.ToString().ToUpper();  
             return stringResult; 
+        }
+
+        public async Task<List<ReceiveNoDetail>> ReceiveNoDetails(string receive_No)
+        {
+            var packingListDetailAll = await _packingListDetailService.GetAllAsync();
+            var packingListDetail = packingListDetailAll.Where(x => x.Receive_No.Trim() == receive_No.Trim()).ToList();
+            var data = new List<ReceiveNoDetail>();
+            foreach (var item in packingListDetail)
+            {
+                var list1 = packingListDetail.Where(x => x.Updated_Time <= item.Updated_Time &&
+                        x.Order_Size == item.Order_Size).GroupBy(y => y.Order_Size).Select(cl =>new {
+                           Remaining = cl.Sum(c => c.Received_Qty)
+                        }).ToList();
+                var ReceiveNoDetail = new ReceiveNoDetail();
+                ReceiveNoDetail.Order_Size = item.Order_Size;
+                ReceiveNoDetail.Purchase_Qty = item.Purchase_Qty;
+                ReceiveNoDetail.Received_Qty = item.Received_Qty;
+                ReceiveNoDetail.Remaining = item.Purchase_Qty - list1[0].Remaining;
+                data.Add(ReceiveNoDetail);
+            }
+            return data;
         }
     }
 }

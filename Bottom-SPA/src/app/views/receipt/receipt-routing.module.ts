@@ -4,6 +4,7 @@ import { ReceiptMainComponent } from './receipt-main/receipt-main.component';
 import { RecordComponent } from './record/record.component';
 import { RecordFormComponent } from './record-form/record-form.component';
 import { RecordFormBatchesComponent } from './record-form-batches/record-form-batches.component';
+import { RecordDetailComponent } from './record-detail/record-detail.component';
 
 const routes: Routes = [
     {
@@ -32,6 +33,13 @@ const routes: Routes = [
                         },
                     },
                     {
+                        path: 'record-detail',
+                        component: RecordDetailComponent,
+                        data: {
+                            title: 'Detail Record'
+                        }
+                    },
+                    {
                         path: 'add',
                         component: RecordFormComponent,
                         data: {
@@ -44,7 +52,7 @@ const routes: Routes = [
                         data: {
                             title: 'Add Record'
                         }
-                    }
+                    },
                 ]
             },
         ]
