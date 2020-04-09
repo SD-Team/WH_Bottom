@@ -135,6 +135,13 @@ export const routes: Routes = [
                  )
              },
              {
+               path: 'transfer',
+               loadChildren: () =>
+                 import('./views/transfer-location/transfer.module').then(
+                   m => m.TransferModule
+                 )
+             },
+             {
                path: "icons",
                loadChildren: () =>
                  import("./views/icons/icons.module").then(m => m.IconsModule)

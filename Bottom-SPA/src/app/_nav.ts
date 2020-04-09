@@ -52,6 +52,18 @@ export const navItems: INavData[] = [
     url: "/receiving/main",
     icon: "icon-book-open"
   },
+  {
+    name: 'Transfer Location',
+    url: '/transfer',
+    icon: 'icon-frame',
+    children: [
+      {
+        name: 'Main',
+        url: '/transfer/main',
+        icon: 'icon-arrow-left-circle'
+      }
+    ]
+  },
   // {
   //   title: true,
   //   name: 'Theme'
