@@ -34,5 +34,17 @@ namespace Bottom_API.Controllers
             var data  = await _service.UpdateMaterial(model);
             return Ok(data);
         }
+
+        [HttpGet("receiveNoDetails/{receive_No}")]
+        public async Task<IActionResult> ReceiveNoDetails(string receive_No) {
+            var data = await _service.ReceiveNoDetails(receive_No);
+            return Ok(data);
+        }
+        
+        [HttpPost("purchaseNoDetail")]
+        public async Task<IActionResult> PurchaseNoDetail([FromBody]MaterialMainViewModel model) {
+            var data = await _service.PurchaseNoDetail(model);
+            return Ok(data);
+        }
     }
 }

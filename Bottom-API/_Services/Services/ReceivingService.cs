@@ -21,19 +21,22 @@ namespace Bottom_API._Services.Services
         private readonly IMaterialPurchaseRepository _repoPurchase;
         private readonly IMaterialMissingRepository _repoMissing;
         private readonly IMaterialViewRepository _repoMaterialView;
+        private readonly IPackingListRepository _repoPackingList;
         private readonly IPackingListService _packingListService;
         private readonly IPackingListDetailService _packingListDetailService;
         public ReceivingService(IMaterialPurchaseRepository repoPurchase,
                                 IMaterialMissingRepository repoMissing,
                                 IMaterialViewRepository repoMaterialView,
+                                IPackingListRepository repoPackingList,
                                 IPackingListService packingListService,
                                 IPackingListDetailService packingListDetailService,
-                                IMapper mapper, 
+                                IMapper mapper,
                                 MapperConfiguration configMapper)
         {
             _repoMissing = repoMissing;
             _repoPurchase = repoPurchase;
             _repoMaterialView = repoMaterialView;
+            _repoPackingList = repoPackingList;
             _packingListService = packingListService;
             _packingListDetailService = packingListDetailService;
             _configMapper = configMapper;
@@ -278,7 +281,7 @@ namespace Bottom_API._Services.Services
         }
 
         public async Task<List<ReceiveNoMain>> UpdateMaterial(List<OrderSizeByBatch> data)
-        {   
+        {
             var Purchase_No = data[0].Purchase_No;
             // --------------------------------------------------------------------------------------------//
             if (data[0].Missing_No == "") {
@@ -305,7 +308,7 @@ namespace Bottom_API._Services.Services
                     foreach (var item1 in purchaseForBatch)
                     {
                         // Kiểm tra thì cần 1 dòng mà Accumlated_In_Qty khác Purchase_Qty thì checkStatus = N
-                        // Và thoát khỏi vòng lặp hiện tại 
+                        // Và thoát khỏi vòng lặp hiện tại
                         if (item1.Accumlated_In_Qty != item1.Purchase_Qty) {
                             checkStatus = "N";
                             break;
@@ -345,7 +348,7 @@ namespace Bottom_API._Services.Services
                     foreach (var item1 in purchaseForBatch)
                     {
                         // Kiểm tra thì cần 1 dòng mà Accumlated_In_Qty khác Purchase_Qty thì checkStatus = N
-                        // Và thoát khỏi vòng lặp hiện tại 
+                        // Và thoát khỏi vòng lặp hiện tại
                         if (item1.Accumlated_In_Qty != item1.Purchase_Qty) {
                             checkStatus = "N";
                             break;
@@ -360,7 +363,7 @@ namespace Bottom_API._Services.Services
                         }
                     }
                 }
-                
+
                 await _repoPurchase.SaveAll();
             }
 
@@ -441,7 +444,7 @@ namespace Bottom_API._Services.Services
         }
 
         // Hàm lấy random string
-        public string RandomString(int size)    
+        public string RandomString(int size)
         {   var datetimeNow = DateTime.Now;
             var year = datetimeNow.Year.ToString();
             var month = datetimeNow.Month;
@@ -461,36 +464,90 @@ namespace Bottom_API._Services.Services
             } else {
                 dayString = "0" + day;
             }
-            StringBuilder builder = new StringBuilder();    
-            Random random = new Random();    
-            char ch;    
-            for (int i = 0; i < size; i++)    
-            {    
-                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));    
-                builder.Append(ch);    
+            StringBuilder builder = new StringBuilder();
+            Random random = new Random();
+            char ch;
+            for (int i = 0; i < size; i++)
+            {
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                builder.Append(ch);
             }
-            var stringResult = "RW" + yearString + monthString + dayString + builder.ToString().ToUpper();  
-            return stringResult; 
+            var stringResult = "RW" + yearString + monthString + dayString + builder.ToString().ToUpper();
+            return stringResult;
         }
 
+
+        // ------------------Hàm lấy chi tiết của 1 Receive_No.--------------------------------------------
         public async Task<List<ReceiveNoDetail>> ReceiveNoDetails(string receive_No)
         {
+            var packing_List = await _repoPackingList.GetAll().ToListAsync();
+            var packing_ListItem = packing_List.Where(x => x.Receive_No.Trim() == receive_No.Trim()).FirstOrDefault();
+            // Các receive_No đã nhận hàng ở trước đó.Cùng batch. Cùng Purchase
+            var listReceiveNoByPurchase = from a in packing_List
+                                                where a.Purchase_No.Trim() == packing_ListItem.Purchase_No.Trim() &&
+                                                a.MO_Seq == packing_ListItem.MO_Seq &&
+                                                // Các receive_No đã nhận hàng ở trước đó.Cùng batch. Cùng Purchase
+                                                a.Updated_Time <= packing_ListItem.Updated_Time
+                                                select new {
+                                                    Receive_No =  a.Receive_No
+                                                };
             var packingListDetailAll = await _packingListDetailService.GetAllAsync();
             var packingListDetail = packingListDetailAll.Where(x => x.Receive_No.Trim() == receive_No.Trim()).ToList();
             var data = new List<ReceiveNoDetail>();
             foreach (var item in packingListDetail)
             {
-                var list1 = packingListDetail.Where(x => x.Updated_Time <= item.Updated_Time &&
-                        x.Order_Size == item.Order_Size).GroupBy(y => y.Order_Size).Select(cl =>new {
-                           Remaining = cl.Sum(c => c.Received_Qty)
-                        }).ToList();
+                // Tính tổng đã nhận được khi Receive_No đó tạo ra.Có nghĩa là tính tổng cả các Recevice_No trước đó cùng
+                // batch đã nhận được. => Để tính số dư còn lại.
+                decimal? Received_Qty = 0;
+                foreach (var item1 in listReceiveNoByPurchase)
+                {
+                    foreach (var item2 in packingListDetailAll)
+                    {
+                        if ( item2.Receive_No.Trim() == item1.Receive_No.Trim() &&
+                                item2.Order_Size.Trim() == item.Order_Size.Trim()) {
+                                Received_Qty = Received_Qty + item2.Received_Qty;
+                        }
+                    }
+                }
                 var ReceiveNoDetail = new ReceiveNoDetail();
                 ReceiveNoDetail.Order_Size = item.Order_Size;
                 ReceiveNoDetail.Purchase_Qty = item.Purchase_Qty;
                 ReceiveNoDetail.Received_Qty = item.Received_Qty;
-                ReceiveNoDetail.Remaining = item.Purchase_Qty - list1[0].Remaining;
+                ReceiveNoDetail.Remaining = item.Purchase_Qty - Received_Qty;
                 data.Add(ReceiveNoDetail);
             }
+            return data;
+        }
+
+        public async Task<List<ReceiveNoMain>> PurchaseNoDetail(MaterialMainViewModel model)
+        {
+            var packingList = await _packingListService.GetAllAsync();
+            var packingListDetail = await _packingListDetailService.GetAllAsync();
+            var data = (from a in packingList
+                        join b in packingListDetail on a.Receive_No.Trim() equals b.Receive_No.Trim()
+                        where a.Purchase_No.Trim() == model.Purchase_No.Trim()
+                        select new {
+                            Status = model.Status,
+                            Purchase_No = model.Purchase_No,
+                            MO_No = model.MO_No,
+                            Receive_No = a.Receive_No,
+                            MO_Seq = a.MO_Seq,
+                            Receive_Date = a.Receive_Date,
+                            Purchase_Qty = b.Purchase_Qty,
+                            Received_Qty = b.Received_Qty,
+                            Sheet_Type = a.Sheet_Type,
+                            Updated_By = a.Updated_By
+                        }).GroupBy(x => x.Receive_No).Select( cl => new ReceiveNoMain() {
+                            MO_No = cl.First().MO_No,
+                            Purchase_No = cl.First().Purchase_No,
+                            Receive_No = cl.First().Receive_No,
+                            MO_Seq = cl.First().MO_Seq,
+                            Receive_Date = cl.First().Receive_Date,
+                            Purchase_Qty = cl.Sum(c => c.Purchase_Qty),
+                            Accumated_Qty = cl.Sum(c => c.Received_Qty),
+                            Sheet_Type = cl.First().Sheet_Type,
+                            Updated_By = cl.First().Updated_By
+                        }).ToList();
             return data;
         }
     }

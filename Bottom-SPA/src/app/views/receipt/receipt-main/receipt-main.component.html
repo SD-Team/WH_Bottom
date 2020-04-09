@@ -108,11 +108,13 @@
                   <ng-template #elseStatus><td class="text-center vertical-middle" rowspan="2">{{item.status}}</td></ng-template>
                   <td class="text-center vertical-middle" rowspan="2">{{item.missing_No}}</td>
                   <td *ngIf="item.status === 'N'; else elsePlanno" class="text-center vertical-middle" rowspan="2"><button
-                    (click)="changePageAdd(item)"
+                    (click)="changePageOnAdd(item)"
                      class="btn btn-primary">{{item.mO_No}}</button></td>
                      <ng-template #elsePlanno>
-                       <td class="text-center vertical-middle" rowspan="2"><button class="btn btn-primary">{{item.mO_No}}</button></td>
-                     </ng-template>
+                        <td class="text-center vertical-middle" rowspan="2">
+                          <button (click)="changePageNotAdd(item)" class="btn btn-primary">{{item.mO_No}}</button>
+                        </td>
+                    </ng-template>
                   <th class="text-center vertical-middle">{{item.purchase_No}}</th>
                   <th class="text-center vertical-middle">{{item.model_No}}</th>
                   <th class="text-center vertical-middle">{{item.model_Name}}</th>

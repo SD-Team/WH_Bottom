@@ -8,6 +8,7 @@ import { Pagination, PaginatedResult } from '../../../_core/_models/pagination';
 import { PackingListService } from '../../../_core/_services/packing-list.service';
 import { Material } from '../../../_core/_models/material';
 import { MaterialModel } from '../../../_core/_viewmodels/material-model';
+import { ReceiveNoMain } from '../../../_core/_viewmodels/receive_no_main';
 
 @Component({
   selector: 'app-receipt-main',
@@ -25,6 +26,7 @@ export class ReceiptMainComponent implements OnInit {
   supplier_ID: string;
   supplier_Name: string;
   materialLists: MaterialModel[] = [];
+  receiveNoMain: ReceiveNoMain[] = [];
   status: string = 'all';
   constructor(private materialService: MaterialService,
               private packingListService: PackingListService,
@@ -96,8 +98,16 @@ export class ReceiptMainComponent implements OnInit {
       });
     }
   }
-  changePageAdd(materialModel) {
+  changePageOnAdd(materialModel) {
     this.materialService.changeMaterialModel(materialModel);
+    this.router.navigate(['receipt/record']);
+  }
+  changePageNotAdd(materialModel) {
+    this.materialService.changeMaterialModel(materialModel);
+    this.materialService.purchaseNoDetail(materialModel).subscribe(res => {
+      this.receiveNoMain = res;
+      this.materialService.changeReceiveNoMain(this.receiveNoMain);
+    });
     this.router.navigate(['receipt/record']);
   }
   pageChanged(event: any): void {

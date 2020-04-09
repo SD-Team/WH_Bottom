@@ -53,7 +53,7 @@
                 <td class="text-center vertical-middle">{{item.sheet_Type}}</td>
                 <td class="text-center vertical-middle">{{item.updated_By}}</td>
                 <td class="text-center vertical-middle">
-                  <button class="btn btn-block btn-success">Show Detail</button>
+                  <button (click)="changeFormDetail(item.receive_No)" class="btn btn-block btn-success">Show Detail</button>
                   <button class="btn btn-block btn-warning" *ngIf="materialModel.status === 'N'">Edit</button>
                   <button class="btn btn-block btn-danger" *ngIf="materialModel.status === 'N'">Delete</button>
                 </td>

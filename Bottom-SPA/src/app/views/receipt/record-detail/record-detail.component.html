@@ -14,49 +14,25 @@
           </div>
         </div>
         <div class="card-body">
-          <table class="table table-bordered">
+          <table *ngIf="receiveDetail !== undefined && receiveDetail !== null" class="table table-bordered">
             <thead>
               <tr>
                 <th class="bgr-table">Size</th>
-                <th class="text-center vertical-middle">04</th>
-                <th class="text-center vertical-middle">04</th>
-                <th class="text-center vertical-middle">04</th>
-                <th class="text-center vertical-middle">04</th>
-                <th class="text-center vertical-middle">04</th>
-                <th class="text-center vertical-middle">04</th>
-                <th class="text-center vertical-middle">04</th>
+                <th *ngFor="let item of receiveDetail" class="text-center vertical-middle">{{item.order_Size}}</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td class="bgr-table">Purchase Qty</td>
-                <td class="text-center vertical-middle">350</td>
-                <td class="text-center vertical-middle">350</td>
-                <td class="text-center vertical-middle">350</td>
-                <td class="text-center vertical-middle">350</td>
-                <td class="text-center vertical-middle">350</td>
-                <td class="text-center vertical-middle">350</td>
-                <td class="text-center vertical-middle">350</td>
+                <td *ngFor="let item of receiveDetail"  class="text-center vertical-middle">{{item.purchase_Qty}}</td>
               </tr>
               <tr>
                 <td class="bgr-table">Received Qty</td>
-                <td class="text-center vertical-middle">350</td>
-                <td class="text-center vertical-middle">350</td>
-                <td class="text-center vertical-middle">350</td>
-                <td class="text-center vertical-middle">350</td>
-                <td class="text-center vertical-middle">350</td>
-                <td class="text-center vertical-middle">350</td>
-                <td class="text-center vertical-middle">350</td>
+                <td *ngFor="let item of receiveDetail"  class="text-center vertical-middle">{{item.received_Qty}}</td>
               </tr>
               <tr>
                 <td class="bgr-table">Remaining canbe receive Qty</td>
-                <td class="text-center vertical-middle">0</td>
-                <td class="text-center vertical-middle">0</td>
-                <td class="text-center vertical-middle">50</td>
-                <td class="text-center vertical-middle">100</td>
-                <td class="text-center vertical-middle">0</td>
-                <td class="text-center vertical-middle">0</td>
-                <td class="text-center vertical-middle">20</td>
+                <td *ngFor="let item of receiveDetail" class="text-center vertical-middle">{{item.remaining}}</td>
               </tr>
             </tbody>
           </table>

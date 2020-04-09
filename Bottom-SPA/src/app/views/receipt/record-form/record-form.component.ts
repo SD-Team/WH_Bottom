@@ -18,7 +18,8 @@ export class RecordFormComponent implements OnInit {
   delivery_No: string;
   type: string = 'No Batch';
   materialModel: MaterialModel;
-  orderSizeByBatch: BatchQtyItem[];
+  orderSizeByBatch: BatchQtyItem[] = [];
+  orderSizeByBatchConst: BatchQtyItem[];
   materialMerging: MaterialMergingViewModel[];
   receiveNoMain: ReceiveNoMain[] = [];
   // Mảng order_size khi input ko đc nhập gì cả.
@@ -39,6 +40,9 @@ export class RecordFormComponent implements OnInit {
   getDataLoadTable() {
     this.materialService.searchByPurchase(this.materialModel).subscribe(res => {
       this.orderSizeByBatch = res.list3;
+      // Để tránh orderSizeByBatchConst thay đổi theo orderSizeByBatch
+      this.orderSizeByBatchConst = JSON.parse(JSON.stringify(res.list3));
+      console.log(this.orderSizeByBatchConst);
       this.materialMerging = res.list4;
       this.materialMerging.forEach(item => {
         this.listOrderSizeInputChange.push(item.order_Size.toString());
@@ -46,11 +50,34 @@ export class RecordFormComponent implements OnInit {
     })
   }
   changeInput(e) {
+    debugger
+    console.log(this.orderSizeByBatch);
     let indexOf = this.listOrderSizeInputChange.indexOf(e.toString());
     if (indexOf!== -1) {
       this.listOrderSizeInputChange.splice(indexOf,1);
     }
-    // this.getDataLoadTable();
+
+    //---------- Phải load lại các giá trị của Order_Size đó lại ban đầu lúc gettable.---------
+    debugger
+    this.orderSizeByBatchConst.forEach(element => {
+      element.purchase_Qty.forEach(element1 => {
+        if (element1.order_Size.toString() === e.toString()) {
+          this.orderSizeByBatch.forEach(element2 => {
+            if(element2.mO_Seq.toString() === element.mO_Seq.toString()) {
+              element2.purchase_Qty.forEach(element3 => {
+                if (element3.order_Size.toString() === e.toString()) {
+                  element3.purchase_Qty = element1.purchase_Qty;
+                  element3.accumlated_In_Qty = element1.accumlated_In_Qty;
+                  element3.received_Qty = 0;
+                  // console.log(element1.purchase_Qty);
+                }
+              })
+            }
+          });
+        }
+      });
+    });
+    // ------------------------------------------------------------------------------------------
     let columnInput = 0;
     // Order_Size tuong ung
     let thisInput = e;
@@ -188,7 +215,7 @@ export class RecordFormComponent implements OnInit {
       }, error => {
         this.alertifyService.error(error);
       });
-      // console.log(this.orderSizeByBatch);
+      // console.log(this.orderSizeByBatchConst);
     }
   }
   backForm() {
