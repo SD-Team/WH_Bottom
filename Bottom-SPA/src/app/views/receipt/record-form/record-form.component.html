@@ -50,7 +50,7 @@
                     <tr class="text-center">
                       <td>Delivery Qty</td>
                       <td *ngFor="let item of materialMerging">
-                        <input (change)="changeInput(item.order_Size)"
+                        <input (keyup)="changeInput(item.order_Size)"
                         value="{{item.delivery_Qty}}"
                         type="text" id="{{item.order_Size}}" class="input-table">
                       </td>

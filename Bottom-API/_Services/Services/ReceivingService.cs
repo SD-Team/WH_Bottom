@@ -294,7 +294,9 @@ namespace Bottom_API._Services.Services
                             .Where(x => x.Purchase_No.Trim() == Purchase_No.Trim() &&
                                     x.Order_Size == item1.Order_Size &&
                                     x.MO_Seq == item.MO_Seq).FirstOrDefaultAsync();
-                        materialItem.Accumlated_In_Qty = item1.Accumlated_In_Qty;
+                        // materialItem.Accumlated_In_Qty = item1.Accumlated_In_Qty;
+                        materialItem.Accumlated_In_Qty  = materialItem.Accumlated_In_Qty + item1.Received_Qty;
+                        await _repoPurchase.SaveAll();
                     }
                 }
 

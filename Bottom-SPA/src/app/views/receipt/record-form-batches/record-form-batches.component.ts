@@ -77,7 +77,7 @@ export class RecordFormBatchesComponent implements OnInit {
             spec_Size: item1.spec_Size,
             mO_Qty: item1.mO_Qty,
             purchase_Qty_Const: item1.purchase_Qty_Const,
-            received_Qty: item1.purchase_Qty_Const
+            received_Qty: item1.purchase_Qty
           };
           itemPurchase.push(item2);
         });
@@ -106,7 +106,7 @@ export class RecordFormBatchesComponent implements OnInit {
     });
   }
   submitData() {
-    console.log(this.materialByBatchList);
+    // console.log(this.materialByBatchList);
     if (this.delivery_No === undefined || this.delivery_No === '') {
       this.alertifyService.error('Please enter Delivery No');
     } else {
@@ -115,15 +115,16 @@ export class RecordFormBatchesComponent implements OnInit {
           item.delivery_No = this.delivery_No;
           return item;
         });
+        console.log(this.materialByBatchList);
         this.materialService.updateMaterial(this.materialByBatchList).subscribe(res => {
           this.receiveNoMain = res;
           this.materialService.changeReceiveNoMain(this.receiveNoMain);
           this.alertifyService.success('Submit success');
           this.router.navigate(['receipt/record']);
         });
-      } else {
-        this.alertifyService.error('Please click insert');
-      }
+        } else {
+          this.alertifyService.error('Please click insert');
+        }
     }
   }
   backForm() {

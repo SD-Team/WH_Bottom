@@ -215,7 +215,7 @@ export class RecordFormComponent implements OnInit {
       }, error => {
         this.alertifyService.error(error);
       });
-      // console.log(this.orderSizeByBatchConst);
+      console.log(this.orderSizeByBatch);
     }
   }
   backForm() {
