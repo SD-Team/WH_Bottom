@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { MaterialModel } from '../_viewmodels/material-model';
 import { BatchQtyItem } from '../_viewmodels/batch-qty-item';
 import { ReceiveNoMain } from '../_viewmodels/receive_no_main';
+import { ReceiveNoDetail } from '../_viewmodels/receive-no-detail';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +18,10 @@ export class MaterialService {
   materialModel: MaterialModel;
   materialSource = new BehaviorSubject<MaterialModel>(this.materialModel);
   receiveNoMainSource = new BehaviorSubject<ReceiveNoMain[]>([]);
+  receiveNoDetailSource = new BehaviorSubject<ReceiveNoDetail[]>([]);
   currentMaterial = this.materialSource.asObservable();
   currentReceiveNoMain = this.receiveNoMainSource.asObservable();
+  currentReceiveNoDetail = this.receiveNoDetailSource.asObservable();
   constructor(private http: HttpClient) { }
   // search(page?, itemsPerPage?, materialSearch?: MaterialSearch): Observable<PaginatedResult<MaterialModel[]>> {
   //   const paginatedResult: PaginatedResult<MaterialModel[]> = new PaginatedResult<MaterialModel[]>();
@@ -48,10 +51,19 @@ export class MaterialService {
   changeReceiveNoMain(receiveNoMain: ReceiveNoMain[]) {
     this.receiveNoMainSource.next(receiveNoMain);
   }
+  changeReceiveNoDetail(receiveNoDetails: ReceiveNoDetail[]) {
+    this.receiveNoDetailSource.next(receiveNoDetails);
+  }
   searchByPurchase(model: MaterialModel) {
     return this.http.post<any>(this.baseUrl + 'receiving/searchTable/', model);
   }
   updateMaterial(model: BatchQtyItem[]): Observable<ReceiveNoMain[]> {
     return this.http.post<any>(this.baseUrl + 'receiving/updateMaterial/', model);
+  }
+  receiveNoDetails(receiveNo: any): Observable<ReceiveNoDetail[]> {
+    return this.http.get<ReceiveNoDetail[]>(this.baseUrl + 'receiving/receiveNoDetails/' + receiveNo, {});
+  }
+  purchaseNoDetail(materialModel: MaterialModel): Observable<ReceiveNoMain[]> {
+    return this.http.post<any>(this.baseUrl + 'receiving/purchaseNoDetail', materialModel);
   }
 }

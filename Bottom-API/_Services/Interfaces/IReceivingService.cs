@@ -13,5 +13,6 @@ namespace Bottom_API._Services.Interfaces
         Task<object> MaterialMerging(MaterialMainViewModel model);
         Task<List<ReceiveNoMain>> UpdateMaterial(List<OrderSizeByBatch> data);
         Task<List<ReceiveNoDetail>> ReceiveNoDetails(string receive_No);
+        Task<List<ReceiveNoMain>> PurchaseNoDetail(MaterialMainViewModel model);
     }
 }

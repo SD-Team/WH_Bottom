@@ -5,6 +5,7 @@ import { MaterialModel } from '../../../_core/_viewmodels/material-model';
 import { BatchQtyItem } from '../../../_core/_viewmodels/batch-qty-item';
 import { MaterialMergingViewModel } from '../../../_core/_viewmodels/material-merging';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
+import { ReceiveNoMain } from '../../../_core/_viewmodels/receive_no_main';
 
 @Component({
   selector: 'app-record-form-batches',
@@ -17,10 +18,11 @@ export class RecordFormBatchesComponent implements OnInit {
   materialByBatchList: BatchQtyItem[] = [];
   orderSizeByBatch: BatchQtyItem[];
   materialMerging: MaterialMergingViewModel[];
+  receiveNoMain: ReceiveNoMain[] = [];
   delivery_No: string;
   constructor(private router: Router,
               private materialService: MaterialService,
-              private alertiryService: AlertifyService) { }
+              private alertifyService: AlertifyService) { }
 
   ngOnInit() {
     this.materialService.currentMaterial.subscribe(res => this.materialModel = res);
@@ -106,7 +108,7 @@ export class RecordFormBatchesComponent implements OnInit {
   submitData() {
     console.log(this.materialByBatchList);
     if (this.delivery_No === undefined || this.delivery_No === '') {
-      this.alertiryService.error('Please enter Delivery No');
+      this.alertifyService.error('Please enter Delivery No');
     } else {
       if (this.materialByBatchList.length !== 0) {
         this.materialByBatchList.map(item => {
@@ -114,10 +116,13 @@ export class RecordFormBatchesComponent implements OnInit {
           return item;
         });
         this.materialService.updateMaterial(this.materialByBatchList).subscribe(res => {
-          this.alertiryService.success('Insert success');
+          this.receiveNoMain = res;
+          this.materialService.changeReceiveNoMain(this.receiveNoMain);
+          this.alertifyService.success('Submit success');
+          this.router.navigate(['receipt/record']);
         });
       } else {
-        this.alertiryService.error('Please click insert');
+        this.alertifyService.error('Please click insert');
       }
     }
   }
