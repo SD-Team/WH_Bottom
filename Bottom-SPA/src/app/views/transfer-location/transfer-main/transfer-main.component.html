@@ -72,17 +72,17 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
+                <tr *ngFor="let item of result; let i = index">
+                  <td>{{i + 1}}</td>
+                  <td>{{item.transferNo}}</td>
+                  <td>{{item.qrCodeId}}</td>
+                  <td>{{item.planNo}}</td>
+                  <td>{{item.receiveNo}}</td>
+                  <td>{{item.batch}}</td>
+                  <td>{{item.matName}}</td>
+                  <td>{{item.qty}}</td>
+                  <td>{{item.fromLocation}}</td>
+                  <td>{{item.fromLocation}}</td>
                   <td>
                     <button class="btn btn-danger">
                       <i class="fa fa-trash"></i> Delete

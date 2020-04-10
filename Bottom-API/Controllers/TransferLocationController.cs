@@ -21,13 +21,5 @@ namespace Bottom_API.Controllers
                 return Ok(model);
             else return NoContent();
         }
-
-        [HttpGet("test")]
-        public IActionResult Get()
-        {
-            return Ok(new {
-                a = "aaaaa"
-            });
-        }
     }
 }
