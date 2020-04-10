@@ -23,30 +23,30 @@ export class TransferMainComponent implements OnInit {
     this.result = [];
   }
 
-  getInputMain(e) {
-    console.log(e.length);
-    if (e.length === 14) {
-      let flag = true;
-      this.result.forEach((item) => {
-        if (item.qrCode_Id === e) {
-          flag = false;
-        }
-      });
-      if (flag) {
-        this.transferService.getMainByQrCodeID(this.qrCodeID).subscribe(
-          (res) => {
-            if (res != null) {
-              this.result.push(res);
-            }
-          },
-          (error) => {
-            this.alertify.error(error);
-          }
-        );
-      } else {
-        this.alertify.error('This QRCode scanded!');
-      }
-      this.qrCodeID = '';
-    }
-  }
+  // getInputMain(e) {
+  //   console.log(e.length);
+  //   if (e.length === 14) {
+  //     let flag = true;
+  //     this.result.forEach((item) => {
+  //       if (item.qrCode_Id === e) {
+  //         flag = false;
+  //       }
+  //     });
+  //     if (flag) {
+  //       this.transferService.getMainByQrCodeID(this.qrCodeID).subscribe(
+  //         (res) => {
+  //           if (res != null) {
+  //             this.result.push(res);
+  //           }
+  //         },
+  //         (error) => {
+  //           this.alertify.error(error);
+  //         }
+  //       );
+  //     } else {
+  //       this.alertify.error('This QRCode scanded!');
+  //     }
+  //     this.qrCodeID = '';
+  //   }
+  // }
 }

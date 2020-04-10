@@ -27,5 +27,6 @@ namespace Bottom_API.Models
         public string Pickup_No { get; set; }
         public DateTime Updated_Time { get; set; }
         public string Updated_By { get; set; }
+        public string Can_Move { get; set; }
     }
 }

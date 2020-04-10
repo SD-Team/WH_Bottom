@@ -3,8 +3,8 @@ using Bottom_API.DTO;
 
 namespace Bottom_API._Services.Interfaces
 {
-    public interface ITransferLocationService : IBottomService<Transaction_Dto>
+    public interface ITransferLocationService
     {
-        Task<Transaction_Dto> GetByQRCodeID(object qrCodeID);
+        Task<TransferLocation_Dto> GetByQrCodeId(object qrCodeId);
     }
 }

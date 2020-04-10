@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Bottom_API._Repositories.Interfaces;
 using Bottom_API.Data;
 using Bottom_API.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bottom_API._Repositories.Repositories
 {
