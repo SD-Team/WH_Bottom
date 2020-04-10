@@ -29,7 +29,7 @@ namespace Bottom_API._Services.Services
         public async Task<TransferLocation_Dto> GetByQrCodeId(object qrCodeId)
         {
             TransferLocation_Dto model = new TransferLocation_Dto();
-            var transctionModel = _repoTransactionMain.FindSingle(x => x.QRCode_ID.Trim() == qrCodeId.ToString().Trim() && x.Can_Move == "Y");
+            var transctionModel = await _repoTransactionMain.GetByQrCodeId(qrCodeId);
             if (transctionModel != null)
             {
                 model.QrCodeId = transctionModel.QRCode_ID.Trim();

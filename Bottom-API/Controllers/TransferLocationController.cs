@@ -22,7 +22,7 @@ namespace Bottom_API.Controllers
             else return NoContent();
         }
 
-        [HttpGet("Get")]
+        [HttpGet("test")]
         public IActionResult Get()
         {
             return Ok(new {
