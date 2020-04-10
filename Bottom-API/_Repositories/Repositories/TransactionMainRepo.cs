@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Bottom_API._Repositories.Interfaces;
 using Bottom_API.Data;
 using Bottom_API.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bottom_API._Repositories.Repositories
 {
@@ -16,5 +17,12 @@ namespace Bottom_API._Repositories.Repositories
         {
             _context = context;
         }
+
+        public async Task<WMSB_Transaction_Main> GetByInputNo(object inputNo)
+        {
+            return await _context.WMSB_Transaction_Main.FirstOrDefaultAsync(x => x.Transac_No.Trim() == inputNo.ToString().Trim());
+        }
+
+        
     }
 }

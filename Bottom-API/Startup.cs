@@ -57,6 +57,8 @@ namespace Bottom_API
             services.AddScoped<IMaterialPurchaseRepository, MaterialPurchaseRepository>();
             services.AddScoped<IMaterialMissingRepository, MaterialMissingRepository>();
             services.AddScoped<IMaterialViewRepository, MaterialViewRepository>();
+            services.AddScoped<ITransactionMainRepo, TransactionMainRepo>();
+            services.AddScoped<ITransactionDetailRepo, TransactionDetailRepo>();
 
             // Service
             services.AddScoped<IPackingListService, PackingListService>();

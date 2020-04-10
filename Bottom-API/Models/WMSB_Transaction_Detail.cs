@@ -21,7 +21,7 @@ namespace Bottom_API.Models
         public decimal? Instock_Qty { get; set; }
         [Column(TypeName = "decimal(9,2)")]
         public decimal? Untransac_Qty { get; set; }
-        public DateTime Updated_Time { get; set; }
+        public DateTime? Updated_Time { get; set; }
         public string Updated_By { get; set; }
 
 
