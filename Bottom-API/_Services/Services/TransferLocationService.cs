@@ -39,11 +39,9 @@ namespace Bottom_API._Services.Services
             var qrCodeModel = await _repoQRCodeMain.GetByQRCodeID(qrCodeId);
             if (transctionModel != null)
             {
-                Random ran = new Random();
-                int num = ran.Next(100, 999);
                 model.Id = transctionModel.ID;
                 model.QrCodeId = transctionModel.QRCode_ID.Trim();
-                model.TransferNo = "TB" + DateTime.Now.ToString("yyyyMMdd") + num.ToString();
+                model.TransferNo = "TB" + DateTime.Now.ToString("yyyyMMdd") + "001";
                 model.PlanNo = transctionModel.MO_No.Trim();
                 model.ReceiveNo = qrCodeModel.Receive_No.Trim();
                 model.Batch = transctionModel.MO_Seq;
@@ -92,6 +90,7 @@ namespace Bottom_API._Services.Services
                     transactionMain.Transac_Time = DateTime.Now;
                     transactionMain.Updated_Time = DateTime.Now;
                     transactionMain.Transac_No = item.TransferNo;
+                    transactionMain.Transac_Sheet_No = item.TransferNo;
                     _repoTransactionMain.Add(transactionMain);
                 }
                 return await _repoTransactionMain.SaveAll();

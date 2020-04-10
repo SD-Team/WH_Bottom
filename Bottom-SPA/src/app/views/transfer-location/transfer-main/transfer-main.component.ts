@@ -53,10 +53,12 @@ export class TransferMainComponent implements OnInit {
   }
 
   remove(qrCodeId: string) {
-    this.result.forEach((e, i) => {
-      if (e.qrCodeId === qrCodeId) {
-        this.result.splice(i, 1);
-      }
+    this.alertify.confirm('Delete', 'Are you sure Delete', () => {
+      this.result.forEach((e, i) => {
+        if (e.qrCodeId === qrCodeId) {
+          this.result.splice(i, 1);
+        }
+      });
     });
   }
 
