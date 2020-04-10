@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Bottom_API._Services.Interfaces;
+using Bottom_API.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bottom_API.Controllers
@@ -24,5 +26,37 @@ namespace Bottom_API.Controllers
                 return Ok(model);
             else return NoContent();
         }
+
+        [HttpGet("detail/{qrCode}", Name="GetDetail")]
+        public async Task<IActionResult> GetDetailByQrCodeID(string qrCode)
+        {
+            var model = await _service.GetDetailByQRCodeID(qrCode);
+            if (model != null)
+                return Ok(model);
+            else return NoContent();
+        }
+
+        [HttpPost("create", Name = "CreateInput")]
+        public async Task<IActionResult> CreateInput(Transaction_Detail_Dto model)
+        {
+            if (await _service.CreateInput(model))
+            {
+                return Ok();
+            }
+
+            throw new Exception("Creating the rack location failed on save");
+        }
+
+        [HttpPut("submit", Name = "SubmitInput")]
+        public async Task<IActionResult> SubmitInput(List<string> list)
+        {
+            if (await _service.SubmitInput(list))
+            {
+                return Ok();
+            }
+
+            throw new Exception("Submit failed on save");
+        }
+    
     }
 }

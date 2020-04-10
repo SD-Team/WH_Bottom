@@ -17,5 +17,12 @@ namespace Bottom_API._Repositories.Repositories
         {
             _context = context;
         }
+
+        public async Task<WMSB_Transaction_Main> GetByInputNo(object inputNo)
+        {
+            return await _context.WMSB_Transaction_Main.FirstOrDefaultAsync(x => x.Transac_No.Trim() == inputNo.ToString().Trim());
+        }
+
+        
     }
 }

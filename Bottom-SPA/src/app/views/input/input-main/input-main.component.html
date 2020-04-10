@@ -18,7 +18,7 @@
                   <span class="input-group-prepend">
                     <button class="btn btn-primary" type="button" disabled>SCAN</button>
                   </span>
-                  <input type="text" placeholder="Scan" class="form-control">
+                  <input type="text" placeholder="Scan" class="form-control" [(ngModel)]="rackLocation" name="rackLocation">
                 </div>
               </div>
             </div>
@@ -42,6 +42,9 @@
     <!--/.col-->
     <div class="col-lg-12">
       <div class="card">
+        <div class="card-header">
+          <strong>INPUT FROM SCAN QR</strong>
+        </div>
         <div class="card-body">
           <!-- <ngx-spinner bdOpacity=0.2 bdColor="rgba(51,51,51,0.8)" size="medium" color="#20A8D8" type="pacman">
           </ngx-spinner> -->
@@ -50,6 +53,7 @@
               <thead>
                 <tr>
                   <th>SEQ</th>
+                  <th>Input No</th>
                   <th>QRcode Id</th>
                   <th>Plan No</th>
                   <th>Suplier</th>
@@ -60,12 +64,13 @@
                   <th>Actions</th>
                 </tr>
               </thead>
-              <tbody *ngIf="result!== undefined">
+              <tbody>
                 <ng-container *ngFor="let item of result; let i = index">
                   <tr >
                     <td rowspan="2"  class="text-center vertical-middle">
                       {{i + 1}}
                     </td>
+                    <td rowspan="2" class="text-center vertical-middle">{{item.input_No}}</td>
                     <td>{{item.qrCode_Id}}</td>
                     <td>{{item.plan_No}}</td>
                     <td>{{item.suplier_No}} - {{item.suplier_Name}}</td>
@@ -74,8 +79,8 @@
                     <td>{{item.trans_In_Qty}}</td>
                     <td>{{item.inStock_Qty}}</td>
                     <td rowspan="2" class="text-center vertical-middle">
-                      <button class="btn btn-warning mr-2"><i class="fa fa-search-plus"></i>  Detail</button>
-                      <button class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button>
+                      <button class="btn btn-warning mr-2" (click)="getDetailByQRCode(item)"><i class="fa fa-search-plus"></i>  Detail</button>
+                      <button class="btn btn-danger" *ngIf="item.input_No == null" (click)="remove(item.qrCode_Id)"><i class="fa fa-trash" ></i> Delete</button>
                     </td>
                   </tr>
                   <tr>
@@ -92,11 +97,12 @@
    
           <div class="card-footer" *ngIf="result.length>0">
             <button class="btn btn-danger mr-2"><i class="fa fa-ban"></i> Cancel</button>
-            <button class="btn btn-success mr-2"><i class="fa fa-check"></i> Submit</button>
+            <button class="btn btn-success mr-2" (click)="submitInput()"><i class="fa fa-check"></i> Submit</button>
             <button class="btn btn-primary"><i class="fa fa-print"></i> Print</button>
           </div>
       </div>
     </div>
     <!--/.col-->
   </div>
+
 </div>
