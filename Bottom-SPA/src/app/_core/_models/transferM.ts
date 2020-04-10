@@ -1,4 +1,5 @@
 export interface TransferM {
+    id: string;
     transferNo: string;
     qrCodeId: string;
     planNo: string;

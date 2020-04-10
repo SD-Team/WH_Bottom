@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
 import { TransferService } from '../../../_core/_services/transfer.service';
+import { TransferM } from '../../../_core/_models/transferM';
 
 @Component({
   selector: 'app-transfer-main',
@@ -9,8 +10,10 @@ import { TransferService } from '../../../_core/_services/transfer.service';
   styleUrls: ['./transfer-main.component.scss'],
 })
 export class TransferMainComponent implements OnInit {
-  result: any = [];
-  qrCodeID = '';
+  result: TransferM[];
+  qrCodeId = '';
+  toLocation = '';
+  flagSubmit = false;
 
   constructor(
     private transferService: TransferService,
@@ -23,17 +26,16 @@ export class TransferMainComponent implements OnInit {
     this.result = [];
   }
 
-  getInputMain(e) {
-    console.log(e.length);
+  getTransferMain(e) {
     if (e.length === 14) {
       let flag = true;
       this.result.forEach((item) => {
-        if (item.qrCode_Id === e) {
+        if (item.qrCodeId === e) {
           flag = false;
         }
       });
       if (flag) {
-        this.transferService.getMainByQrCodeID(this.qrCodeID).subscribe(
+        this.transferService.getMainByQrCodeId(this.qrCodeId).subscribe(
           (res) => {
             if (res != null) {
               this.result.push(res);
@@ -46,7 +48,27 @@ export class TransferMainComponent implements OnInit {
       } else {
         this.alertify.error('This QRCode scanded!');
       }
-      this.qrCodeID = '';
+      this.qrCodeId = '';
     }
+  }
+
+  remove(qrCodeId: string) {
+    this.result.forEach((e, i) => {
+      if (e.qrCodeId === qrCodeId) {
+        this.result.splice(i, 1);
+      }
+    });
+  }
+
+  submitMain() {
+    this.flagSubmit = true;
+    this.transferService.submitMain(this.result).subscribe(
+      () => {
+        this.alertify.success('Submit succeed');
+      },
+      error => {
+        this.alertify.error(error);
+      }
+    )
   }
 }

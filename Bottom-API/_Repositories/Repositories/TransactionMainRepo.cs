@@ -22,17 +22,5 @@ namespace Bottom_API._Repositories.Repositories
         {
             return await _context.WMSB_Transaction_Main.FirstOrDefaultAsync(x => x.Transac_No.Trim() == inputNo.ToString().Trim());
         }
-
-        public Task<WMSB_Transaction_Main> GetByQRCodeD(object qrCodeID)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<WMSB_Transaction_Main> GetByQrCodeId(object qrCodeId)
-        {
-            var model = await _context.WMSB_Transaction_Main.FirstOrDefaultAsync(x => x.QRCode_ID.Trim() == qrCodeId.ToString().Trim() && x.Can_Move == "Y");
-            return model;
-        }
-        
     }
 }

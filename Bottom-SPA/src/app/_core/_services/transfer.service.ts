@@ -11,8 +11,11 @@ export class TransferService {
   baseUrl = environment.apiUrl;
   constructor(private http: HttpClient) { }
 
-  getMainByQrCodeID(qrCodeID: string) {
-    return this.http.get<TransferM>(this.baseUrl + 'input/' + qrCodeID, {});
+  getMainByQrCodeId(qrCodeId: string) {
+    return this.http.get<TransferM>(this.baseUrl + 'TransferLocation/' + qrCodeId, {});
   }
 
+  submitMain(lists: TransferM[]) {
+    return this.http.post(this.baseUrl + 'TransferLocation/submit', lists);
+  }
 }

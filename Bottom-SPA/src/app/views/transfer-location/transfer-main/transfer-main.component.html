@@ -9,7 +9,7 @@
         <form class="form-horizontal">
           <div class="card-body">
             <div class="form-group row">
-              <div class="col-md-2">
+              <div class="col-md-3">
                 <label>To Location:</label>
                 <div class="input-group">
                   <span class="input-group-prepend">
@@ -21,12 +21,14 @@
                     type="text"
                     placeholder="To Location"
                     class="form-control"
+                    name="toLocation"
+                    [(ngModel)]="toLocation"
                   />
                 </div>
               </div>
             </div>
             <div class="form-group row">
-              <div class="col-md-2">
+              <div class="col-md-3">
                 <label> QrCode:</label>
                 <div class="input-group">
                   <span class="input-group-prepend">
@@ -39,8 +41,8 @@
                     placeholder="QRCode"
                     name="qrCodeID"
                     class="form-control"
-                    [(ngModel)]="qrCodeID"
-                    (ngModelChange)="getInputMain($event)"
+                    [(ngModel)]="qrCodeId"
+                    (ngModelChange)="getTransferMain($event)"
                   />
                 </div>
               </div>
@@ -53,6 +55,9 @@
   <div class="row">
     <div class="col-lg-12">
       <div class="card">
+        <div class="card-header">
+          <strong>TRANSFER FROM SCAN QR</strong>
+        </div>
         <div class="card-body">
           <div class="table-responsive">
             <table class="table table-bordered text-center">
@@ -68,23 +73,26 @@
                   <th>Qty</th>
                   <th>From Location</th>
                   <th>To Location</th>
-                  <th>Actions</th>
+                  <th *ngIf="!flagSubmit">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let item of result; let i = index">
-                  <td>{{i + 1}}</td>
-                  <td>{{item.transferNo}}</td>
-                  <td>{{item.qrCodeId}}</td>
-                  <td>{{item.planNo}}</td>
-                  <td>{{item.receiveNo}}</td>
-                  <td>{{item.batch}}</td>
-                  <td>{{item.matName}}</td>
-                  <td>{{item.qty}}</td>
-                  <td>{{item.fromLocation}}</td>
-                  <td>{{item.fromLocation}}</td>
-                  <td>
-                    <button class="btn btn-danger">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ item.transferNo }}</td>
+                  <td>{{ item.qrCodeId }}</td>
+                  <td>{{ item.planNo }}</td>
+                  <td>{{ item.receiveNo }}</td>
+                  <td>{{ item.batch }}</td>
+                  <td>{{ item.matId }} - {{ item.matName }}</td>
+                  <td>{{ item.qty }}</td>
+                  <td>{{ item.fromLocation }}</td>
+                  <td>{{ toLocation }}</td>
+                  <td *ngIf="!flagSubmit">
+                    <button
+                      class="btn btn-danger"
+                      (click)="remove(item.qrCodeId)"
+                    >
                       <i class="fa fa-trash"></i> Delete
                     </button>
                   </td>
@@ -93,14 +101,18 @@
             </table>
           </div>
         </div>
-        <div class="card-footer">
+        <div class="card-footer" *ngIf="result.length > 0">
           <button class="btn btn-danger mr-2">
             <i class="fa fa-ban"></i> Cancel
           </button>
-          <button class="btn btn-success mr-2">
+          <button
+            class="btn btn-success mr-2"
+            (click)="submitMain()"
+            [disabled]="flagSubmit"
+          >
             <i class="fa fa-check"></i> Submit
           </button>
-          <button class="btn btn-primary">
+          <button class="btn btn-primary" [disabled]="!flagSubmit">
             <i class="fa fa-print"></i> Print
           </button>
         </div>

@@ -1,5 +1,8 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Bottom_API._Services.Interfaces;
+using Bottom_API.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bottom_API.Controllers
@@ -20,6 +23,17 @@ namespace Bottom_API.Controllers
             if (model.QrCodeId != null)
                 return Ok(model);
             else return NoContent();
+        }
+
+        [HttpPost("submit", Name = "SubmitTransfer")]
+        public async Task<IActionResult> Submit(List<TransferLocation_Dto> lists)
+        {
+            if (await _service.SubmitTransfer(lists))
+            {
+                return Ok();
+            }
+
+            throw new Exception("Submit failed on save");
         }
     }
 }
