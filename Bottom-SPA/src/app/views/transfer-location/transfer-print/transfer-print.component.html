@@ -14,10 +14,10 @@
         </div>
         <div class="card-body">
           <div class="container div-hidden print-all" id="wrap-print">
-            <div class="row">
+            <h4>Print Date: {{ today | date: "yyyy/MM/dd" }}</h4>
+            <div class="row"  *ngFor="let item of results">
               <div class="col-8 pt-3">
-                <h4>Transfer No: {{ transferNo }}</h4>
-                <h4>Print Date: {{ today | date: "yyyy/MM/dd" }}</h4>
+                <h4>Transfer No: {{ item.name }}</h4>
               </div>
               <div class="col-4">
                 <ngx-qrcode
@@ -25,49 +25,51 @@
                   [qrc-element-type]="elementType"
                   qrc-class="qr-height"
                   qrc-version="7"
-                  [qrc-value]="transferNo"
+                  [qrc-value]="item.name"
                 >
                 </ngx-qrcode>
                 <div class="pl-4 pb-2">
                   <strong class="rack-location">
-                    {{ transferNo }}
+                    {{ item.name }}
                   </strong>
                 </div>
               </div>
-            </div>
-            <div class="table-responsive">
-              <table class="table table-bordered text-center">
-                <thead>
-                  <tr>
-                    <th>SEQ</th>
-                    <th>Plan No</th>
-                    <th>Batch</th>
-                    <th>Mat# Name</th>
-                    <th>Qty</th>
-                    <th>From Location</th>
-                    <th>To Location</th>
-                    <th>Transfer Time</th>
-                    <th>Transfer By</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let item of transfers; let i = index">
-                    <td>{{ i + 1 }}</td>
-                    <td>{{ item.planNo }}</td>
-                    <td>{{ item.batch }}</td>
-                    <td>{{ item.matId }} - {{ item.matName }}</td>
-                    <td>{{ item.qty }}</td>
-                    <td>{{ item.fromLocation }}</td>
-                    <td>{{ item.toLocation }}</td>
-                    <td>
-                      {{ item.transacTime | date: "yyyy/MM/dd HH:mm:ss" }}
-                    </td>
-                    <td>
-                      {{ item.updateBy }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <div class="table-responsive">
+                <table class="table table-bordered text-center">
+                  <thead>
+                    <tr>
+                      <th>SEQ</th>
+                      <th>Plan No</th>
+                      <th>Batch</th>
+                      <th>Material No</th>
+                      <th>Mat# Name</th>
+                      <th>Qty</th>
+                      <th>From Location</th>
+                      <th>To Location</th>
+                      <th>Transfer Time</th>
+                      <th>Transfer By</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let value of item.values; let i = index">
+                      <td>{{ i + 1 }}</td>
+                      <td>{{ value.planNo }}</td>
+                      <td>{{ value.batch }}</td>
+                      <td>{{ value.matId }}</td>
+                      <td>{{ value.matName }}</td>
+                      <td>{{ value.qty }}</td>
+                      <td>{{ value.fromLocation }}</td>
+                      <td>{{ value.toLocation }}</td>
+                      <td>
+                        {{ value.transacTime | date: "yyyy/MM/dd HH:mm:ss" }}
+                      </td>
+                      <td>
+                        {{ value.updateBy }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>

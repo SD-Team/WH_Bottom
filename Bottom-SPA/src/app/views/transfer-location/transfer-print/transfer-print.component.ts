@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { TransferService } from '../../../_core/_services/transfer.service';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { TransferM } from '../../../_core/_models/transferM';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-transfer-print',
@@ -11,19 +12,37 @@ import { TransferM } from '../../../_core/_models/transferM';
 export class TransferPrintComponent implements OnInit {
   elementType: 'url' | 'canvas' | 'img' = 'url';
   transfers: TransferM[] = [];
-  transferNo = '';
+  results = [];
   today = new Date();
+  private previousUrl: string = undefined;
+  private currentUrl: string = undefined;
   constructor(
     private transferService: TransferService,
     private router: Router
-  ) {}
+  ) {
+    this.currentUrl = this.router.url;
+    router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.previousUrl = this.currentUrl;
+        this.currentUrl = event.url;
+      }
+    });
+  }
 
   ngOnInit() {
     this.transferService.currentTransfer.subscribe((res) => {
       this.transfers = res;
-      if (res.length > 0) {
-        this.transferNo = this.transfers[0].transferNo;
-      }
+
+      const groups = new Set(this.transfers.map((item) => item.transferNo)),
+        results = [];
+      groups.forEach((g) =>
+        results.push({
+          name: g,
+          values: this.transfers.filter((i) => i.transferNo === g),
+        })
+      );
+
+      this.results = results;
     });
   }
 
@@ -37,6 +56,6 @@ export class TransferPrintComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/transfer/main']);
+    this.router.navigate([this.previousUrl]);
   }
 }

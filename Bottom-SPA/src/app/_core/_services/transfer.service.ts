@@ -26,4 +26,11 @@ export class TransferService {
   changePrintTransfer(transfer: Array<TransferM>) {
     this.printTransfer.next(transfer);
   }
+
+  search(fromDate: string, toDate: string) {
+    return this.http.get<TransferM[]>(this.baseUrl + 'TransferLocation/search', {params: {
+      fromDate: fromDate,
+      toDate: toDate
+    }});
+  }
 }

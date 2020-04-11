@@ -61,6 +61,11 @@ export const navItems: INavData[] = [
         name: 'Main',
         url: '/transfer/main',
         icon: 'icon-arrow-left-circle'
+      },
+      {
+        name: 'History',
+        url: '/transfer/history',
+        icon: 'icon-arrow-left-circle'
       }
     ]
   },

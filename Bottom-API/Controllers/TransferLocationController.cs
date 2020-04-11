@@ -12,10 +12,12 @@ namespace Bottom_API.Controllers
     public class TransferLocationController : ControllerBase
     {
         private readonly ITransferLocationService _service;
+
         public TransferLocationController(ITransferLocationService service)
         {
             _service = service;
         }
+
         [HttpGet("{qrCodeId}", Name = "GetByQrCode")]
         public async Task<IActionResult> GetByQrCodeId(string qrCodeId)
         {
@@ -34,6 +36,12 @@ namespace Bottom_API.Controllers
             }
 
             throw new Exception("Submit failed on save");
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> Search(string fromDate, string toDate) {
+            var lists = await _service.Search(fromDate, toDate);
+            return Ok(lists);
         }
     }
 }

@@ -56,6 +56,28 @@ namespace Bottom_API._Services.Services
             return model;
         }
 
+        public async Task<List<TransferLocation_Dto>> Search(string fromDate, string toDate)
+        {
+            DateTime t1 = Convert.ToDateTime(fromDate);
+            DateTime t2 = DateTime.Parse(toDate + " 23:59:59");
+            var model = _repoTransactionMain.FindAll(x => x.Transac_Time >= t1 && x.Transac_Time <= t2);
+
+            var data = await model.Select(x => new TransferLocation_Dto {
+                Batch = x.MO_Seq,
+                FromLocation = x.Rack_Location,
+                Qty = _repoTransactionDetail.GetQtyByTransacNo(x.Transac_No),
+                UpdateBy = x.Updated_By,
+                TransferNo = x.Transac_No,
+                TransacTime = x.Transac_Time,
+                PlanNo = x.MO_No,
+                MatId = x.Material_ID,
+                MatName = x.Material_Name,
+                ToLocation = x.Rack_Location,
+                Id = x.ID
+            }).ToListAsync();
+            return data;
+        }
+
         public async Task<bool> SubmitTransfer(List<TransferLocation_Dto> lists)
         {
             if (lists.Count > 0)
@@ -89,6 +111,7 @@ namespace Bottom_API._Services.Services
                     transactionMain.Rack_Location = item.FromLocation;
                     transactionMain.Updated_By = item.UpdateBy;
                     transactionMain.Updated_Time = DateTime.Now;
+                    transactionMain.Transac_Time = item.TransacTime;
                     transactionMain.Transac_No = item.TransferNo;
                     transactionMain.Transac_Sheet_No = item.TransferNo;
                     _repoTransactionMain.Add(transactionMain);
