@@ -50,6 +50,7 @@ namespace Bottom_API._Services.Services
                 model.FromLocation = transctionModel.Rack_Location.Trim();
                 model.Qty = _repoTransactionDetail.GetQtyByTransacNo(transctionModel.Transac_No);
                 model.UpdateBy = "Emma";
+                model.TransacTime = DateTime.Now;
             }
 
             return model;
@@ -87,7 +88,6 @@ namespace Bottom_API._Services.Services
                     transactionMain.Can_Move = "Y";
                     transactionMain.Rack_Location = item.FromLocation;
                     transactionMain.Updated_By = item.UpdateBy;
-                    transactionMain.Transac_Time = DateTime.Now;
                     transactionMain.Updated_Time = DateTime.Now;
                     transactionMain.Transac_No = item.TransferNo;
                     transactionMain.Transac_Sheet_No = item.TransferNo;

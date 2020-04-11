@@ -23,6 +23,7 @@
                     class="form-control"
                     name="toLocation"
                     [(ngModel)]="toLocation"
+                    (ngModelChange)="changeTransferNo()"
                   />
                 </div>
               </div>
@@ -77,7 +78,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let item of result; let i = index">
+                <tr *ngFor="let item of transfers; let i = index">
                   <td>{{ i + 1 }}</td>
                   <td>{{ item.transferNo }}</td>
                   <td>{{ item.qrCodeId }}</td>
@@ -87,7 +88,7 @@
                   <td>{{ item.matId }} - {{ item.matName }}</td>
                   <td>{{ item.qty }}</td>
                   <td>{{ item.fromLocation }}</td>
-                  <td>{{ toLocation }}</td>
+                  <td>{{ item.toLocation }}</td>
                   <td *ngIf="!flagSubmit">
                     <button
                       class="btn btn-danger"
@@ -101,7 +102,7 @@
             </table>
           </div>
         </div>
-        <div class="card-footer" *ngIf="result.length > 0">
+        <div class="card-footer" *ngIf="transfers.length > 0">
           <button class="btn btn-danger mr-2">
             <i class="fa fa-ban"></i> Cancel
           </button>
@@ -112,7 +113,7 @@
           >
             <i class="fa fa-check"></i> Submit
           </button>
-          <button class="btn btn-primary" [disabled]="!flagSubmit">
+          <button class="btn btn-primary" [disabled]="!flagSubmit" (click)="printMain()">
             <i class="fa fa-print"></i> Print
           </button>
         </div>

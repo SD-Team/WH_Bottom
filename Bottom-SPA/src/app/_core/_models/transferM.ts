@@ -9,4 +9,7 @@ export interface TransferM {
     matName: string;
     qty: number;
     fromLocation: string;
+    toLocation: string;
+    updateBy: string;
+    transacTime: string;
 }

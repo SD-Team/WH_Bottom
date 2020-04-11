@@ -10,9 +10,10 @@ import { TransferM } from '../../../_core/_models/transferM';
   styleUrls: ['./transfer-main.component.scss'],
 })
 export class TransferMainComponent implements OnInit {
-  result: TransferM[];
+  transfers: TransferM[];
   qrCodeId = '';
   toLocation = '';
+  transferNo = '';
   flagSubmit = false;
 
   constructor(
@@ -20,16 +21,22 @@ export class TransferMainComponent implements OnInit {
     private alertify: AlertifyService,
     private route: ActivatedRoute,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
-    this.result = [];
+    this.transferNo =
+      'TB' +
+      new Date().getFullYear().toString() +
+      (new Date().getMonth() + 1).toString() +
+      new Date().getDate().toString() +
+      Math.floor(Math.random() * (999 - 100 + 1) + 100);
+    this.transfers = [];
   }
 
   getTransferMain(e) {
     if (e.length === 14) {
       let flag = true;
-      this.result.forEach((item) => {
+      this.transfers.forEach((item) => {
         if (item.qrCodeId === e) {
           flag = false;
         }
@@ -38,7 +45,9 @@ export class TransferMainComponent implements OnInit {
         this.transferService.getMainByQrCodeId(this.qrCodeId).subscribe(
           (res) => {
             if (res != null) {
-              this.result.push(res);
+              res.transferNo = this.transferNo;
+              res.toLocation = this.toLocation;
+              this.transfers.push(res);
             }
           },
           (error) => {
@@ -54,9 +63,9 @@ export class TransferMainComponent implements OnInit {
 
   remove(qrCodeId: string) {
     this.alertify.confirm('Delete', 'Are you sure Delete', () => {
-      this.result.forEach((e, i) => {
+      this.transfers.forEach((e, i) => {
         if (e.qrCodeId === qrCodeId) {
-          this.result.splice(i, 1);
+          this.transfers.splice(i, 1);
         }
       });
     });
@@ -64,13 +73,27 @@ export class TransferMainComponent implements OnInit {
 
   submitMain() {
     this.flagSubmit = true;
-    this.transferService.submitMain(this.result).subscribe(
+    this.transferService.submitMain(this.transfers).subscribe(
       () => {
         this.alertify.success('Submit succeed');
       },
-      error => {
+      (error) => {
         this.alertify.error(error);
       }
-    )
+    );
+  }
+
+  printMain() {
+    this.transferService.changePrintTransfer(this.transfers);
+    this.router.navigate(['/transfer/print']);
+  }
+
+  changeTransferNo() {
+    this.transferNo =
+      'TB' +
+      new Date().getFullYear().toString() +
+      (new Date().getMonth() + 1).toString() +
+      new Date().getDate().toString() +
+      Math.floor(Math.random() * (999 - 100 + 1) + 100);
   }
 }

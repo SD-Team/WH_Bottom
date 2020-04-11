@@ -1,3 +1,5 @@
+using System;
+
 namespace Bottom_API.DTO
 {
     public class TransferLocation_Dto
@@ -13,5 +15,6 @@ namespace Bottom_API.DTO
         public decimal? Qty { get; set; }
         public string FromLocation { get; set; }
         public string UpdateBy { get; set; }
+        public DateTime TransacTime { get; set; }
     }
 }
