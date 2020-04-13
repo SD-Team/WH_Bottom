@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Bottom_API._Services.Interfaces;
 using Bottom_API.DTO;
+using Bottom_API.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bottom_API.Controllers
@@ -38,10 +39,17 @@ namespace Bottom_API.Controllers
             throw new Exception("Submit failed on save");
         }
 
-        [HttpGet("search")]
-        public async Task<IActionResult> Search(string keyword, string fromDate, string toDate) {
-            var lists = await _service.Search(keyword, fromDate, toDate);
-            return Ok(lists);
+        [HttpPost("search")]
+        public async Task<IActionResult> Search([FromQuery]PaginationParams paginationParams, TransferLocationParam transferLocationParam) {
+            var result = await _service.Search(transferLocationParam, paginationParams);
+            Response.AddPagination(result.CurrentPage, result.PageSize, result.TotalCount, result.TotalPages);
+            return Ok(result);
+        }
+
+        [HttpGet("GetDetailTransaction")]
+        public async Task<IActionResult> GetDetailTransaction(string transferNo) {
+            var result = await _service.GetDetailTransaction(transferNo);
+            return Ok(result);
         }
     }
 }

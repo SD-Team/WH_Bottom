@@ -15,7 +15,7 @@
         <div class="card-body">
           <div class="container div-hidden print-all" id="wrap-print">
             <h4>Print Date: {{ today | date: "yyyy/MM/dd" }}</h4>
-            <div class="row"  *ngFor="let item of results">
+            <div class="row"  *ngFor="let item of resultsPrint">
               <div class="col-8 pt-3">
                 <h4>Transfer No: {{ item.name }}</h4>
               </div>

@@ -12,7 +12,7 @@ import { filter } from 'rxjs/operators';
 export class TransferPrintComponent implements OnInit, OnDestroy {
   elementType: 'url' | 'canvas' | 'img' = 'url';
   transfers: TransferM[] = [];
-  results = [];
+  resultsPrint = [];
   today = new Date();
   private returnUrl: string = undefined;
   constructor(
@@ -28,6 +28,7 @@ export class TransferPrintComponent implements OnInit, OnDestroy {
     this.transferService.currentTransfer.subscribe((res) => {
       this.transfers = res;
 
+      // Group by theo transferNo
       const groups = new Set(this.transfers.map((item) => item.transferNo)),
         results = [];
       groups.forEach((g) =>
@@ -37,7 +38,7 @@ export class TransferPrintComponent implements OnInit, OnDestroy {
         })
       );
 
-      this.results = results;
+      this.resultsPrint = results;
     });
   }
 

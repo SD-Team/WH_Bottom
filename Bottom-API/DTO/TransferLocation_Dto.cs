@@ -17,5 +17,6 @@ namespace Bottom_API.DTO
         public string ToLocation { get; set; }
         public string UpdateBy { get; set; }
         public DateTime? TransacTime { get; set; }
+        public string TransacType { get; set; }
     }
 }

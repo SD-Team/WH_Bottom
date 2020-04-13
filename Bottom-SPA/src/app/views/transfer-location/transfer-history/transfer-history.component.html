@@ -51,19 +51,18 @@
             </div>
             <div class="form-group row">
               <label class="col-md-2 col-form-label" for="version"
-                ><strong class="float-right">Material</strong></label
+                ><strong class="float-right">Status</strong></label
               >
               <div class="col-md-2">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Enter Material No  .."
-                  name="materialNo"
-                  [(ngModel)]="materialNo"
-                />
+                <select class="form-control" [(ngModel)]="status" name="status">
+                  <option value="">All</option>
+                  <option value="I">In</option>
+                  <option value="O">Out</option>
+                  <option value="M">Transfer</option>
+                </select>
               </div>
               <div class="col-1"></div>
-              <div class="col">
+              <div class="col-md-2">
                 <button
                   type="button"
                   class="btn btn-success"
@@ -83,71 +82,98 @@
     <div class="col-lg-12">
       <div class="card">
         <div class="card-body">
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th class="text-center">
-                  <div class="custom-control custom-checkbox">
-                    <input
-                      type="checkbox"
-                      class="custom-control-input"
-                      id="checkAll"
-                      (change)="checkAll($event)"
-                    />
-                    <label
-                      class="custom-control-label"
-                      for="checkAll"
-                    ></label>
-                  </div>
-                </th>
-                <th>Transfer Time</th>
-                <th>Plan No</th>
-                <th>Batch</th>
-                <th>Material No</th>
-                <th>Qty</th>
-                <th>From Location</th>
-                <th>To Location</th>
-                <th>Transfer By</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of transfers; let i = index">
-                <td class="text-center">
-                  <div class="custom-control custom-checkbox">
-                    <input
-                      type="checkbox"
-                      class="custom-control-input"
-                      [value]="i"
-                      id="{{ item.id }}"
-                      (change)="checkEle($event)"
-                      name="transfers"
-                    />
-                    <label
-                      class="custom-control-label"
-                      for="{{item.id}}"
-                    ></label>
-                  </div>
-                </td>
-                <td>{{ item.transacTime | date: "yyyy/MM/dd HH:mm:ss" }}</td>
-                <td>{{ item.planNo }}</td>
-                <td>{{ item.batch }}</td>
-                <td>{{ item.matId }}</td>
-                <td>{{ item.qty }}</td>
-                <td>{{ item.fromLocation }}</td>
-                <td>{{ item.toLocation }}</td>
-                <td>{{ item.updateBy }}</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="table-responsive">
+            <table class="table table-bordered text-center">
+              <thead>
+                <tr>
+                  <!-- <th class="text-center">
+                    <div class="custom-control custom-checkbox">
+                      <input
+                        type="checkbox"
+                        class="custom-control-input"
+                        id="checkAll"
+                        (change)="checkAll($event)"
+                      />
+                      <label
+                        class="custom-control-label"
+                        for="checkAll"
+                      ></label>
+                    </div>
+                  </th> -->
+                  <th>Transfer Time</th>
+                  <th>Plan No</th>
+                  <th>Status</th>
+                  <th>Qty</th>
+                  <th>From Location</th>
+                  <th>To Location</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of transfers; let i = index">
+                  <!-- <td class="text-center">
+                    <div class="custom-control custom-checkbox">
+                      <input
+                        type="checkbox"
+                        class="custom-control-input"
+                        [value]="i"
+                        id="{{ item.id }}"
+                        (change)="checkEle($event)"
+                        name="transfers"
+                      />
+                      <label
+                        class="custom-control-label"
+                        for="{{item.id}}"
+                      ></label>
+                    </div>
+                  </td> -->
+                  <td>{{ item.transacTime | date: "yyyy/MM/dd" }}</td>
+                  <td>{{ item.planNo }}</td>
+                  <td>
+                    {{
+                      item.transacType == "I"
+                        ? "Input"
+                        : item.transacType == "O"
+                        ? "Output"
+                        : "Move"
+                    }}
+                  </td>
+                  <td>{{ item.qty }}</td>
+                  <td>{{ item.fromLocation }}</td>
+                  <td>{{ item.toLocation }}</td>
+                  <td>
+                    <button class="btn btn-warning mr-2" [routerLink]="['/transfer/detail/',item.transacType, item.transferNo]">
+                      <i class="fa fa-search-plus"></i> Detail
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="d-flex" *ngIf="pagination.totalPages > 1">
+            <pagination
+              [boundaryLinks]="true"
+              [totalItems]="pagination.totalItems"
+              [(ngModel)]="pagination.currentPage"
+              [itemsPerPage]="pagination.itemsPerPage"
+              (pageChanged)="pageChanged($event)"
+              previousText="&lsaquo;"
+              nextText="&rsaquo;"
+              firstText="&laquo;"
+              lastText="&raquo;"
+              [maxSize]="5"
+            >
+            </pagination>
+          </div>
         </div>
-        <div class="card-footer" *ngIf="transfers.length > 0">
+        <!-- <div class="card-footer" *ngIf="transfers.length > 0">
           <button class="btn btn-danger mr-2">
             <i class="fa fa-ban"></i> Cancel
           </button>
           <button class="btn btn-primary" (click)="print()">
             <i class="fa fa-print"></i> Print
           </button>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

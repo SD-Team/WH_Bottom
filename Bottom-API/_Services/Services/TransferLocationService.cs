@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Bottom_API._Repositories.Interfaces;
 using Bottom_API._Services.Interfaces;
 using Bottom_API.DTO;
@@ -56,17 +57,24 @@ namespace Bottom_API._Services.Services
             return model;
         }
 
-        public async Task<List<TransferLocation_Dto>> Search(string keyword, string fromDate, string toDate)
+        public async Task<List<TransferLocationDetail_Dto>> GetDetailTransaction(string transacNo)
         {
-            DateTime t1 = Convert.ToDateTime(fromDate);
-            DateTime t2 = DateTime.Parse(toDate + " 23:59:59");
+            var model = _repoTransactionDetail.FindAll(x => x.Transac_No.Trim() == transacNo.Trim());
+            var data = await model.ProjectTo<TransferLocationDetail_Dto>(_configMapper).ToListAsync();
+            return data;
+        }
+
+        public async Task<PagedList<TransferLocation_Dto>> Search(TransferLocationParam transferLocationParam, PaginationParams paginationParams)
+        {
+            DateTime t1 = Convert.ToDateTime(transferLocationParam.FromDate);
+            DateTime t2 = DateTime.Parse(transferLocationParam.ToDate + " 23:59:59");
             var model = _repoTransactionMain.FindAll(x => x.Transac_Time >= t1 && x.Transac_Time <= t2);
-            if (keyword != string.Empty && keyword != null)
+            if (transferLocationParam.Status != string.Empty && transferLocationParam.Status != null)
             {
-                model = model.Where(x => x.Material_ID.Contains(keyword.Trim()));
+                model = model.Where(x => x.Transac_Type.Trim() == transferLocationParam.Status.Trim());
             }
 
-            var data = await model.Select(x => new TransferLocation_Dto {
+            var data = model.Select(x => new TransferLocation_Dto {
                 Batch = x.MO_Seq,
                 FromLocation = x.Rack_Location,
                 Qty = _repoTransactionDetail.GetQtyByTransacNo(x.Transac_No),
@@ -77,9 +85,10 @@ namespace Bottom_API._Services.Services
                 MatId = x.Material_ID,
                 MatName = x.Material_Name,
                 ToLocation = x.Rack_Location,
-                Id = x.ID
-            }).ToListAsync();
-            return data;
+                Id = x.ID,
+                TransacType = x.Transac_Type.Trim()
+            });
+            return await PagedList<TransferLocation_Dto>.CreateAsync(data, paginationParams.PageNumber, paginationParams.PageSize);
         }
 
         public async Task<bool> SubmitTransfer(List<TransferLocation_Dto> lists)

@@ -1,0 +1,68 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <strong>Detail Transfer Location</strong>
+          <button
+            type="button"
+            class="btn btn-sm btn-primary float-right"
+            (click)="back()"
+          >
+            <i class="fa fa-chevron-left"></i> Back
+          </button>
+        </div>
+        <form class="form-horizontal">
+          <div class="card-body">
+            <div class="table-responsive" *ngIf="transferType !== 'O'">
+              <table class="table table-bordered text-center">
+                <thead>
+                  <tr>
+                    <th>
+                      PO#Size
+                    </th>
+                    <th>
+                      Accumated Qty
+                    </th>
+                    <th>
+                      Trans In Qty
+                    </th>
+                    <th>
+                      InStock Qty
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of transferDetails">
+                    <td>{{item.model_Size}}</td>
+                    <td>{{item.qty}}</td>
+                    <td>{{item.trans_Qty}}</td>
+                    <td>{{item.instock_Qty}}</td>
+                </tbody>
+              </table>
+            </div>
+            <div class="table-responsive" *ngIf="transferType === 'O'">
+              <table class="table table-bordered text-center">
+                <thead>
+                  <tr>
+                    <th>
+                      Tool Size
+                    </th>
+                    <th>
+                      Trans Out Qty
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of transferDetails">
+                    <td>{{item.tool_Size}}</td>
+                    <td>{{item.trans_Qty}}</td>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

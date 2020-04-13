@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { TransferMainComponent } from './transfer-main/transfer-main.component';
 import { TransferPrintComponent } from './transfer-print/transfer-print.component';
 import { TransferHistoryComponent } from './transfer-history/transfer-history.component';
+import { TransferDetailComponent } from './transfer-detail/transfer-detail.component';
 
 const routes: Routes = [
     {
@@ -33,6 +34,14 @@ const routes: Routes = [
                 component: TransferHistoryComponent,
                 data: {
                     title: 'Transfer History'
+                }
+
+            },
+            {
+                path: 'detail/:transferType/:transferNo',
+                component: TransferDetailComponent,
+                data: {
+                    title: 'Transfer Detail'
                 }
 
             },

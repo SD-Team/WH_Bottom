@@ -6,6 +6,8 @@ import { TransferM } from '../../../_core/_models/transferM';
 import { TransferService } from '../../../_core/_services/transfer.service';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
 import { FunctionUtility } from '../../../_core/_utility/function-utility';
+import { TransferHistoryParam } from '../../../_core/_viewmodels/transfer-history-param';
+import { Pagination } from '../../../_core/_models/pagination';
 
 @Component({
   selector: 'app-transfer-history',
@@ -18,7 +20,13 @@ export class TransferHistoryComponent implements OnInit {
   toDate: string;
   transfers: TransferM[] = [];
   printArray: TransferM[] = [];
-  materialNo: string = '';
+  status: string = '';
+  pagination: Pagination = {
+    currentPage: 1,
+    itemsPerPage: 10,
+    totalItems: 0,
+    totalPages: 0
+  };
 
   constructor(
     private transferService: TransferService,
@@ -39,17 +47,28 @@ export class TransferHistoryComponent implements OnInit {
     const timeNow = this.functionUtility.getToDay();
     this.fromDate = timeNow;
     this.toDate = timeNow;
-    this.getData();
   }
 
   getData() {
     const t1 = new Date(this.fromDate).toLocaleDateString();
     const t2 = new Date(this.toDate).toLocaleDateString();
-    this.transferService.search(this.materialNo, t1, t2).subscribe((res) => {
-      this.transfers = res;
+    const transferHistoryParam = new TransferHistoryParam();
+    transferHistoryParam.toDate = t2;
+    transferHistoryParam.fromDate = t1;
+    transferHistoryParam.status = this.status;
+    this.transferService.search(this.pagination.currentPage, this.pagination.itemsPerPage, transferHistoryParam).subscribe((res) => {
+      this.transfers = res.result;
+      this.pagination = res.pagination;
     });
   }
+  pageChanged(event: any): void {
+    this.pagination.currentPage = event.page;
+    this.getData();
+  }
 
+
+
+  // Mấy đoạn ở dưới là để in mà giờ chưa dùng tới để khi nào xài thì nhớ là mấy hàm ở dưới
   checkEle(e) {
     if (e.target.checked) {
       const transfer = this.transfers[e.target.value];

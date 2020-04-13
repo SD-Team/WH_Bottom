@@ -12,4 +12,5 @@ export interface TransferM {
     toLocation: string;
     updateBy: string;
     transacTime: string;
+    transacType: string;
 }
