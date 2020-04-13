@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TransferService } from '../../../_core/_services/transfer.service';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { TransferM } from '../../../_core/_models/transferM';
 import { filter } from 'rxjs/operators';
 
@@ -9,24 +9,19 @@ import { filter } from 'rxjs/operators';
   templateUrl: './transfer-print.component.html',
   styleUrls: ['./transfer-print.component.scss'],
 })
-export class TransferPrintComponent implements OnInit {
+export class TransferPrintComponent implements OnInit, OnDestroy {
   elementType: 'url' | 'canvas' | 'img' = 'url';
   transfers: TransferM[] = [];
   results = [];
   today = new Date();
-  private previousUrl: string = undefined;
-  private currentUrl: string = undefined;
+  private returnUrl: string = undefined;
   constructor(
     private transferService: TransferService,
     private router: Router
   ) {
-    this.currentUrl = this.router.url;
-    router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.previousUrl = this.currentUrl;
-        this.currentUrl = event.url;
-      }
-    });
+  }
+  ngOnDestroy(): void {
+    this.transferService.changePrintTransfer([]);
   }
 
   ngOnInit() {
@@ -56,6 +51,6 @@ export class TransferPrintComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate([this.previousUrl]);
+    this.router.navigate([this.returnUrl]);
   }
 }

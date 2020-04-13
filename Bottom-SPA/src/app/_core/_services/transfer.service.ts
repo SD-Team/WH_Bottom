@@ -27,8 +27,9 @@ export class TransferService {
     this.printTransfer.next(transfer);
   }
 
-  search(fromDate: string, toDate: string) {
+  search(keyword: string, fromDate: string, toDate: string) {
     return this.http.get<TransferM[]>(this.baseUrl + 'TransferLocation/search', {params: {
+      keyword: keyword,
       fromDate: fromDate,
       toDate: toDate
     }});

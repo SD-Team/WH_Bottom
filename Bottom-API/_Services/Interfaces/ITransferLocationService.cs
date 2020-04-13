@@ -8,6 +8,6 @@ namespace Bottom_API._Services.Interfaces
     {
         Task<TransferLocation_Dto> GetByQrCodeId(object qrCodeId);
         Task<bool> SubmitTransfer(List<TransferLocation_Dto> lists);
-        Task<List<TransferLocation_Dto>> Search(string fromDate, string toDate);
+        Task<List<TransferLocation_Dto>> Search(string keyword, string fromDate, string toDate);
     }
 }

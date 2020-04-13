@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
 import { TransferService } from '../../../_core/_services/transfer.service';
 import { TransferM } from '../../../_core/_models/transferM';
+import { FunctionUtility } from '../../../_core/_utility/function-utility';
 
 @Component({
   selector: 'app-transfer-main',
@@ -20,21 +21,17 @@ export class TransferMainComponent implements OnInit {
     private transferService: TransferService,
     private alertify: AlertifyService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private functionUtility: FunctionUtility
   ) {}
 
   ngOnInit() {
-    this.transferNo =
-      'TB' +
-      new Date().getFullYear().toString() +
-      (new Date().getMonth() + 1).toString() +
-      new Date().getDate().toString() +
-      Math.floor(Math.random() * (999 - 100 + 1) + 100);
+    this.transferNo = this.functionUtility.getTransferNo();
     this.transfers = [];
   }
 
   getTransferMain(e) {
-    if (e.length === 14) {
+    if (e.length >= 14) {
       let flag = true;
       this.transfers.forEach((item) => {
         if (item.qrCodeId === e) {
@@ -88,12 +85,8 @@ export class TransferMainComponent implements OnInit {
     this.router.navigate(['/transfer/print']);
   }
 
+  // khi thay đổi to location thì thay đổi transferNo
   changeTransferNo() {
-    this.transferNo =
-      'TB' +
-      new Date().getFullYear().toString() +
-      (new Date().getMonth() + 1).toString() +
-      new Date().getDate().toString() +
-      Math.floor(Math.random() * (999 - 100 + 1) + 100);
+    this.transferNo = this.functionUtility.getTransferNo();
   }
 }

@@ -39,8 +39,8 @@ namespace Bottom_API.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<IActionResult> Search(string fromDate, string toDate) {
-            var lists = await _service.Search(fromDate, toDate);
+        public async Task<IActionResult> Search(string keyword, string fromDate, string toDate) {
+            var lists = await _service.Search(keyword, fromDate, toDate);
             return Ok(lists);
         }
     }
