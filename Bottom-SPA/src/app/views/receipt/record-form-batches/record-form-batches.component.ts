@@ -117,10 +117,13 @@ export class RecordFormBatchesComponent implements OnInit {
         });
         console.log(this.materialByBatchList);
         this.materialService.updateMaterial(this.materialByBatchList).subscribe(res => {
-          this.receiveNoMain = res;
-          this.materialService.changeReceiveNoMain(this.receiveNoMain);
-          this.alertifyService.success('Submit success');
-          this.router.navigate(['receipt/record']);
+          this.materialService.receiveNoMain(this.materialModel).subscribe(respo => {
+            this.receiveNoMain = respo;
+            this.materialService.changeReceiveNoMain(this.receiveNoMain);
+            this.router.navigate(['receipt/record']);
+          }, error => {
+            this.alertifyService.error(error);
+          });
         });
         } else {
           this.alertifyService.error('Please click insert');

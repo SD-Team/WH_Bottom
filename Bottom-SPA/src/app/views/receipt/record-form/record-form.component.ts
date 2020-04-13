@@ -81,7 +81,7 @@ export class RecordFormComponent implements OnInit {
     let columnInput = 0;
     // Order_Size tuong ung
     let thisInput = e;
-    for (let i = 0; i <  this.materialMerging.length; i++) {
+    for (let i = 0; i < this.materialMerging.length; i++) {
       if (e.toString() === this.materialMerging[i].order_Size.toString()) {
         columnInput = i;
         break;
@@ -208,14 +208,21 @@ export class RecordFormComponent implements OnInit {
         });
       });
       this.materialService.updateMaterial(this.orderSizeByBatch).subscribe(res => {
-        this.receiveNoMain = res;
-        this.materialService.changeReceiveNoMain(this.receiveNoMain);
+        // Thêm thành công. trả về receiveNoMain mới đc thêm vào.
+        // this.receiveNoMain = res;
+        // this.materialService.changeReceiveNoMain(this.receiveNoMain);
+          this.materialService.receiveNoMain(this.materialModel).subscribe(respo => {
+            this.receiveNoMain = respo;
+            this.materialService.changeReceiveNoMain(this.receiveNoMain);
+            this.router.navigate(['receipt/record']);
+          }, error => {
+            this.alertifyService.error(error);
+          });
         this.alertifyService.success('Submit success');
-        this.router.navigate(['receipt/record']);
       }, error => {
         this.alertifyService.error(error);
       });
-      console.log(this.orderSizeByBatch);
+      //console.log(this.orderSizeByBatch);
     }
   }
   backForm() {

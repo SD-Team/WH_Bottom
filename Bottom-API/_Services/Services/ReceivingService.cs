@@ -22,12 +22,14 @@ namespace Bottom_API._Services.Services
         private readonly IMaterialMissingRepository _repoMissing;
         private readonly IMaterialViewRepository _repoMaterialView;
         private readonly IPackingListRepository _repoPackingList;
+        private readonly IPackingListDetailRepository _repoPackingListDetail;
         private readonly IPackingListService _packingListService;
         private readonly IPackingListDetailService _packingListDetailService;
         public ReceivingService(IMaterialPurchaseRepository repoPurchase,
                                 IMaterialMissingRepository repoMissing,
                                 IMaterialViewRepository repoMaterialView,
                                 IPackingListRepository repoPackingList,
+                                IPackingListDetailRepository repoPackingListDetail,
                                 IPackingListService packingListService,
                                 IPackingListDetailService packingListDetailService,
                                 IMapper mapper,
@@ -37,6 +39,7 @@ namespace Bottom_API._Services.Services
             _repoPurchase = repoPurchase;
             _repoMaterialView = repoMaterialView;
             _repoPackingList = repoPackingList;
+            _repoPackingListDetail = repoPackingListDetail;
             _packingListService = packingListService;
             _packingListDetailService = packingListDetailService;
             _configMapper = configMapper;
@@ -295,6 +298,7 @@ namespace Bottom_API._Services.Services
                                     x.Order_Size == item1.Order_Size &&
                                     x.MO_Seq == item.MO_Seq).FirstOrDefaultAsync();
                         // materialItem.Accumlated_In_Qty = item1.Accumlated_In_Qty;
+                        // Số lượng bằng số lượng nhận hiện tại + số lượng vừa mới nhận vào.
                         materialItem.Accumlated_In_Qty  = materialItem.Accumlated_In_Qty + item1.Received_Qty;
                         await _repoPurchase.SaveAll();
                     }
@@ -303,27 +307,7 @@ namespace Bottom_API._Services.Services
                 //------------------------- Update giá trị Status--------------------------------------------//
                 foreach (var item in data)
                 {
-                    var checkStatus = "Y";
-                    var purchaseForBatch = await _repoPurchase.FindAll()
-                                    .Where(x => x.Purchase_No.Trim() == Purchase_No.Trim() &&
-                                    x.MO_Seq == item.MO_Seq).ToListAsync();
-                    foreach (var item1 in purchaseForBatch)
-                    {
-                        // Kiểm tra thì cần 1 dòng mà Accumlated_In_Qty khác Purchase_Qty thì checkStatus = N
-                        // Và thoát khỏi vòng lặp hiện tại
-                        if (item1.Accumlated_In_Qty != item1.Purchase_Qty) {
-                            checkStatus = "N";
-                            break;
-                        }
-                    }
-                    // Nếu mà Accumlated_In_Qty đều bằng Purchase_Qty có nghĩa là batch đó đã nhận đủ hàng.
-                    // Cập nhập lại Status trong table của batch đó là Y.
-                    if (checkStatus == "Y") {
-                        foreach (var item3 in purchaseForBatch)
-                        {
-                            item3.Status = "Y";
-                        }
-                    }
+                    await this.UpdateStatusMaterial(item.Purchase_No, item.MO_Seq, item.Missing_No);
                 }
                 await _repoPurchase.SaveAll();
             } else {
@@ -343,30 +327,10 @@ namespace Bottom_API._Services.Services
                 // Update lại Status
                 foreach (var item in data)
                 {
-                    var checkStatus = "Y";
-                    var purchaseForBatch = await _repoMissing.FindAll()
-                                    .Where(x => x.Purchase_No.Trim() == Purchase_No.Trim() &&
-                                    x.MO_Seq == item.MO_Seq).ToListAsync();
-                    foreach (var item1 in purchaseForBatch)
-                    {
-                        // Kiểm tra thì cần 1 dòng mà Accumlated_In_Qty khác Purchase_Qty thì checkStatus = N
-                        // Và thoát khỏi vòng lặp hiện tại
-                        if (item1.Accumlated_In_Qty != item1.Purchase_Qty) {
-                            checkStatus = "N";
-                            break;
-                        }
-                    }
-                    // Nếu mà Accumlated_In_Qty đều bằng Purchase_Qty có nghĩa là batch đó đã nhận đủ hàng.
-                    // Cập nhập lại Status trong table của batch đó là Y.
-                    if (checkStatus == "Y") {
-                        foreach (var item3 in purchaseForBatch)
-                        {
-                            item3.Status = "Y";
-                        }
-                    }
+                    await this.UpdateStatusMaterial(item.Purchase_No, item.MO_Seq, item.Missing_No);
                 }
 
-                await _repoPurchase.SaveAll();
+                await _repoMissing.SaveAll();
             }
 
                //------------------------Thêm vào 2 bảng Packing_List và Packing_List_Detail------------------//
@@ -479,49 +443,32 @@ namespace Bottom_API._Services.Services
         }
 
 
-        // ------------------Hàm lấy chi tiết của 1 Receive_No.--------------------------------------------
+        // ------------------Hàm lấy chi tiết của 1 Receive_No.------------------------------------------------------------
         public async Task<List<ReceiveNoDetail>> ReceiveNoDetails(string receive_No)
         {
-            var packing_List = await _repoPackingList.GetAll().ToListAsync();
-            var packing_ListItem = packing_List.Where(x => x.Receive_No.Trim() == receive_No.Trim()).FirstOrDefault();
-            // Các receive_No đã nhận hàng ở trước đó.Cùng batch. Cùng Purchase
-            var listReceiveNoByPurchase = from a in packing_List
-                                                where a.Purchase_No.Trim() == packing_ListItem.Purchase_No.Trim() &&
-                                                a.MO_Seq == packing_ListItem.MO_Seq &&
-                                                // Các receive_No đã nhận hàng ở trước đó.Cùng batch. Cùng Purchase
-                                                a.Updated_Time <= packing_ListItem.Updated_Time
-                                                select new {
-                                                    Receive_No =  a.Receive_No
-                                                };
-            var packingListDetailAll = await _packingListDetailService.GetAllAsync();
-            var packingListDetail = packingListDetailAll.Where(x => x.Receive_No.Trim() == receive_No.Trim()).ToList();
-            var data = new List<ReceiveNoDetail>();
-            foreach (var item in packingListDetail)
-            {
-                // Tính tổng đã nhận được khi Receive_No đó tạo ra.Có nghĩa là tính tổng cả các Recevice_No trước đó cùng
-                // batch đã nhận được. => Để tính số dư còn lại.
-                decimal? Received_Qty = 0;
-                foreach (var item1 in listReceiveNoByPurchase)
-                {
-                    foreach (var item2 in packingListDetailAll)
-                    {
-                        if ( item2.Receive_No.Trim() == item1.Receive_No.Trim() &&
-                                item2.Order_Size.Trim() == item.Order_Size.Trim()) {
-                                Received_Qty = Received_Qty + item2.Received_Qty;
-                        }
-                    }
-                }
-                var ReceiveNoDetail = new ReceiveNoDetail();
-                ReceiveNoDetail.Order_Size = item.Order_Size;
-                ReceiveNoDetail.Purchase_Qty = item.Purchase_Qty;
-                ReceiveNoDetail.Received_Qty = item.Received_Qty;
-                ReceiveNoDetail.Remaining = item.Purchase_Qty - Received_Qty;
-                data.Add(ReceiveNoDetail);
+            var packingList = await _repoPackingList.GetAll().Where(x => x.Receive_No.Trim() == receive_No.Trim()).FirstOrDefaultAsync();
+            var materialList = new List<Material_Dto>();
+            if(packingList.Missing_No == "") {
+                materialList = await _repoPurchase.GetAll()
+                    .Where(x => x.Purchase_No.Trim() == packingList.Purchase_No.Trim() &&
+                            x.MO_Seq.Trim() == packingList.MO_Seq.Trim())
+                    .ProjectTo<Material_Dto>(_configMapper).ToListAsync();
+            } else {
+                await _repoMissing.GetAll()
+                    .Where(x => x.Purchase_No.Trim() == packingList.Purchase_No.Trim() &&
+                            x.MO_Seq.Trim() == packingList.MO_Seq.Trim())
+                    .ProjectTo<Material_Dto>(_configMapper).ToListAsync();
             }
-            return data;
+            var listData = materialList.Select( x => new ReceiveNoDetail() {
+                Order_Size = x.Order_Size,
+                Purchase_Qty = x.Purchase_Qty,
+                Received_Qty = x.Accumlated_In_Qty,
+                Remaining = x.Purchase_Qty - x.Accumlated_In_Qty
+            }).ToList();
+            return listData;
         }
 
-        public async Task<List<ReceiveNoMain>> PurchaseNoDetail(MaterialMainViewModel model)
+        public async Task<List<ReceiveNoMain>> ReceiveNoMain(MaterialMainViewModel model)
         {
             var packingList = await _packingListService.GetAllAsync();
             var packingListDetail = await _packingListDetailService.GetAllAsync();
@@ -531,26 +478,246 @@ namespace Bottom_API._Services.Services
                         select new {
                             Status = model.Status,
                             Purchase_No = model.Purchase_No,
+                            Missing_No = model.Missing_No,
                             MO_No = model.MO_No,
                             Receive_No = a.Receive_No,
                             MO_Seq = a.MO_Seq,
                             Receive_Date = a.Receive_Date,
                             Purchase_Qty = b.Purchase_Qty,
                             Received_Qty = b.Received_Qty,
+                            Generated_QRCode = a.Generated_QRCode,
                             Sheet_Type = a.Sheet_Type,
                             Updated_By = a.Updated_By
                         }).GroupBy(x => x.Receive_No).Select( cl => new ReceiveNoMain() {
                             MO_No = cl.First().MO_No,
+                            Missing_No = cl.First().Missing_No,
                             Purchase_No = cl.First().Purchase_No,
                             Receive_No = cl.First().Receive_No,
                             MO_Seq = cl.First().MO_Seq,
                             Receive_Date = cl.First().Receive_Date,
                             Purchase_Qty = cl.Sum(c => c.Purchase_Qty),
                             Accumated_Qty = cl.Sum(c => c.Received_Qty),
+                            Generated_QRCode = cl.First().Generated_QRCode,
                             Sheet_Type = cl.First().Sheet_Type,
                             Updated_By = cl.First().Updated_By
-                        }).ToList();
+                        }).OrderByDescending(x => x.Receive_Date).ToList();
             return data;
+        }
+
+        public async Task<bool> ClosePurchase(MaterialMainViewModel model)
+        {
+            if (model.Missing_No == "") {
+                var purchaseList = await _repoPurchase.GetAll()
+                    .Where(x => x.Purchase_No.Trim() == model.Purchase_No.Trim()).ToListAsync();
+                foreach (var item in purchaseList)
+                {
+                    item.Status = "Y";
+                }
+                return await _repoPurchase.SaveAll();
+            } else {
+                var purchaseList = await _repoMissing.GetAll()
+                    .Where(x => x.Purchase_No.Trim() == model.Purchase_No.Trim()).ToListAsync();
+                foreach (var item in purchaseList)
+                {
+                    item.Status = "Y";
+                }
+                return await _repoMissing.SaveAll();
+            }
+        }
+
+        public async Task<string> StatusPurchase(MaterialMainViewModel model)
+        {
+            var packingList = _repoPackingList.GetAll().Where(x => x.Purchase_No.Trim() == model.Purchase_No.Trim());
+            var material = new List<Material_Dto>();
+            var status = "no";
+            if(model.Missing_No == "") {
+                material = await _repoPurchase.GetAll().Where(x => x.Purchase_No.Trim() == model.Purchase_No.Trim())
+                    .ProjectTo<Material_Dto>(_configMapper).ToListAsync();
+            } else {
+                material = await _repoMissing.GetAll().Where(x => x.Purchase_No.Trim() == model.Purchase_No.Trim())
+                    .ProjectTo<Material_Dto>(_configMapper).ToListAsync();
+            }
+
+            // Nếu tồn tại 1 Status trong bảng Purchase hoặc bảng Missing có status = N thì thêm đc.Còn Y là
+            // đã đủ hàng rồi.Ko đc thêm tiếp.
+            foreach (var item in material)
+            {
+                if (item.Status == "N") {
+                    status = "ok";
+                    break;
+                }
+            }
+            if(status != "ok") {
+                 // Nếu trong bảng packingList có 1 receiveNo của purchase đó chưa đc sản sinh qrcode thì 
+                // chưa cho thêm hàng tiếp
+                status = "ok";
+                foreach (var item in packingList)
+                {
+                    if(item.Generated_QRCode.Trim() == "N") {
+                        status = "no";
+                        break;
+                    }
+                }
+            } 
+            return status;
+        }
+
+        public async Task<List<MaterialEditModel>> EditMaterial(ReceiveNoMain model)
+        {
+            var materialList = new List<Material_Dto>();
+            if(model.Missing_No == "") {
+                materialList = await _repoPurchase.GetAll()
+                .Where(x => x.Purchase_No.Trim() == model.Purchase_No.Trim() &&
+                        x.MO_Seq.Trim() == model.MO_Seq.Trim())
+                    .ProjectTo<Material_Dto>(_configMapper).ToListAsync();
+            } else {
+                materialList = await _repoMissing.GetAll()
+                .Where(x => x.Purchase_No.Trim() == model.Purchase_No.Trim() &&
+                        x.MO_Seq.Trim() == model.MO_Seq.Trim())
+                    .ProjectTo<Material_Dto>(_configMapper).ToListAsync();
+            }
+            var packingListDetail = await _repoPackingListDetail.GetAll()
+                .Where(x => x.Receive_No.Trim() == model.Receive_No.Trim()).ToListAsync();
+            var dataList1 = materialList.GroupBy(x => x.Order_Size).Select( y => new MaterialEditModel(){
+                Purchase_No = y.First().Purchase_No,
+                Missing_No = model.Missing_No,
+                Receive_No = model.Receive_No,
+                Order_Size = y.First().Order_Size,
+                Purchase_Qty = y.Sum(cl => cl.Purchase_Qty),
+                Accumated_Qty = y.Sum(cl => cl.Accumlated_In_Qty),
+                Delivery_Qty = y.Sum(cl => (cl.Purchase_Qty - cl.Accumlated_In_Qty)),
+                MO_Seq_Edit = model.MO_Seq,
+            }).ToList();
+            foreach (var item in dataList1)
+            {
+                foreach (var item1 in packingListDetail)
+                {
+                    if(item1.Order_Size.Trim() == item.Order_Size.Trim()) {
+                        item.Received_Qty = item1.Received_Qty;
+                        item.Received_Qty_Edit = item1.Received_Qty;
+                    }
+                }
+            }
+            return dataList1;
+        }
+
+        public async Task<bool> EditDetail(List<MaterialEditModel> data)
+        {
+            var editResult = false;
+            var receive_No = data[0].Receive_No;
+            var missing_No = data[0].Missing_No;
+            var packinglistDetail = _repoPackingListDetail.GetAll().Where(x => x.Receive_No.Trim() == receive_No.Trim());
+            foreach (var item in packinglistDetail)
+            {
+                foreach (var item1 in data)
+                {
+                    if (item1.Order_Size.Trim() == item.Order_Size.Trim()) {
+                        item.Received_Qty = item1.Received_Qty_Edit;
+                    }
+                }
+            }
+            var SavePackingListDetail =  await _repoPackingListDetail.SaveAll();
+            var saveMaterial = false;
+            // Áp dụng cho bảng Material_Missing
+            if(missing_No == "") {
+                var materialPurchaseList = _repoPurchase.GetAll()
+                    .Where(x => x.Purchase_No.Trim() == data[0].Purchase_No.Trim() &&
+                            x.MO_Seq.Trim() == data[0].MO_Seq_Edit.Trim());
+                foreach (var item2 in data)
+                {
+                    foreach (var item4 in materialPurchaseList)
+                    {
+                        if(item4.Order_Size.Trim() == item2.Order_Size.Trim()) {
+                            // Số lượng mới = số lượng hiện tại trừ đi số lượng đã nhận trước và + cho số lượng nhận mới.
+                            item4.Accumlated_In_Qty = item4.Accumlated_In_Qty - item2.Received_Qty + item2.Received_Qty_Edit;
+                        }
+                    }
+                }
+                await _repoPurchase.SaveAll();
+                //------------------------- Update giá trị Status--------------------------------------------//
+                await this.UpdateStatusMaterial(data[0].Purchase_No, data[0].MO_Seq_Edit, missing_No);
+                saveMaterial = await _repoPurchase.SaveAll();
+            } 
+            // Áp dụng cho bảng Material_Missing
+            else {
+                var materialPurchaseList = _repoMissing.GetAll()
+                    .Where(x => x.Purchase_No.Trim() == data[0].Purchase_No.Trim() &&
+                            x.MO_Seq.Trim() == data[0].MO_Seq_Edit.Trim());
+                foreach (var item2 in data)
+                {
+                    foreach (var item4 in materialPurchaseList)
+                    {
+                        if(item4.Order_Size.Trim() == item2.Order_Size.Trim()) {
+                            // Số lượng mới = số lượng hiện tại trừ đi số lượng đã nhận trước và + cho số lượng nhận mới.
+                            item4.Accumlated_In_Qty = item4.Accumlated_In_Qty - item2.Received_Qty + item2.Received_Qty_Edit;
+                        }
+                    }
+                }
+                await _repoMissing.SaveAll();
+                await this.UpdateStatusMaterial(data[0].Purchase_No, data[0].MO_Seq_Edit, missing_No);
+                saveMaterial = await _repoMissing.SaveAll();
+            }
+            if (SavePackingListDetail == true && saveMaterial == true) {
+                editResult = true;
+            }
+            return editResult;
+        }
+
+        public async Task<bool> UpdateStatusMaterial(string purchaseNo, string mOSeq, string missingNo)
+        {
+            if (missingNo == "") {
+                var checkStatus = "Y";
+                    var purchaseForBatch = await _repoPurchase.FindAll()
+                                    .Where(x => x.Purchase_No.Trim() == purchaseNo.Trim() &&
+                                    x.MO_Seq == mOSeq).ToListAsync();
+                foreach (var item1 in purchaseForBatch)
+                    {
+                        // Kiểm tra thì cần 1 dòng mà Accumlated_In_Qty khác Purchase_Qty thì checkStatus = N
+                        // Và thoát khỏi vòng lặp hiện tại
+                        if (item1.Accumlated_In_Qty != item1.Purchase_Qty) {
+                            checkStatus = "N";
+                            break;
+                        }
+                    }
+                    // Nếu mà Accumlated_In_Qty đều bằng Purchase_Qty có nghĩa là batch đó đã nhận đủ hàng.
+                    // Cập nhập lại Status trong table của batch đó là Y.
+                    if (checkStatus == "Y") {
+                        foreach (var item3 in purchaseForBatch)
+                        {
+                            item3.Status = "Y";
+                        }
+                    } else {
+                        foreach (var item3 in purchaseForBatch)
+                        {
+                            item3.Status = "N";
+                        }
+                    }
+                return await _repoPurchase.SaveAll();
+            } else {
+                var checkStatus = "Y";
+                var purchaseForBatch = await _repoMissing.FindAll()
+                                    .Where(x => x.Purchase_No.Trim() == purchaseNo.Trim() &&
+                                    x.MO_Seq == mOSeq).ToListAsync();
+                foreach (var item1 in purchaseForBatch)
+                    {
+                        if (item1.Accumlated_In_Qty != item1.Purchase_Qty) {
+                            checkStatus = "N";
+                            break;
+                        }
+                    }
+                    if (checkStatus == "Y") {
+                        foreach (var item3 in purchaseForBatch)
+                        {
+                            item3.Status = "Y";
+                        }
+                    } else {
+                         foreach (var item3 in purchaseForBatch)
+                        {
+                            item3.Status = "N";
+                        }
+                    }
+                return await _repoPurchase.SaveAll();
+            }
         }
     }
 }

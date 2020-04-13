@@ -41,10 +41,34 @@ namespace Bottom_API.Controllers
             return Ok(data);
         }
         
-        [HttpPost("purchaseNoDetail")]
+        [HttpPost("receiveNoMain")]
         public async Task<IActionResult> PurchaseNoDetail([FromBody]MaterialMainViewModel model) {
-            var data = await _service.PurchaseNoDetail(model);
+            var data = await _service.ReceiveNoMain(model);
             return Ok(data);
+        }
+
+        [HttpPost("closePurchase")]
+        public async Task<IActionResult> ClosePurchase([FromBody]MaterialMainViewModel model) {
+            var data = await _service.ClosePurchase(model);
+            return Ok(data);
+        }
+
+        [HttpPost("statusPurchase")]
+        public async Task<IActionResult> StatusPurchase([FromBody]MaterialMainViewModel model) {
+            var status = await _service.StatusPurchase(model);
+            return Ok(new {status = status});
+        }
+
+        [HttpPost("editMaterial")]
+        public async Task<IActionResult> EditMaterial ([FromBody] ReceiveNoMain model) {
+            var data = await _service.EditMaterial(model);
+            return Ok(data);
+        }
+
+        [HttpPost("editDetail")]
+        public async Task<IActionResult> EditDetail([FromBody] List<MaterialEditModel> data) {
+            var result = await _service.EditDetail(data);
+            return Ok(result);
         }
     }
 }

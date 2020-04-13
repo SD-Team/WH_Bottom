@@ -7,7 +7,7 @@
         <div class="card-header">
           <i class="fa fa-align-justify"></i> Manage
           <div class="float-right">
-            <button type="button" *ngIf="materialModel.status === 'N'; else elseStatus" 
+            <button type="button" *ngIf="checkButtonAdd === true; else elseStatus" 
             (click)="changeForm()" class="btn btn-sm btn-primary">
               <i class="fa fa-plus"></i>
               Add new
@@ -54,8 +54,10 @@
                 <td class="text-center vertical-middle">{{item.updated_By}}</td>
                 <td class="text-center vertical-middle">
                   <button (click)="changeFormDetail(item.receive_No)" class="btn btn-block btn-success">Show Detail</button>
-                  <button class="btn btn-block btn-warning" *ngIf="materialModel.status === 'N'">Edit</button>
-                  <button class="btn btn-block btn-danger" *ngIf="materialModel.status === 'N'">Delete</button>
+                  <button (click)="editReceiveNo(item)" class="btn btn-block btn-warning" *ngIf="item.generated_QRCode === 'N'">Edit</button>
+                  <!-- <ng-template #elseEdit>
+                    <button disabled class="btn btn-block btn-warning">Edit</button>
+                  </ng-template> -->
                 </td>
               </tr>
             </ng-container>
