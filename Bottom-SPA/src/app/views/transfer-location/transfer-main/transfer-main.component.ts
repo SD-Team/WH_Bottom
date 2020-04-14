@@ -11,7 +11,7 @@ import { FunctionUtility } from '../../../_core/_utility/function-utility';
   styleUrls: ['./transfer-main.component.scss'],
 })
 export class TransferMainComponent implements OnInit {
-  transfers: TransferM[];
+  transfers: TransferM[] = [];
   qrCodeId = '';
   toLocation = '';
   transferNo = '';
@@ -26,8 +26,8 @@ export class TransferMainComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // lấy ra transferNo mới theo yêu cầu: TB(ngày thực hiện yyyymmdd) 3 mã số random number. (VD: TB20200310001)
     this.transferNo = this.functionUtility.getTransferNo();
-    this.transfers = [];
   }
 
   getTransferMain(e) {

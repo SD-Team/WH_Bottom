@@ -3,26 +3,30 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
-          <strong>Add new</strong>
-          Audit Type
-          <button type="button" class="btn btn-sm btn-primary float-right"><i class="fa fa-chevron-left"></i>
-            Back</button>
+          <strong>Output</strong>
+          <!-- <button type="button" class="btn btn-sm btn-primary float-right"><i class="fa fa-chevron-left"></i>
+            Back</button> -->
         </div>
         <form class="form-horizontal" #addAuditTypeForm="ngForm">
           <div class="card-body">
-
             <div class="form-group row">
-              <div class="col-md-2">
-                <label> Material Sheet NO:</label>
+              <div class="col-md-3">
+                <label> Pickup Sheet No:</label>
                 <div class="input-group">
                   <span class="input-group-prepend">
-                    <button class="btn btn-primary" type="button" disabled>SCAN</button>
+                    <button class="btn btn-primary" type="button" disabled>
+                      SCAN
+                    </button>
                   </span>
-                  <input type="text" placeholder="QRCode" class="form-control">
+                  <input
+                    type="text"
+                    placeholder="QRCode"
+                    class="form-control"
+                    name="qrCodeId"
+                    [(ngModel)]="qrCodeId"
+                    (ngModelChange)="getOutputMain($event)"
+                  />
                 </div>
-              </div>
-              <div class="col-md-2">
-                <button class="btn btn-success float-right" (click)="search()">Search</button>
               </div>
             </div>
           </div>
@@ -31,84 +35,98 @@
     </div>
   </div>
   <div class="row">
-    <!--/.col-->
     <div class="col-lg-12">
       <div class="card">
         <div class="card-body">
-          <!-- <ngx-spinner bdOpacity=0.2 bdColor="rgba(51,51,51,0.8)" size="medium" color="#20A8D8" type="pacman">
-          </ngx-spinner> -->
-          <div class="table-reponsive">
+          <div class="table-responsive">
             <table class="table table-bordered text-center">
               <thead>
                 <tr>
                   <th>
                     <div class="custom-control custom-checkbox">
-                      <input type="checkbox" class="custom-control-input" id="all">
-                      <label class="custom-control-label" for="iall"></label>
+                      <input
+                        type="checkbox"
+                        class="custom-control-input"
+                        id="all"
+                      />
+                      <label class="custom-control-label" for="all"></label>
                     </div>
                   </th>
                   <th>Output Sheet No</th>
                   <th>QRcode Id</th>
                   <th>Plan No</th>
-                  <th>Purchase No</th>
+                  <th>Supplier</th>
                   <th>Batch</th>
                   <th>WH</th>
                   <th>Building</th>
                   <th>Area</th>
-                  <th>Rack Location </th>
-                  <th>Stock Qty</th>
-                  <th>Output Qty</th>
+                  <th>Rack Location</th>
+                  <th>InStock Qty</th>
+                  <th>Trans Out Qty</th>
                   <th>Remaining Qty</th>
-                  <th></th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                <ng-container *ngFor="let item of result">
+                <ng-container *ngFor="let item of ouputs">
                   <tr>
-                    <td>
+                    <td rowspan="2" class="align-middle">
                       <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" [id]="item.outputSheetNo">
-                        <label class="custom-control-label" [for]="item.outputSheetNo"></label>
+                        <input
+                          type="checkbox"
+                          class="custom-control-input"
+                          [id]="item.outputSheetNo"
+                        />
+                        <label
+                          class="custom-control-label"
+                          [for]="item.outputSheetNo"
+                        ></label>
                       </div>
                     </td>
-                    <td>{{item.outputSheetNo}}</td>
-                    <td>{{item.qrCodeId}}</td>
-                    <td>{{item.planNo}}</td>
-                    <td>{{item.purchaseNo}}</td>
-                    <td>{{item.batch}}</td>
-                    <td>{{item.wH}}</td>
-                    <td>{{item.building}}</td>
-                    <td>{{item.area}}</td>
-                    <td>{{item.rackLocation}}</td>
-                    <td>{{item.stockQty}}</td>
-                    <td>{{item.outputQty}}</td>
-                    <td>{{item.remainingQty}}</td>
+                    <td rowspan="2" class="align-middle">{{ item.outputSheetNo }}</td>
+                    <td>{{ item.qrCodeId }}</td>
+                    <td>{{ item.planNo }}</td>
+                    <td>{{ item.supplierNo }} - {{ item.supplierName }}</td>
+                    <td>{{ item.batch }}</td>
+                    <td>{{ item.wh }}</td>
+                    <td>{{ item.building }}</td>
+                    <td>{{ item.area }}</td>
+                    <td>{{ item.rackLocation }}</td>
+                    <td>{{ item.inStockQty }}</td>
+                    <td>{{ item.transOutQty }}</td>
+                    <td>{{ item.remainingQty }}</td>
                     <td rowspan="2">
-                      <button class="btn btn-warning mr-2"><i class="fa fa-search-plus"></i>  Detail</button>
-                      <button class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button>
+                      <button class="btn btn-warning mr-2">
+                        <i class="fa fa-search-plus"></i> Detail
+                      </button>
+                      <button class="btn btn-danger" (click)="remove(item.qrCodeId)">
+                        <i class="fa fa-trash"></i> Delete
+                      </button>
                     </td>
                   </tr>
                   <tr>
-                    <td colspan="13">
-                      {{item.description}}
+                    <td colspan="11">
+                      {{ item. matId }} - {{ item. matName }}
                     </td>
                   </tr>
                 </ng-container>
               </tbody>
             </table>
           </div>
-
-          <div class="d-flex">
-
-          </div>
+          <div class="d-flex"></div>
         </div>
-          <div class="card-footer" *ngIf="result.length>0">
-            <button class="btn btn-danger mr-2"><i class="fa fa-ban"></i> Cancel</button>
-            <button class="btn btn-success mr-2"><i class="fa fa-check"></i> Submit</button>
-            <button class="btn btn-primary"><i class="fa fa-print"></i> Print</button>
-          </div>
+        <div class="card-footer" *ngIf="ouputs.length > 0">
+          <button class="btn btn-danger mr-2">
+            <i class="fa fa-ban"></i> Cancel
+          </button>
+          <button class="btn btn-success mr-2">
+            <i class="fa fa-check"></i> Submit
+          </button>
+          <button class="btn btn-primary">
+            <i class="fa fa-print"></i> Print
+          </button>
+        </div>
       </div>
     </div>
-    <!--/.col-->
   </div>
 </div>

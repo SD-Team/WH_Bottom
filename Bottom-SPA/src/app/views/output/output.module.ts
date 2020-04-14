@@ -7,10 +7,12 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { OutputRoutingModule } from './output-routing.module';
 
-
-//Component
+// Component
 import { OutputMainComponent } from './output-main/output-main.component';
 import { OutputPrintComponent } from './output-print/output-print.component';
+import { OutputDetailComponent } from './output-detail/output-detail.component';
+import { NgxQRCodeModule } from 'ngx-qrcode2';
+import { NgxPrintModule } from 'ngx-print';
 
 @NgModule({
     imports: [
@@ -21,11 +23,14 @@ import { OutputPrintComponent } from './output-print/output-print.component';
         OutputRoutingModule,
         PaginationModule,
         NgSelectModule,
-        BsDatepickerModule
+        BsDatepickerModule,
+        NgxQRCodeModule,
+        NgxPrintModule,
     ],
     declarations: [
         OutputMainComponent,
-        OutputPrintComponent
+        OutputPrintComponent,
+        OutputDetailComponent
     ]
 })
 

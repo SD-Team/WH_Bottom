@@ -54,7 +54,6 @@ export class TransferService {
   }
 
   getTransferDetail(transferNo: string) {
-    debugger
     return this.http.get<TransferDetail[]>(this.baseUrl + 'TransferLocation/GetDetailTransaction', { params: { transferNo: transferNo } });
   }
 }

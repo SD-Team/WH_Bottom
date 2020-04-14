@@ -16,8 +16,20 @@ namespace Bottom_API._Repositories.Repositories
 
         public decimal? GetQtyByTransacNo(string transacNo)
         {
-            var model = _context.WMSB_Transaction_Detail.Where(x => x.Transac_No.Trim() == transacNo).Sum(x => x.Instock_Qty);
-            return model;
+            var data = _context.WMSB_Transaction_Detail.Where(x => x.Transac_No.Trim() == transacNo).Sum(x => x.Instock_Qty);
+            return data;
+        }
+
+        public decimal? GetTransQtyByTransacNo(string transacNo)
+        {
+            var data = _context.WMSB_Transaction_Detail.Where(x => x.Transac_No.Trim() == transacNo).Sum(x => x.Trans_Qty);
+            return data;
+        }
+
+        public decimal? GetUntransacQtyByTransacNo(string transacNo)
+        {
+            var data = _context.WMSB_Transaction_Detail.Where(x => x.Transac_No.Trim() == transacNo).Sum(x => x.Untransac_Qty);
+            return data;
         }
     }
 }

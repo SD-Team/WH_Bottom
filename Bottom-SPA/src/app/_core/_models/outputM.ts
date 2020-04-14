@@ -2,14 +2,16 @@ export class OutputM {
     outputSheetNo: string;
     qrCodeId: string;
     planNo: string;
-    purchaseNo: string;
-    batch: number;
-    wH: string;
+    supplierNo: string;
+    supplierName: string;
+    batch: string;
+    matId: string;
+    matName: string;
+    wh: string;
     building: string;
     area: string;
     rackLocation: string;
-    stockQty: number;
-    outputQty: number;
+    inStockQty: number;
+    transOutQty: number;
     remainingQty: number;
-    description: string;
 }

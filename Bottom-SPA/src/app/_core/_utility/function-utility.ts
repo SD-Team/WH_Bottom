@@ -34,4 +34,17 @@ export class FunctionUtility {
             Math.floor(Math.random() * (999 - 100 + 1) + 100);
         return transferNo;
     }
+
+    /**
+     *Trả ra outputSheetNo mới theo yêu cầu: TB(ngày thực hiện yyyymmdd) 3 mã số random number. (VD: TB20200310001)
+     */
+    getOutSheetNo() {
+        const outputSheetNo =
+            'OB' +
+            new Date().getFullYear().toString() +
+            (new Date().getMonth() + 1).toString() +
+            new Date().getDate().toString() +
+            Math.floor(Math.random() * (999 - 100 + 1) + 100);
+        return outputSheetNo;
+    }
 }

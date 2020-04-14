@@ -21,23 +21,30 @@
                     <th>
                       PO#Size
                     </th>
-                    <th>
-                      Accumated Qty
-                    </th>
-                    <th>
-                      Trans In Qty
-                    </th>
-                    <th>
-                      InStock Qty
+                    <th class="custom-background-print" *ngFor="let item of transferDetails">
+                      {{ item.tool_Size }}
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let item of transferDetails">
-                    <td>{{item.model_Size}}</td>
-                    <td>{{item.qty}}</td>
-                    <td>{{item.trans_Qty}}</td>
-                    <td>{{item.instock_Qty}}</td>
+                  <tr>
+                    <td class="custom-thead">
+                      Accumated Qty
+                    </td>
+                    <td *ngFor="let item of transferDetails">{{ item.qty }}</td>
+                  </tr>
+                  <tr>
+                    <td class="custom-thead">Trans In Qty</td>
+                    <td *ngFor="let item of transferDetails">
+                      {{ item.trans_Qty }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="custom-thead">InStock Qty</td>
+                    <td *ngFor="let item of transferDetails">
+                      {{ item.instock_Qty }}
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -48,15 +55,18 @@
                     <th>
                       Tool Size
                     </th>
-                    <th>
-                      Trans Out Qty
+                    <th class="custom-background-print" *ngFor="let item of transferDetails">
+                      {{ item.tool_Size }}
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let item of transferDetails">
-                    <td>{{item.tool_Size}}</td>
-                    <td>{{item.trans_Qty}}</td>
+                  <tr>
+                    <td class="custom-thead">Tran Out Qty</td>
+                    <td *ngFor="let item of transferDetails">
+                      {{ item.trans_Qty }}
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
