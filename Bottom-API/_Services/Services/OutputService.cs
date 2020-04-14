@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -50,16 +51,21 @@ namespace Bottom_API._Services.Services
                 model.Batch = packingListModel.MO_Seq;
                 model.MatId = packingListModel.Material_ID.Trim();
                 model.MatName = packingListModel.Material_Name.Trim();
-                model.WH = "CB";
-                model.Building = "CB";
-                model.Area = "CB";
-                model.RackLocation = "CB";
+                model.WH = "";
+                model.Building = "";
+                model.Area = "";
+                model.RackLocation = "";
                 model.InStockQty = _repoTransactionDetail.GetTransQtyByTransacNo(transctionModel.Transac_No);
                 model.TransOutQty = 0;
                 model.RemainingQty = _repoTransactionDetail.GetTransQtyByTransacNo(transctionModel.Transac_No);
             }
 
             return model;
+        }
+
+        public Task<List<OutputDetail_Dto>> GetDetailOutput(string transacNo)
+        {
+            throw new NotImplementedException();
         }
     }
 }
