@@ -100,10 +100,6 @@ export class ReceiptMainComponent implements OnInit {
   }
   changePageAdd(materialModel) {
     this.materialService.changeMaterialModel(materialModel);
-    // this.materialService.receiveNoMain(materialModel).subscribe(res => {
-    //   this.receiveNoMain = res;
-    //   // this.materialService.changeReceiveNoMain(this.receiveNoMain);
-    // });
     this.router.navigate(['receipt/record']);
   }
   changeStatus(materialModel) {

@@ -58,7 +58,7 @@
           </div>
         </div>
         <div class="card-footer">
-          <button type="button" class="btn btn-danger"><i class="fa fa-ban"></i> Cancel</button>
+          <button type="button" (click)="cancel()" class="btn btn-danger"><i class="fa fa-ban"></i> Cancel</button>
           <button type="button" (click)="submitEdit()" class="btn btn-success" [disabled]="!addAuditTypeForm.valid"><i
               class="fa fa-check"></i> Save</button>
         </div>

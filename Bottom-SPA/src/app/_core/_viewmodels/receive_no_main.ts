@@ -3,6 +3,7 @@ export interface ReceiveNoMain {
     purchase_No: string;
     missing_No: string;
     receive_No: string;
+    delivery_No: string;
     mO_Seq: string;
     receive_Date: Date;
     purchase_Qty: string;

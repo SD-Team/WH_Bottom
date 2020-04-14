@@ -17,7 +17,9 @@ namespace Bottom_API.Helpers.AutoMapper
             CreateMap<HP_Material_j13, HP_Material_Dto>();
             CreateMap<HP_Style_j08, HP_Style_Dto>();
             CreateMap<HP_Vendor_u01, HP_Vendor_Dto>();
-            CreateMap<WMSB_Material_Purchase, Material_Dto>();
+            CreateMap<WMSB_Material_Purchase, Material_Dto>()
+                .ForMember(dest => dest.Updated_By, opt => opt.MapFrom(src => src.Update_By))
+                .ForMember(dest => dest.Updated_Time, opt => opt.MapFrom(src => src.Update_Time)) ;
             CreateMap<WMSB_Material_Missing, Material_Dto>();
             CreateMap<VM_WMSB_Material_Purchase, Material_View_Dto>();
 

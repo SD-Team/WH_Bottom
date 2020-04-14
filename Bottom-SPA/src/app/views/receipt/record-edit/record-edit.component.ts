@@ -4,7 +4,6 @@ import { MaterialService } from '../../../_core/_services/material.service';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
 import { MaterialEditModel } from '../../../_core/_viewmodels/material-edit-model';
 import { ReceiveNoMain } from '../../../_core/_viewmodels/receive_no_main';
-import { element } from 'protractor';
 
 @Component({
   selector: 'app-record-edit',
@@ -21,7 +20,6 @@ export class RecordEditComponent implements OnInit {
               private materialService: MaterialService) { }
 
   ngOnInit() {
-    // this.materialService.currentMaterialEditModel.subscribe(res => this.materialEditModels = res);
     this.materialService.currentReceiveNoMainItem.subscribe(res => this.receiveNoMain = res);
     this.getLoadTable();
 
@@ -49,11 +47,17 @@ export class RecordEditComponent implements OnInit {
     }
   }
   getLoadTable() {
+    if(this.receiveNoMain !== undefined) {
+      this.delivery_No = this.receiveNoMain.delivery_No;
+    }
     this.materialService.editMaterial(this.receiveNoMain).subscribe(res => {
         this.materialEditModels = res;
         // Mảng materialEditModelsConst sẽ không thay đổi
         this.materialEditModelsConst = JSON.parse(JSON.stringify(res));
     });
+  }
+  cancel() {
+    this.getLoadTable();
   }
   changeInput(e) {
     let columnInput = 0;
@@ -63,7 +67,6 @@ export class RecordEditComponent implements OnInit {
         columnInput = i;
       }
     }
-    console.log(columnInput);
     // Giá trị lấy được khi nhập input.
     let valueInput = (<HTMLInputElement>document.getElementById(thisInput.toString())).value;
     this.materialEditModels.forEach(element => {

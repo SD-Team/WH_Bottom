@@ -168,16 +168,16 @@ namespace Bottom_API._Services.Services
         {
             var listMaterialView = await _repoMaterialView.FindAll().ToListAsync();
             var materialPurchaseList = await _repoPurchase.FindAll()
-            .Where(x => x.Confirm_Delivery >= Convert.ToDateTime(model.From_Date + " 00:00") &&
-                        x.Confirm_Delivery <= Convert.ToDateTime(model.To_Date + " 00:00")).Select(x => new {
+            .Where(x => x.Confirm_Delivery >= Convert.ToDateTime(model.From_Date + " 00:00:00.000") &&
+                        x.Confirm_Delivery <= Convert.ToDateTime(model.To_Date + " 23:59:59.997")).Select(x => new {
                             Purchase_No = x.Purchase_No,
                             Status = x.Status,
                             Missing_No = ""
                         }).Distinct().ToListAsync();
 
             var materialMissingList = await _repoMissing.GetAll()
-            .Where(x => x.Confirm_Delivery >= Convert.ToDateTime(model.From_Date + " 00:00") &&
-                        x.Confirm_Delivery <= Convert.ToDateTime(model.To_Date + " 00:00"))
+            .Where(x => x.Confirm_Delivery >= Convert.ToDateTime(model.From_Date + " 00:00:00.000") &&
+                        x.Confirm_Delivery <= Convert.ToDateTime(model.To_Date + " 23:59:59.997"))
                         .Select(x => new {
                             Purchase_No = x.Purchase_No,
                             Status = x.Status,
@@ -478,6 +478,7 @@ namespace Bottom_API._Services.Services
                         select new {
                             Status = model.Status,
                             Purchase_No = model.Purchase_No,
+                            Delivery_No = a.Delivery_No,
                             Missing_No = model.Missing_No,
                             MO_No = model.MO_No,
                             Receive_No = a.Receive_No,
@@ -492,6 +493,7 @@ namespace Bottom_API._Services.Services
                             MO_No = cl.First().MO_No,
                             Missing_No = cl.First().Missing_No,
                             Purchase_No = cl.First().Purchase_No,
+                            Delivery_No = cl.First().Delivery_No,
                             Receive_No = cl.First().Receive_No,
                             MO_Seq = cl.First().MO_Seq,
                             Receive_Date = cl.First().Receive_Date,
@@ -538,27 +540,36 @@ namespace Bottom_API._Services.Services
                     .ProjectTo<Material_Dto>(_configMapper).ToListAsync();
             }
 
-            // Nếu tồn tại 1 Status trong bảng Purchase hoặc bảng Missing có status = N thì thêm đc.Còn Y là
-            // đã đủ hàng rồi.Ko đc thêm tiếp.
-            foreach (var item in material)
-            {
-                if (item.Status == "N") {
-                    status = "ok";
-                    break;
-                }
-            }
-            if(status != "ok") {
-                 // Nếu trong bảng packingList có 1 receiveNo của purchase đó chưa đc sản sinh qrcode thì 
-                // chưa cho thêm hàng tiếp
-                status = "ok";
+            // Nếu purchase đó chưa có hàng nhận vào.
+            if (packingList.Count() > 0) {
                 foreach (var item in packingList)
                 {
+                    // Nếu trong bảng packingList có 1 receiveNo của purchase đó chưa đc sản sinh qrcode thì 
+                    // chưa cho thêm hàng tiếp
                     if(item.Generated_QRCode.Trim() == "N") {
                         status = "no";
                         break;
                     }
                 }
-            } 
+            } else {
+                status = "ok";
+            }
+
+            // Nếu tồn tại 1 Status trong bảng Purchase hoặc bảng Missing có status = N thì thêm đc.Còn Y là
+            // đã đủ hàng rồi.Ko đc thêm tiếp.
+            if(status == "ok") {
+                var checkmaterial = "enough";
+                foreach (var item in material)
+                {
+                    if (item.Status == "N") {
+                        checkmaterial = "not enough";
+                        break;
+                    }
+                }
+                if(checkmaterial == "enough") {
+                    status = "no";
+                }
+            }
             return status;
         }
 
