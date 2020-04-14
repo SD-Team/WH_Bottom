@@ -213,7 +213,7 @@ export class RecordFormComponent implements OnInit {
         // this.materialService.changeReceiveNoMain(this.receiveNoMain);
           this.materialService.receiveNoMain(this.materialModel).subscribe(respo => {
             this.receiveNoMain = respo;
-            this.materialService.changeReceiveNoMain(this.receiveNoMain);
+            // this.materialService.changeReceiveNoMain(this.receiveNoMain);
             this.router.navigate(['receipt/record']);
           }, error => {
             this.alertifyService.error(error);

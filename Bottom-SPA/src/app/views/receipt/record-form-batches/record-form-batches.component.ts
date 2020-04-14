@@ -119,7 +119,7 @@ export class RecordFormBatchesComponent implements OnInit {
         this.materialService.updateMaterial(this.materialByBatchList).subscribe(res => {
           this.materialService.receiveNoMain(this.materialModel).subscribe(respo => {
             this.receiveNoMain = respo;
-            this.materialService.changeReceiveNoMain(this.receiveNoMain);
+            // this.materialService.changeReceiveNoMain(this.receiveNoMain);
             this.router.navigate(['receipt/record']);
           }, error => {
             this.alertifyService.error(error);
