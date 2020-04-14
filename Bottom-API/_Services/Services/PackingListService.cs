@@ -57,10 +57,12 @@ namespace Bottom_API._Services.Services
 
         public async Task<PagedList<Packing_List_Dto>> SearchViewModel(PaginationParams param,PackingListSearchViewModel model)
         {
+            var test = DateTime.Now.Date.ToString();
             var packingSearch =  _repo.GetAll().ProjectTo<Packing_List_Dto>(_configMapper).
-                            Where(  x => x.Receive_Date >= Convert.ToDateTime(model.From_Date + " 00:00") &&
+                            Where(  x => x.Receive_Date >= DateTime.Parse(model.From_Date + " 00:00:00.000") &&
                                     x.Generated_QRCode.Trim() == "N" &&
-                                    x.Receive_Date <= Convert.ToDateTime(model.To_Date + " 00:00"));
+                                    x.Receive_Date <= DateTime.Parse(model.To_Date + " 23:59:59.000")
+                                    );
             if (model.Supplier_ID != null && model.Supplier_ID != "") {
                 packingSearch = packingSearch.Where(x => x.Supplier_ID.Trim() == model.Supplier_ID.Trim());
             }

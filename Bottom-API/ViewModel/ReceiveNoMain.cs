@@ -6,6 +6,7 @@ namespace Bottom_API.ViewModel
     {
         public string MO_No {get;set;}
         public string Purchase_No {get;set;}
+        public string Delivery_No {get;set;}
         public string Missing_No {get;set;}
         public string Receive_No {get;set;}
         public string MO_Seq {get;set;}

@@ -112,7 +112,7 @@ export class QrMainComponent implements OnInit {
   pageQrCode() {
     if (this.checkArray.length > 0) {
       this.qrcodeService.generateQrCode(this.checkArray).subscribe(res => {
-        this.alertifyService.success('Generate QRCode succed!');
+        this.alertifyService.success('Generate QRCode successed!');
         this.router.navigate(['/qr/body']);
         // this.search();
       }, error => {
