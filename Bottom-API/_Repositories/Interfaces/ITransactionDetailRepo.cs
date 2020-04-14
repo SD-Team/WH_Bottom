@@ -6,5 +6,7 @@ namespace Bottom_API._Repositories.Interfaces
     public interface ITransactionDetailRepo : IBottomRepository<WMSB_Transaction_Detail>
     {
         decimal? GetQtyByTransacNo(string transacNo);
+        decimal? GetTransQtyByTransacNo(string transacNo);
+        decimal? GetUntransacQtyByTransacNo(string transacNo);
     }
 }

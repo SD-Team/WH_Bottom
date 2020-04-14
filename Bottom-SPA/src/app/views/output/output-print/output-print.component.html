@@ -1,3 +1,126 @@
-<p>
-  output-print works!
-</p>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <strong>Output Print</strong>
+          <button
+            type="button"
+            class="btn btn-sm btn-primary float-right"
+            (click)="back()"
+          >
+            <i class="fa fa-chevron-left"></i> Back
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="container div-hidden print-all" id="wrap-print">
+            <h4>Print Date: {{ today | date: "yyyy/MM/dd" }}</h4>
+            <div>
+              <div class="row">
+                <div class="col-8 pt-3">
+                  <h4>Output No: {{ printOutput }}</h4>
+                </div>
+                <div class="col-4">
+                  <ngx-qrcode
+                    id="qrCodeImage"
+                    [qrc-element-type]="elementType"
+                    qrc-class="qr-height"
+                    qrc-version="7"
+                    [qrc-value]="printOutput"
+                  >
+                  </ngx-qrcode>
+                  <div class="pl-4 pb-2">
+                    <strong class="rack-location">
+                      {{ printOutput }}
+                    </strong>
+                  </div>
+                </div>
+              </div>
+              <div class="row" class="custom-thead pt-3 pb-3 border-3 border-primary">
+                <div class="col">
+                  <div class="row m-2">
+                    <div class="col-3">PO# :<span>0123456</span></div>
+                    <div class="col-3">Batch :<span>-1</span></div>
+                    <div class="col-3">Model :<span>JAE06</span></div>
+                    <div class="col-3">Art# :<span>EH3522</span></div>
+                  </div>
+                  <div class="row m-2">
+                    <div class="col-3">
+                      Mat# :
+                    </div>
+                    <div class="col-9">
+                      <span>EH3SFCD27W00A</span> -
+                      <span
+                        >(03003)(016 55C CM LS3)A8L5/MIDSOLE PAINTING REARFOOT
+                        AA2S M/S (W's)</span
+                      >
+                    </div>
+                  </div>
+                  <div class="row m-2">
+                    <div class="col-3">
+                      Subcon : <span>H001 - TPUELASTOTAL</span>
+                    </div>
+                    <div class="col-3">
+                      Supplier : <span>VB02 - YUESHENG</span>
+                    </div>
+                    <div class="col-3">Total Qty : <span>900</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-bordered text-center">
+                  <thead>
+                    <tr>
+                      <th width="30%">Tool Size</th>
+                      <th class="custom-background-print">03.5</th>
+                      <th class="custom-background-print">04</th>
+                      <th class="custom-background-print">05</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="custom-thead">InStock Qty A</td>
+                      <td>500</td>
+                      <td>400</td>
+                      <td>100</td>
+                    </tr>
+                    <tr>
+                      <td class="custom-thead">Pickup Qty</td>
+                      <td>500</td>
+                      <td>400</td>
+                      <td>100</td>
+                    </tr>
+                    <tr>
+                      <td class="custom-thead">Trans Out Qty B</td>
+                      <td>500</td>
+                      <td>400</td>
+                      <td>100</td>
+                    </tr>
+                    <tr>
+                      <td class="custom-thead">Remaining Qty C = A - B</td>
+                      <td>500</td>
+                      <td>400</td>
+                      <td>100</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <button
+          type="button"
+          class="btn btn-primary"
+          [useExistingCss]="true"
+          printSectionId="wrap-print"
+          ngxPrint
+        >
+          <i class="fa fa-print"></i> Print
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
