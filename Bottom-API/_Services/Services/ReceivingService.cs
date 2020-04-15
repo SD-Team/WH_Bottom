@@ -187,7 +187,7 @@ namespace Bottom_API._Services.Services
             {
                 materialPurchaseList.Add(item);
             }
-            // Nếu purchase đó có 1 batch là N thì status show ra sẽ là N. Còn Y hết thì là Y
+            // Nếu purchase đó có 1 batch là N thì status show ra sẽ là N. Còn Y hết thì hiển thị Y
             // Tạo ra 1 mảng đối tượng mới
             var materialPurchaseListConvert = new List<PurchaseConvert>();
             foreach (var item in materialPurchaseList)
