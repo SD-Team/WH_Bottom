@@ -35,5 +35,14 @@ namespace Bottom_API.Controllers
             Response.AddPagination(lists.CurrentPage, lists.PageSize, lists.TotalCount, lists.TotalPages);
             return Ok(lists);
         }
+
+        [HttpGet("printqrcode/{qrCodeId}/version/{qrCodeVersion}", Name="PrintQrCode")]
+        public async Task<IActionResult> PrintQrCode(string qrCodeId, int qrCodeVersion)
+        {
+            var model = await _service.GetQrCodePrint(qrCodeId, qrCodeVersion);
+            if (model != null)
+                return Ok(model);
+            else return NoContent();
+        }
     }
 }

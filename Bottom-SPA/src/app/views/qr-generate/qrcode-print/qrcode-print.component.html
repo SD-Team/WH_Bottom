@@ -1,0 +1,162 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <strong>QRCode Print</strong>
+          <button
+            type="button"
+            class="btn btn-sm btn-primary float-right"
+            (click)="back()"
+          >
+            <i class="fa fa-chevron-left"></i> Back
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="container div-hidden print-all" id="wrap-print">
+            <div>
+              <div class="row text-center">
+                <div class="col-4">
+                  <ngx-qrcode
+                    id="qrCodeImage"
+                    [qrc-element-type]="elementType"
+                    qrc-class="qr-height"
+                    qrc-version="7"
+                    [qrc-value]="qrCodeId"
+                  >
+                  </ngx-qrcode>
+                </div>
+              </div>
+              <div class="row text-center">
+                <div class="col-4">
+                  {{ qrCodeId }}
+                </div>
+                <div class="col-4">
+                  {{ qrCodePrint.receive_Date | date: "yyyy/MM/dd" }}
+                </div>
+                <div class="col-4">
+                  {{ qrCodePrint.supplier_ID }} -
+                  {{ qrCodePrint.supplier_Name }}
+                </div>
+              </div>
+              <hr />
+              <div class="row text-center">
+                <div class="col-4">
+                  {{ qrCodePrint.mO_No }}
+                </div>
+                <div class="col-4">
+                  {{ qrCodePrint.mO_Seq }}
+                </div>
+                <div class="col-4">
+                  {{ totalQty }}
+                </div>
+              </div>
+              <br />
+              <div>
+                <table class="table border-0 text-center">
+                  <tbody>
+                    <tr>
+                      <td>TSize</td>
+                      <td *ngFor="let item of trasnferDetail">
+                        {{ item.tool_Size }}
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>Size</td>
+                      <td *ngFor="let item of trasnferDetail">
+                        {{ item.order_Size }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>RQty</td>
+                      <td *ngFor="let item of trasnferDetail">
+                        {{ item.qty }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Act</td>
+                      <td *ngFor="let item of trasnferDetail">
+                        {{ item.trans_Qty }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Bal</td>
+                      <td *ngFor="let item of trasnferDetail">
+                        {{ item.untransac_Qty }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <hr />
+              <div class="row text-center">
+                <div class="col-4">
+                  {{ qrCodePrint.subcon_ID }}
+                </div>
+                <div class="col-4">
+                  {{ qrCodePrint.subcon_Name }}
+                </div>
+                <div class="col-4">
+                  {{ qrCodePrint.t3_Supplier }} -
+                  {{ qrCodePrint.t3_Supplier_Name }}
+                </div>
+              </div>
+              <br />
+              <div class="row text-center">
+                <div class="col-3">
+                  Suggested Location:
+                </div>
+                <div class="col-3">
+                  A-01-02
+                  <ngx-qrcode
+                    id="qrCodeImage"
+                    [qrc-element-type]="elementType"
+                    qrc-class="qr-height"
+                    qrc-version="7"
+                    qrc-value="A-01-02"
+                  >
+                  </ngx-qrcode>
+                </div>
+                <div class="col-3">
+                  A-02-02
+                  <ngx-qrcode
+                    id="qrCodeImage"
+                    [qrc-element-type]="elementType"
+                    qrc-class="qr-height"
+                    qrc-version="7"
+                    qrc-value="A-02-02"
+                  >
+                  </ngx-qrcode>
+                </div>
+                <div class="col-3">
+                  B-01-02
+                  <ngx-qrcode
+                    id="qrCodeImage"
+                    [qrc-element-type]="elementType"
+                    qrc-class="qr-height"
+                    qrc-version="7"
+                    qrc-value="B-01-02"
+                  >
+                  </ngx-qrcode>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <button
+          type="button"
+          class="btn btn-primary"
+          [useExistingCss]="true"
+          printSectionId="wrap-print"
+          ngxPrint
+        >
+          <i class="fa fa-print"></i> Print
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

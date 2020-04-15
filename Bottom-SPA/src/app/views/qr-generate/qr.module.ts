@@ -11,6 +11,8 @@ import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { QrMainComponent } from './qr-main/qr-main.component';
 import { QrPrintComponent } from './qr-print/qr-print.component';
 import { QrBodyComponent } from './qr-body/qr-body.component';
+import { QrcodePrintComponent } from './qrcode-print/qrcode-print.component';
+import { NgxPrintModule } from 'ngx-print';
 
 @NgModule({
     imports: [
@@ -23,11 +25,13 @@ import { QrBodyComponent } from './qr-body/qr-body.component';
         NgSelectModule,
         BsDatepickerModule,
         NgxQRCodeModule,
+        NgxPrintModule
     ],
     declarations: [
         QrMainComponent,
         QrPrintComponent,
-        QrBodyComponent
+        QrBodyComponent,
+        QrcodePrintComponent
     ]
 })
 
