@@ -56,10 +56,14 @@ namespace Bottom_API._Services.Services
                 model.Building = "";
                 model.Area = "";
                 model.RackLocation = transctionModel.Rack_Location;
-                model.InStockQty = _repoTransactionDetail.GetTransQtyByTransacNo(transctionModel.Transac_No);
+                model.InStockQty = _repoTransactionDetail.GetQtyByTransacNo(transctionModel.Transac_No);
                 model.TransOutQty = 0;
-                model.RemainingQty = _repoTransactionDetail.GetTransQtyByTransacNo(transctionModel.Transac_No);
+                model.RemainingQty = _repoTransactionDetail.GetQtyByTransacNo(transctionModel.Transac_No);
                 model.OutputDetail = await _repoTransactionDetail.FindAll(x => x.Transac_No == transctionModel.Transac_No).ProjectTo<TransferLocationDetail_Dto>(_configMapper).ToListAsync();
+                model.RackLocation = "";
+                // model.InStockQty = _repoTransactionDetail.GetTransQtyByTransacNo(transctionModel.Transac_No);
+                // model.TransOutQty = 0;
+                // model.RemainingQty = _repoTransactionDetail.GetTransQtyByTransacNo(transctionModel.Transac_No);
             }
 
             return model;

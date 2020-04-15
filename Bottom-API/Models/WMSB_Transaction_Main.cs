@@ -20,6 +20,9 @@ namespace Bottom_API.Models
         public string MO_Seq { get; set; }
         public string Material_ID { get; set; }
         public string Material_Name { get; set; }
+
+        [Column(TypeName = "decimal(9,2)")]
+        public decimal? Purchase_Qty { get; set; }
         
         [Column(TypeName = "decimal(9,2)")]
         public decimal? Transacted_Qty { get; set; }

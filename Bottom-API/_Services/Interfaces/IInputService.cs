@@ -11,5 +11,6 @@ namespace Bottom_API._Services.Interfaces
         Task<bool> CreateInput(Transaction_Detail_Dto model);
         Task<bool> SubmitInput(List<string> lists);
         Task<MissingPrint_Dto> GetMaterialPrint(string missingNo);
+        
     }
 }

@@ -19,5 +19,11 @@ namespace Bottom_API._Repositories.Repositories
             var model = await _context.WMSB_Packing_List.FirstOrDefaultAsync(x => x.Receive_No.Trim() == receiveNo.ToString().Trim());
             return model;
         }
+
+        public WMSB_Packing_List GetPackingList(string Purchase_No, string MO_No, string MO_Seq, string Material_ID)
+        {
+            var model = _context.WMSB_Packing_List.FirstOrDefault(x => x.Purchase_No == Purchase_No && x.MO_No == MO_No && x.MO_Seq == MO_Seq && x.Material_ID == Material_ID);
+            return model;
+        }
     }
 }

@@ -4,21 +4,21 @@ export const navItems: INavData[] = [
   {
     name: "Dashboard",
     url: "/dashboard",
-    icon: "icon-speedometer"
+    icon: "icon-speedometer",
     // badge: {
     //   variant: 'info',
     //   text: 'NEW'
     // }
   },
   {
-    name: "Receipt",
+    name: "Receiving Material",
     url: "/receipt/main",
-    icon: "icon-list"
+    icon: "icon-list",
   },
   {
     name: "QR Generate",
     url: "/qr/main",
-    icon: "icon-frame"
+    icon: "icon-frame",
   },
   {
     name: "Input/Output",
@@ -28,46 +28,41 @@ export const navItems: INavData[] = [
       {
         name: "Input",
         url: "/input/main",
-        icon: "icon-arrow-left-circle"
+        icon: "icon-arrow-left-circle",
       },
       {
         name: "Output",
         url: "/output/main",
-        icon: "icon-arrow-right-circle"
-      }
-    ]
+        icon: "icon-arrow-right-circle",
+      },
+    ],
   },
   {
     name: "In/Out History",
     url: "/io-history",
-    icon: "icon-book-open"
+    icon: "icon-book-open",
   },
   {
     name: "Rack Location",
     url: "/rack/main",
-    icon: "icon-book-open"
+    icon: "icon-book-open",
   },
   {
-    name: "Receiving Material",
-    url: "/receiving/main",
-    icon: "icon-book-open"
-  },
-  {
-    name: 'Transfer Location',
-    url: '/transfer',
-    icon: 'icon-frame',
+    name: "Transfer Location",
+    url: "/transfer",
+    icon: "icon-frame",
     children: [
       {
-        name: 'Main',
-        url: '/transfer/main',
-        icon: 'icon-arrow-left-circle'
+        name: "Main",
+        url: "/transfer/main",
+        icon: "icon-arrow-left-circle",
       },
       {
-        name: 'History',
-        url: '/transfer/history',
-        icon: 'icon-arrow-left-circle'
-      }
-    ]
+        name: "History",
+        url: "/transfer/history",
+        icon: "icon-arrow-left-circle",
+      },
+    ],
   },
   // {
   //   title: true,
