@@ -5,10 +5,10 @@ export class TransferDetail {
     order_Size: string;
     model_Size: string;
     spec_Size: string;
-    qty: string;
-    trans_Qty: string;
-    instock_Qty: string;
-    untransac_Qty: string;
+    qty: number;
+    trans_Qty: number;
+    instock_Qty: number;
+    untransac_Qty: number;
     updated_Time: string;
     updated_By: string;
 }

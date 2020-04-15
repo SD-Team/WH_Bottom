@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Bottom_API.DTO
 {
     public class Output_Dto
@@ -17,5 +19,6 @@ namespace Bottom_API.DTO
         public decimal? InStockQty { get; set; }
         public decimal? TransOutQty { get; set; }
         public decimal? RemainingQty { get; set; }
+        public List<TransferLocationDetail_Dto> OutputDetail { get; set; }
     }
 }

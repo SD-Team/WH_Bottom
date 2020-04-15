@@ -39,6 +39,7 @@ export class OutputMainComponent implements OnInit {
             if (res != null) {
               res.outputSheetNo = this.outputSheetNo;
               this.ouputs.push(res);
+              debugger
             }
           },
           (error) => {

@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { InputM } from '../_models/inputM';
 import { InputDetail } from '../_models/input-detail';
 import { BehaviorSubject } from 'rxjs';
+import { MissingPrint } from '../_models/missing-print';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -44,5 +46,9 @@ export class InputService {
 
   changeFlag(flag: string) {
     this.flagSource.next(flag);
+  }
+
+  printMissing(missingNo: string) {
+    return this.http.get<MissingPrint>(this.baseUrl + 'input/printmissing/' + missingNo, {});
   }
 }

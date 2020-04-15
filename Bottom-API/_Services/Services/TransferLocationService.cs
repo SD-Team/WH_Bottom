@@ -103,15 +103,16 @@ namespace Bottom_API._Services.Services
                     // tạo biến lấy ra Transac_No của TransactionMain
                     var transacNo = transactionMain.Transac_No;
 
-                    // Update TransactionMain cũ: Transac_Type = "M", Can_Move = "N"
-                    transactionMain.Transac_Type = "M";
+                    // Update TransactionMain cũ:  Can_Move = "N"
                     transactionMain.Can_Move = "N";
                     transactionMain.Updated_Time = DateTime.Now;
+                    transactionMain.Updated_By = item.UpdateBy;
                     _repoTransactionMain.Update(transactionMain);
+                    await _repoTransactionMain.SaveAll();
 
                     // Thêm TransactionMain mới dựa vào TransactionMain cũ: thêm mới chỉ thay đổi mấy trường dưới còn lại giữ nguyên
                     transactionMain.ID = 0; // Trong DB có identity tự tăng
-                    transactionMain.Transac_Type = "I";
+                    transactionMain.Transac_Type = "M";
                     transactionMain.Can_Move = "Y";
                     transactionMain.Rack_Location = item.FromLocation;
                     transactionMain.Updated_By = item.UpdateBy;
@@ -122,7 +123,7 @@ namespace Bottom_API._Services.Services
                     _repoTransactionMain.Add(transactionMain);
 
                     // Thêm TransactionDetail mới dựa vào TransactionDetail của TransactionMain cũ(có bao nhiêu TransactionDetail cũ là thêm bấy nhiêu TransactionDetail mới): chỉ thay đổi Transac_No thành của TransactionMain mới
-                    var transactionDetails = await _repoTransactionDetail.FindAll(x => x.Transac_No == transacNo).ToListAsync();
+                    var transactionDetails = await _repoTransactionDetail.FindAll(x => x.Transac_No.Trim() == transacNo.Trim()).ToListAsync();
                     foreach (var transactionDetail in transactionDetails)
                     {
                         // thêm mới chỉ thay đổi mấy trường dưới, còn lại giữ nguyên
