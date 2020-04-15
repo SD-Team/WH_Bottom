@@ -222,7 +222,7 @@ namespace Bottom_API._Services.Services
                 model.Accumlated_In_Qty = 0;
                 model.Status = "N";
                 model.Updated_Time = DateTime.Now;
-                model.Updated_By = "Emma";
+                model.Updated_By = "Nam";
                 foreach (var purchase in matPurchase)
                 {
                     if(detail.Order_Size == purchase.Order_Size) {

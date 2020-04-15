@@ -55,9 +55,9 @@ namespace Bottom_API._Services.Services
                 model.Building = "";
                 model.Area = "";
                 model.RackLocation = "";
-                model.InStockQty = _repoTransactionDetail.GetTransQtyByTransacNo(transctionModel.Transac_No);
-                model.TransOutQty = 0;
-                model.RemainingQty = _repoTransactionDetail.GetTransQtyByTransacNo(transctionModel.Transac_No);
+                // model.InStockQty = _repoTransactionDetail.GetTransQtyByTransacNo(transctionModel.Transac_No);
+                // model.TransOutQty = 0;
+                // model.RemainingQty = _repoTransactionDetail.GetTransQtyByTransacNo(transctionModel.Transac_No);
             }
 
             return model;
