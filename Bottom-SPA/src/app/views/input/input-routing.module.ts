@@ -2,6 +2,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { InputMainComponent } from './input-main/input-main.component';
 import { InputPrintComponent } from './input-print/input-print.component';
+import { MissingPrintComponent } from './missing-print/missing-print.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,13 @@ const routes: Routes = [
         //resolve: { brands: BrandListResolver },
         data: {
           title: 'Input Print'
+        }
+      },
+      {
+        path: 'missing-print',
+        component: MissingPrintComponent,
+        data: {
+          title: 'Missing Print'
         }
       },
     ]

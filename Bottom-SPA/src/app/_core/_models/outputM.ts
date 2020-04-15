@@ -1,3 +1,5 @@
+import { TransferDetail } from './transfer-detail';
+
 export class OutputM {
     outputSheetNo: string;
     qrCodeId: string;
@@ -14,4 +16,5 @@ export class OutputM {
     inStockQty: number;
     transOutQty: number;
     remainingQty: number;
+    outputDetail: TransferDetail[];
 }

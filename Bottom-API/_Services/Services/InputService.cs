@@ -7,6 +7,8 @@ using Bottom_API.DTO;
 using Bottom_API.Models;
 using Bottom_API.Helpers;
 using System;
+using Microsoft.EntityFrameworkCore;
+using AutoMapper.QueryableExtensions;
 
 namespace Bottom_API._Services.Services
 {
@@ -17,14 +19,16 @@ namespace Bottom_API._Services.Services
         private readonly IQRCodeDetailRepository _repoQRCodeDetail;
         private readonly ITransactionMainRepo _repoTransactionMain;
         private readonly ITransactionDetailRepo _repoTransactionDetail;
+        private readonly IMaterialMissingRepository _repoMaterialMissing;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
         public InputService(
-            IPackingListRepository repoPackingList, 
+            IPackingListRepository repoPackingList,
             IQRCodeMainRepository repoQRCodeMain,
             IQRCodeDetailRepository repoQRCodeDetail,
             ITransactionMainRepo repoTransactionMain,
             ITransactionDetailRepo repoTransactionDetail,
+            IMaterialMissingRepository repoMaterialMissing,
             IMapper mapper, MapperConfiguration configMapper)
         {
             _configMapper = configMapper;
@@ -34,12 +38,14 @@ namespace Bottom_API._Services.Services
             _repoPackingList = repoPackingList;
             _repoTransactionMain = repoTransactionMain;
             _repoTransactionDetail = repoTransactionDetail;
+            _repoMaterialMissing = repoMaterialMissing;
         }
         public async Task<Transaction_Dto> GetByQRCodeID(object qrCodeID)
         {
             Transaction_Dto model = new Transaction_Dto();
             var qrCodeModel = await _repoQRCodeMain.GetByQRCodeID(qrCodeID);
-            if(qrCodeModel != null) {
+            if (qrCodeModel != null)
+            {
                 var packingListModel = await _repoPackingList.GetByReceiveNo(qrCodeModel.Receive_No);
                 var listQrCodeDetails = await _repoQRCodeDetail.GetByQRCodeID(qrCodeID);
                 decimal? num = 0;
@@ -47,7 +53,7 @@ namespace Bottom_API._Services.Services
                 {
                     num += item.Qty;
                 }
-                
+
                 model.QrCode_Id = qrCodeModel.QRCode_ID.Trim();
                 model.Plan_No = packingListModel.MO_No.Trim();
                 model.Suplier_No = packingListModel.Supplier_ID.Trim();
@@ -59,7 +65,7 @@ namespace Bottom_API._Services.Services
                 model.Trans_In_Qty = 0;
                 model.InStock_Qty = 0;
             }
-            
+
             return model;
         }
 
@@ -99,7 +105,8 @@ namespace Bottom_API._Services.Services
         public async Task<bool> CreateInput(Transaction_Detail_Dto model)
         {
             var qrCodeModel = await _repoQRCodeMain.GetByQRCodeID(model.QrCode_Id);
-            if(qrCodeModel != null) {
+            if (qrCodeModel != null)
+            {
                 var listQrCodeDetails = await _repoQRCodeDetail.GetByQRCodeID(qrCodeModel.QRCode_ID);
                 Random ran = new Random();
                 int num = ran.Next(100, 999);
@@ -123,7 +130,7 @@ namespace Bottom_API._Services.Services
                 _repoTransactionMain.Add(inputModel);
 
                 var i = 0;
-                foreach (var item in model.Detail_Size )
+                foreach (var item in model.Detail_Size)
                 {
                     WMSB_Transaction_Detail inputDetailModel = new WMSB_Transaction_Detail();
                     inputDetailModel.Transac_No = inputModel.Transac_No;
@@ -148,7 +155,8 @@ namespace Bottom_API._Services.Services
         public async Task<bool> SubmitInput(List<string> lists)
         {
             Random ran = new Random();
-            if(lists.Count > 0) {
+            if (lists.Count > 0)
+            {
                 foreach (var item in lists)
                 {
                     int num = ran.Next(100, 999);
@@ -163,6 +171,18 @@ namespace Bottom_API._Services.Services
             }
 
             return false;
+        }
+
+        public async Task<MissingPrint_Dto> GetMaterialPrint(string missingNo)
+        {
+            var materialMissingModel = await _repoMaterialMissing.FindAll(x => x.Missing_No.Trim() == missingNo.Trim()).ProjectTo<Material_Dto>(_configMapper).FirstOrDefaultAsync();
+            var transactionMainModel = _repoTransactionMain.FindSingle(x => x.Missing_No.Trim() == missingNo.Trim());
+            var transactionDetailByMissingNo = await _repoTransactionDetail.FindAll(x => x.Transac_No.Trim() == transactionMainModel.Transac_No.Trim()).ProjectTo<TransferLocationDetail_Dto>(_configMapper).ToListAsync();
+            MissingPrint_Dto result = new MissingPrint_Dto();
+            result.MaterialMissing = materialMissingModel;
+            result.TransactionDetailByMissingNo = transactionDetailByMissingNo;
+
+            return result;
         }
     }
 }

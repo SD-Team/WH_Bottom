@@ -19,7 +19,7 @@ import { TransferDetailComponent } from './transfer-detail/transfer-detail.compo
     NgxQRCodeModule,
     NgxPrintModule,
     BsDatepickerModule,
-    PaginationModule
+    PaginationModule.forRoot()
   ],
   declarations: [
     TransferMainComponent,

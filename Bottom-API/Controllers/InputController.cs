@@ -57,6 +57,15 @@ namespace Bottom_API.Controllers
 
             throw new Exception("Submit failed on save");
         }
+
+        [HttpGet("printmissing/{missingNo}", Name="PrintMissing")]
+        public async Task<IActionResult> PrintMissing(string missingNo)
+        {
+            var model = await _service.GetMaterialPrint(missingNo);
+            if (model != null)
+                return Ok(model);
+            else return NoContent();
+        }
     
     }
 }

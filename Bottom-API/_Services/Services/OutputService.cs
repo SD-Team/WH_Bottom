@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Bottom_API._Repositories.Interfaces;
 using Bottom_API._Services.Interfaces;
 using Bottom_API.DTO;
@@ -54,10 +55,11 @@ namespace Bottom_API._Services.Services
                 model.WH = "";
                 model.Building = "";
                 model.Area = "";
-                model.RackLocation = "";
+                model.RackLocation = transctionModel.Rack_Location;
                 model.InStockQty = _repoTransactionDetail.GetTransQtyByTransacNo(transctionModel.Transac_No);
                 model.TransOutQty = 0;
                 model.RemainingQty = _repoTransactionDetail.GetTransQtyByTransacNo(transctionModel.Transac_No);
+                model.OutputDetail = await _repoTransactionDetail.FindAll(x => x.Transac_No == transctionModel.Transac_No).ProjectTo<TransferLocationDetail_Dto>(_configMapper).ToListAsync();
             }
 
             return model;

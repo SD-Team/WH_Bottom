@@ -10,6 +10,9 @@ import { InputRoutingModule } from './input-routing.module';
 //Component
 import { InputMainComponent } from './input-main/input-main.component';
 import { InputPrintComponent } from './input-print/input-print.component';
+import { MissingPrintComponent } from './missing-print/missing-print.component';
+import { NgxQRCodeModule } from 'ngx-qrcode2';
+import { NgxPrintModule } from 'ngx-print';
 
 @NgModule({
     imports: [
@@ -20,11 +23,14 @@ import { InputPrintComponent } from './input-print/input-print.component';
         InputRoutingModule,
         PaginationModule,
         NgSelectModule,
-        BsDatepickerModule
+        BsDatepickerModule,
+        NgxQRCodeModule,
+        NgxPrintModule,
     ],
     declarations: [
         InputMainComponent,
-        InputPrintComponent
+        InputPrintComponent,
+        MissingPrintComponent
     ]
 })
 

@@ -10,5 +10,6 @@ namespace Bottom_API._Services.Interfaces
         Task<Transaction_Detail_Dto> GetDetailByQRCodeID(object qrCodeID);
         Task<bool> CreateInput(Transaction_Detail_Dto model);
         Task<bool> SubmitInput(List<string> lists);
+        Task<MissingPrint_Dto> GetMaterialPrint(string missingNo);
     }
 }
