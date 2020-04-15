@@ -1,0 +1,68 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+
+        <div class="card-header">
+          <strong>Edit record</strong>
+          <button type="button" (click)="backForm()" class="btn btn-sm btn-primary float-right"><i class="fa fa-chevron-left"></i>
+            Back</button>
+        </div>
+
+        <form class="form-horizontal" #addAuditTypeForm="ngForm">
+          <div class="card-body">
+            <div class="form-group row">
+              <label class="col-md-1 col-form-label" for="purchaseNo"><strong
+                  class="float-right">Delivery No </strong></label>
+              <div class="col-md-3">
+                <input type="text" name="Delivery No" class="form-control" [(ngModel)]="delivery_No">
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <div class="row">
+          <div class="col-md-10 offset-md-1">
+            <table *ngIf="materialEditModels !== undefined" style="margin-left: -40px !important;" class="table table-bordered">
+              <thead>
+                <tr class="text-center">
+                  <th>Size</th>
+                  <th *ngFor="let item of materialEditModels">{{item.order_Size}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="text-center">
+                  <td>Purchase Qty</td>
+                  <th *ngFor="let item of materialEditModels">{{item.purchase_Qty}}</th>
+                </tr>
+                <tr class="text-center">
+                  <td>Accumated Qty</td>
+                  <td *ngFor="let item of materialEditModels">{{item.accumated_Qty}}</td>
+                </tr>
+                <tr class="text-center">
+                  <td>Delevery Qty</td>
+                  <td *ngFor="let item of materialEditModels">
+                    <input type="text" id="{{item.order_Size}}" 
+                    value="{{item.delivery_Qty}}" 
+                    (change)="changeInput(item.order_Size)" class="input-table">
+                  </td>
+                </tr>
+                <tr class="text-center">
+                  <td *ngIf="receiveNoMain !== undefined">{{receiveNoMain.mO_Seq}}</td>
+                  <td *ngFor="let item of materialEditModels">
+                    <input disabled value="{{item.received_Qty}}" type="text" class="input-table">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button type="button" (click)="cancel()" class="btn btn-danger"><i class="fa fa-ban"></i> Cancel</button>
+          <button type="button" (click)="submitEdit()" class="btn btn-success" [disabled]="!addAuditTypeForm.valid"><i
+              class="fa fa-check"></i> Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

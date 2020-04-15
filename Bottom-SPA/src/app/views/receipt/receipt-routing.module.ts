@@ -5,6 +5,7 @@ import { RecordComponent } from './record/record.component';
 import { RecordFormComponent } from './record-form/record-form.component';
 import { RecordFormBatchesComponent } from './record-form-batches/record-form-batches.component';
 import { RecordDetailComponent } from './record-detail/record-detail.component';
+import { RecordEditComponent } from './record-edit/record-edit.component';
 
 const routes: Routes = [
     {
@@ -51,6 +52,13 @@ const routes: Routes = [
                         component: RecordFormBatchesComponent,
                         data: {
                             title: 'Add Record'
+                        }
+                    },
+                    {
+                        path: 'record-edit',
+                        component: RecordEditComponent,
+                        data: {
+                            title: 'Edit Record'
                         }
                     },
                 ]

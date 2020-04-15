@@ -2,6 +2,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { OutputMainComponent } from './output-main/output-main.component';
 import { OutputPrintComponent } from './output-print/output-print.component';
+import { OutputDetailComponent } from './output-detail/output-detail.component';
 
 
 const routes: Routes = [
@@ -14,7 +15,6 @@ const routes: Routes = [
             {
                 path: 'main',
                 component: OutputMainComponent,
-                //resolve: { brands: BrandListResolver },
                 data: {
                     title: 'Scan'
                 }
@@ -23,9 +23,15 @@ const routes: Routes = [
             {
                 path: 'print',
                 component: OutputPrintComponent,
-                //resolve: { brands: BrandListResolver },
                 data: {
                     title: 'Output Print'
+                }
+            },
+            {
+                path: 'detail',
+                component: OutputDetailComponent,
+                data: {
+                    title: 'Output Detail'
                 }
             },
         ]

@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { OutputM } from '../../../_core/_models/outputM';
+import { OutputService } from '../../../_core/_services/output.service';
+import { AlertifyService } from '../../../_core/_services/alertify.service';
+import { FunctionUtility } from '../../../_core/_utility/function-utility';
 
 @Component({
   selector: 'app-output-main',
@@ -7,30 +10,56 @@ import { OutputM } from '../../../_core/_models/outputM';
   styleUrls: ['./output-main.component.scss']
 })
 export class OutputMainComponent implements OnInit {
-  result = [];
-  constructor() { }
+  ouputs: OutputM[] = [];
+  qrCodeId = '';
+  outputSheetNo = '';
+
+  constructor(
+    private outputService: OutputService,
+    private alertify: AlertifyService,
+    private functionUtility: FunctionUtility
+  ) {}
 
   ngOnInit() {
+    // lấy ra transferNo mới theo yêu cầu: TB(ngày thực hiện yyyymmdd) 3 mã số random number. (VD: TB20200310001)
+    this.outputSheetNo = this.functionUtility.getOutSheetNo();
   }
 
-
-  search() {
-    for (let index = 1; index < 3; index++) {
-      let b = new OutputM();
-      b.qrCodeId = "20200224AAB";
-      b.outputSheetNo="";
-      b.planNo = "0132514846511";
-      b.purchaseNo = "PW19B0FEYC";
-      b.batch = -1;
-      b.wH = "CA";
-      b.building = "D";
-      b.area = "Storage";
-      b.rackLocation = "A-01";
-      b.stockQty = 1050;
-      b.outputQty = 100;
-      b.remainingQty = 0;
-      b.description="SKYJ17 -(35867)(65A 80 SO RERUB NM EPM3) BLK FOREFOOT";
-      this.result.push(b);
+  getOutputMain(e) {
+    if (e.length >= 14) {
+      let flag = true;
+      this.ouputs.forEach((item) => {
+        if (item.qrCodeId === e) {
+          flag = false;
+        }
+      });
+      if (flag) {
+        this.outputService.getMainByQrCodeId(this.qrCodeId).subscribe(
+          (res) => {
+            if (res != null) {
+              res.outputSheetNo = this.outputSheetNo;
+              this.ouputs.push(res);
+            }
+          },
+          (error) => {
+            this.alertify.error(error);
+          }
+        );
+      } else {
+        this.alertify.error('This QRCode scanded!');
+      }
+      this.qrCodeId = '';
     }
   }
+
+  remove(qrCodeId: string) {
+    this.alertify.confirm('Delete', 'Are you sure Delete', () => {
+      this.ouputs.forEach((e, i) => {
+        if (e.qrCodeId === qrCodeId) {
+          this.ouputs.splice(i, 1);
+        }
+      });
+    });
+  }
+
 }

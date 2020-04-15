@@ -9,6 +9,7 @@ import { MaterialModel } from '../_viewmodels/material-model';
 import { BatchQtyItem } from '../_viewmodels/batch-qty-item';
 import { ReceiveNoMain } from '../_viewmodels/receive_no_main';
 import { ReceiveNoDetail } from '../_viewmodels/receive-no-detail';
+import { MaterialEditModel } from '../_viewmodels/material-edit-model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,12 +17,13 @@ import { ReceiveNoDetail } from '../_viewmodels/receive-no-detail';
 export class MaterialService {
   baseUrl = environment.apiUrl;
   materialModel: MaterialModel;
+  receiveNoMainItem: ReceiveNoMain;
   materialSource = new BehaviorSubject<MaterialModel>(this.materialModel);
-  receiveNoMainSource = new BehaviorSubject<ReceiveNoMain[]>([]);
+  receiveNoMainSource = new BehaviorSubject<ReceiveNoMain>(this.receiveNoMainItem);
   receiveNoDetailSource = new BehaviorSubject<ReceiveNoDetail[]>([]);
   currentMaterial = this.materialSource.asObservable();
-  currentReceiveNoMain = this.receiveNoMainSource.asObservable();
   currentReceiveNoDetail = this.receiveNoDetailSource.asObservable();
+  currentReceiveNoMainItem = this.receiveNoMainSource.asObservable();
   constructor(private http: HttpClient) { }
   // search(page?, itemsPerPage?, materialSearch?: MaterialSearch): Observable<PaginatedResult<MaterialModel[]>> {
   //   const paginatedResult: PaginatedResult<MaterialModel[]> = new PaginatedResult<MaterialModel[]>();
@@ -48,7 +50,7 @@ export class MaterialService {
   changeMaterialModel(materialModel: MaterialModel) {
     this.materialSource.next(materialModel);
   }
-  changeReceiveNoMain(receiveNoMain: ReceiveNoMain[]) {
+  changeReceiveNoMainItem(receiveNoMain: ReceiveNoMain) {
     this.receiveNoMainSource.next(receiveNoMain);
   }
   changeReceiveNoDetail(receiveNoDetails: ReceiveNoDetail[]) {
@@ -63,7 +65,28 @@ export class MaterialService {
   receiveNoDetails(receiveNo: any): Observable<ReceiveNoDetail[]> {
     return this.http.get<ReceiveNoDetail[]>(this.baseUrl + 'receiving/receiveNoDetails/' + receiveNo, {});
   }
-  purchaseNoDetail(materialModel: MaterialModel): Observable<ReceiveNoMain[]> {
-    return this.http.post<any>(this.baseUrl + 'receiving/purchaseNoDetail', materialModel);
+  receiveNoMain(materialModel: MaterialModel): Observable<ReceiveNoMain[]> {
+    return this.http.post<any>(this.baseUrl + 'receiving/receiveNoMain', materialModel);
+  }
+
+  // Đóng purchase
+  closePurchase(materialModel: MaterialModel) {
+    return this.http.post<any>(this.baseUrl + 'receiving/closePurchase/', materialModel);
+  }
+  receiveByPurchase(materialModel: MaterialModel): Observable<ReceiveNoMain[]> {
+    return this.http.post<any>(this.baseUrl + 'receiving/receiveByPurchase/', materialModel);
+  }
+
+  // kiểm tra status của purchaseNo.
+  statusPurchase(materialModel: MaterialModel){
+    return this.http.post<any>(this.baseUrl + 'receiving/statusPurchase/', materialModel);
+  }
+
+  editMaterial(receiveNoMain: ReceiveNoMain): Observable<MaterialEditModel[]> {
+    return this.http.post<any>(this.baseUrl + 'receiving/editMaterial/', receiveNoMain);
+  }
+  
+  editDetail(materialEditModels: MaterialEditModel[]) {
+    return this.http.post<any>(this.baseUrl + 'receiving/editDetail/', materialEditModels);
   }
 }

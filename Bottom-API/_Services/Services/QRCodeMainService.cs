@@ -18,21 +18,18 @@ namespace Bottom_API._Services.Services
     {
         private readonly IQRCodeMainRepository _repoQrcode;
         private readonly IPackingListRepository _repoPacking;
-        private readonly IQRCodeMainRepository _repoQrCodeMain;
         private readonly IPackingListDetailRepository _repoPackingDetail;
         private readonly IQRCodeDetailRepository _repoQrCodeDetail;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
         public QRCodeMainService(   IQRCodeMainRepository repoQrcode,
                                     IPackingListRepository repoPacking,
-                                    IQRCodeMainRepository repoQrCodeMain,
                                     IPackingListDetailRepository repoPackingDetail,
                                     IQRCodeDetailRepository repoQrCodeDetail,
                                     IMapper mapper,
                                     MapperConfiguration configMapper) {
             _repoQrcode = repoQrcode;
             _repoPacking = repoPacking;
-            _repoQrCodeMain = repoQrCodeMain;
             _repoPackingDetail = repoPackingDetail;
             _repoQrCodeDetail = repoQrCodeDetail;
             _mapper = mapper;

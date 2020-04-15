@@ -73,6 +73,7 @@ namespace Bottom_API
             services.AddScoped<IReceivingService, ReceivingService>();
             services.AddScoped<IInputService, InputService>();
             services.AddScoped<ITransferLocationService, TransferLocationService>();
+            services.AddScoped<IOutputService, OutputService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

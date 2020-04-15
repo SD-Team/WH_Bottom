@@ -9,7 +9,7 @@ import { PackingListService } from '../../../_core/_services/packing-list.servic
 import { Material } from '../../../_core/_models/material';
 import { MaterialModel } from '../../../_core/_viewmodels/material-model';
 import { ReceiveNoMain } from '../../../_core/_viewmodels/receive_no_main';
-
+import * as _ from 'lodash'; 
 @Component({
   selector: 'app-receipt-main',
   templateUrl: './receipt-main.component.html',
@@ -98,17 +98,24 @@ export class ReceiptMainComponent implements OnInit {
       });
     }
   }
-  changePageOnAdd(materialModel) {
+  changePageAdd(materialModel) {
     this.materialService.changeMaterialModel(materialModel);
     this.router.navigate(['receipt/record']);
   }
-  changePageNotAdd(materialModel) {
-    this.materialService.changeMaterialModel(materialModel);
-    this.materialService.purchaseNoDetail(materialModel).subscribe(res => {
-      this.receiveNoMain = res;
-      this.materialService.changeReceiveNoMain(this.receiveNoMain);
+  changeStatus(materialModel) {
+    this.alertifyService.confirm('Close Purchase No', 'Are you sure Close ?', () => {
+      this.materialService.closePurchase(materialModel).subscribe(res => {
+        this.materialLists.forEach(item => {
+          if (_.isEqual(item,materialModel)) {
+            item.status = 'Y';
+            return;
+          }
+        });
+        this.alertifyService.success('Close successed!');
+      }, error => {
+        this.alertifyService.error(error);
+      });
     });
-    this.router.navigate(['receipt/record']);
   }
   pageChanged(event: any): void {
     this.pagination.currentPage = event.page;
