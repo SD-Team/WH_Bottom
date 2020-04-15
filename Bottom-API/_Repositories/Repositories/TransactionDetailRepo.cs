@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bottom_API._Repositories.Interfaces;
@@ -12,6 +13,12 @@ namespace Bottom_API._Repositories.Repositories
         public TransactionDetailRepo(DataContext context) : base(context)
         {
             _context = context;
+        }
+
+        public List<WMSB_Transaction_Detail> GetListTransDetailByTransacNo(string transacNo)
+        {
+            var lists = _context.WMSB_Transaction_Detail.Where(x => x.Transac_No.Trim() == transacNo).ToList();
+            return lists;
         }
 
         public decimal? GetQtyByTransacNo(string transacNo)

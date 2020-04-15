@@ -17,6 +17,8 @@ namespace Bottom_API._Services.Services
         private readonly IQRCodeDetailRepository _repoQRCodeDetail;
         private readonly ITransactionMainRepo _repoTransactionMain;
         private readonly ITransactionDetailRepo _repoTransactionDetail;
+        private readonly IMaterialPurchaseRepository _repoMatPurchase;
+        private readonly IMaterialMissingRepository _repoMatMissing;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
         public InputService(
@@ -25,6 +27,8 @@ namespace Bottom_API._Services.Services
             IQRCodeDetailRepository repoQRCodeDetail,
             ITransactionMainRepo repoTransactionMain,
             ITransactionDetailRepo repoTransactionDetail,
+            IMaterialPurchaseRepository repoMatPurchase,
+            IMaterialMissingRepository repoMatMissing,
             IMapper mapper, MapperConfiguration configMapper)
         {
             _configMapper = configMapper;
@@ -34,6 +38,8 @@ namespace Bottom_API._Services.Services
             _repoPackingList = repoPackingList;
             _repoTransactionMain = repoTransactionMain;
             _repoTransactionDetail = repoTransactionDetail;
+            _repoMatMissing = repoMatMissing;
+            _repoMatPurchase = repoMatPurchase;
         }
         public async Task<Transaction_Dto> GetByQRCodeID(object qrCodeID)
         {
@@ -67,7 +73,7 @@ namespace Bottom_API._Services.Services
         {
             Transaction_Detail_Dto model = new Transaction_Detail_Dto();
             var qrCodeModel = await _repoQRCodeMain.GetByQRCodeID(qrCodeID);
-            if (qrCodeModel != null)
+            if (qrCodeModel != null && qrCodeModel.Valid_Status == "Y")
             {
                 var packingListModel = await _repoPackingList.GetByReceiveNo(qrCodeModel.Receive_No);
                 var listQrCodeDetails = await _repoQRCodeDetail.GetByQRCodeID(qrCodeID);
@@ -99,7 +105,7 @@ namespace Bottom_API._Services.Services
         public async Task<bool> CreateInput(Transaction_Detail_Dto model)
         {
             var qrCodeModel = await _repoQRCodeMain.GetByQRCodeID(model.QrCode_Id);
-            if(qrCodeModel != null) {
+            if(qrCodeModel != null && qrCodeModel.Valid_Status == "Y") {
                 var listQrCodeDetails = await _repoQRCodeDetail.GetByQRCodeID(qrCodeModel.QRCode_ID);
                 Random ran = new Random();
                 int num = ran.Next(100, 999);
@@ -115,6 +121,7 @@ namespace Bottom_API._Services.Services
                 inputModel.Purchase_No = packingListModel.Purchase_No;
                 inputModel.Material_ID = packingListModel.Material_ID;
                 inputModel.Material_Name = packingListModel.Material_Name;
+                inputModel.Purchase_Qty = model.Accumated_Qty;
                 inputModel.Transacted_Qty = model.Trans_In_Qty;
                 inputModel.Rack_Location = model.Rack_Location;
                 inputModel.Can_Move = "Y";
@@ -135,7 +142,7 @@ namespace Bottom_API._Services.Services
                     inputDetailModel.Trans_Qty = item.Qty;
                     inputDetailModel.Instock_Qty = item.Qty;
                     inputDetailModel.Untransac_Qty = inputDetailModel.Qty - inputDetailModel.Trans_Qty;
-                    inputDetailModel.Updated_By = "Emma";
+                    inputDetailModel.Updated_By = "Nam";
                     inputDetailModel.Updated_Time = DateTime.Now;
                     _repoTransactionDetail.Add(inputDetailModel);
                     i += 1;
@@ -147,22 +154,134 @@ namespace Bottom_API._Services.Services
 
         public async Task<bool> SubmitInput(List<string> lists)
         {
-            Random ran = new Random();
             if(lists.Count > 0) {
+                Random ran = new Random();
+                int num = ran.Next(100, 999);
+                var Transac_Sheet_No = "IB" + DateTime.Now.ToString("yyyyMMdd") + num.ToString();
+                var Missing_No = "BTM" + DateTime.Now.ToString("yyyyMMdd") + num.ToString();
                 foreach (var item in lists)
                 {
-                    int num = ran.Next(100, 999);
                     WMSB_Transaction_Main model = await _repoTransactionMain.GetByInputNo(item);
                     model.Can_Move = "Y";
-                    model.Transac_Sheet_No = "IB" + DateTime.Now.ToString("yyyyMMdd") + num.ToString();
+                    model.Transac_Sheet_No = Transac_Sheet_No;
                     model.Updated_By = "Nam";
                     model.Updated_Time = DateTime.Now;
+                    if(model.Purchase_Qty > model.Transacted_Qty) {
+                        model.Missing_No = Missing_No;
+
+                        //Tạo các record trong bảng Material_Missing
+                        CreateMissing(model.Purchase_No, model.MO_No, model.MO_Seq, model.Material_ID, item, Missing_No);
+
+                        //Tạo mới record và update status record cũ trong bảng QRCode_Main và QRCode_Detail
+                        GenerateNewQrCode(model.QRCode_ID, model.QRCode_Version, item);
+
+                        //Update QrCode Version cho bảng Transaction_Main
+                        model.QRCode_Version += 1;
+                    }
+                    
                     _repoTransactionMain.Update(model);
                 }
                 return await _repoTransactionMain.SaveAll();
             }
 
             return false;
+        }
+
+        private void CreateMissing(string Purchase_No, string MO_No, string MO_Seq, string Material_ID, string transacNo, string Missing_No) 
+        {
+            //Lấy list Material Purchase
+            var matPurchase = _repoMatPurchase.GetFactory(Purchase_No, MO_No, MO_Seq, Material_ID);
+
+            //Lấy PackingList
+            var packingList = _repoPackingList.GetPackingList(Purchase_No, MO_No, MO_Seq, Material_ID);
+            //Lấy danh sách transaction detail
+            List<WMSB_Transaction_Detail> listDetails = _repoTransactionDetail.GetListTransDetailByTransacNo(transacNo);
+            foreach (var detail in listDetails)
+            {
+                WMSB_Material_Missing model = new WMSB_Material_Missing();
+                model.Missing_No = Missing_No;
+                model.Purchase_No = Purchase_No;
+                model.MO_No = MO_No;
+                model.MO_Seq = MO_Seq;
+                model.Material_ID = packingList.Material_ID;
+                model.Material_Name = packingList.Material_Name;
+                model.Model_No = packingList.Model_No;
+                model.Model_Name = packingList.Model_Name;
+                model.Article = packingList.Article;
+                model.Supplier_ID = packingList.Supplier_ID;
+                model.Supplier_Name = packingList.Supplier_Name;
+                model.Process_Code = packingList.Subcon_ID;
+                model.Subcon_Name = packingList.Subcon_Name;
+                model.T3_Supplier = packingList.T3_Supplier;
+                model.T3_Supplier_Name = packingList.T3_Supplier_Name;
+                model.Order_Size = detail.Order_Size;
+                model.Model_Size = detail.Model_Size;
+                model.Tool_Size = detail.Tool_Size;
+                model.Spec_Size = detail.Spec_Size;
+                model.Purchase_Qty = detail.Untransac_Qty;
+                model.Accumlated_In_Qty = 0;
+                model.Status = "N";
+                model.Updated_Time = DateTime.Now;
+                model.Updated_By = "Emma";
+                foreach (var purchase in matPurchase)
+                {
+                    if(detail.Order_Size == purchase.Order_Size) {
+                        model.Factory_ID = purchase.Factory_ID;
+                        model.MO_Qty = purchase.MO_Qty;
+                        model.PreBook_Qty = purchase.PreBook_Qty;
+                        model.Stock_Qty = purchase.Stock_Qty;
+                        model.Require_Delivery = purchase.Require_Delivery;
+                        model.Confirm_Delivery = purchase.Confirm_Delivery;
+                        model.Custmoer_Part = purchase.Custmoer_Part;
+                        model.T3_Purchase_No = purchase.T3_Purchase_No;
+                        model.Stage = purchase.Stage;
+                        model.Tool_ID = purchase.Tool_ID;
+                        model.Tool_Type = purchase.Tool_Type;
+                        model.Purchase_Kind = purchase.Purchase_Kind;
+                        model.Collect_No = purchase.Collect_No;
+                        model.Purchase_Size = purchase.Purchase_Size;
+                    }
+                }
+                _repoMatMissing.Add(model);
+            }
+        }
+        private void GenerateNewQrCode(string qrCodeID, int qrCodeVersion, string transacNo) 
+        {
+            //Update dòng QRCodeMain cũ
+            var qrCodeMain = _repoQRCodeMain.GetByQRCodeIDAndVersion(qrCodeID, qrCodeVersion);
+            qrCodeMain.Valid_Status = "N";
+            qrCodeMain.Invalid_Date = DateTime.Now;
+            _repoQRCodeMain.Update(qrCodeMain);
+
+            //Thêm QRCode mới và update version lên 
+            WMSB_QRCode_Main model = new WMSB_QRCode_Main();
+            model.QRCode_ID = qrCodeID;
+            model.QRCode_Version = qrCodeMain.QRCode_Version + 1;
+            model.QRCode_Type = qrCodeMain.QRCode_Type;
+            model.Receive_No = qrCodeMain.Receive_No;
+            model.Valid_Status = "Y";
+            model.Updated_By = "Nam";
+            model.Updated_Time = DateTime.Now;
+            _repoQRCodeMain.Add(model);
+
+            //Lấy danh sách transaction detail
+            List<WMSB_Transaction_Detail> listDetails = _repoTransactionDetail.GetListTransDetailByTransacNo(transacNo);
+
+            //Tạo mới các dòng QRCode Detail dựa trên QRcode version mới với Qty tương ứng với Trans_Qty của Transaction_Detail
+            foreach (var item in listDetails)
+            {
+                WMSB_QRCode_Detail detailQRCode = new WMSB_QRCode_Detail();
+                detailQRCode.QRCode_ID = qrCodeID;
+                detailQRCode.QRCode_Version = model.QRCode_Version;
+                detailQRCode.Tool_Size = item.Tool_Size;
+                detailQRCode.Model_Size = item.Model_Size;
+                detailQRCode.Order_Size = item.Order_Size;
+                detailQRCode.Spec_Size = item.Spec_Size;
+                detailQRCode.Qty = item.Trans_Qty;
+                detailQRCode.Updated_By = "Nam";
+                detailQRCode.Updated_Time = DateTime.Now;
+                _repoQRCodeDetail.Add(detailQRCode);
+            }
         }
     }
 }
