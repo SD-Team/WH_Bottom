@@ -55,19 +55,19 @@ namespace Bottom_API._Services.Services
             return model;
         }
 
-        public async Task<PagedList<Packing_List_Dto>> SearchViewModel(PaginationParams param,PackingListSearchViewModel model)
+        public async Task<PagedList<Packing_List_Dto>> SearchViewModel(PaginationParams param,FilterPackingListParam filterParam)
         {
             var test = DateTime.Now.Date.ToString();
             var packingSearch =  _repo.GetAll().ProjectTo<Packing_List_Dto>(_configMapper).
-                            Where(  x => x.Receive_Date >= DateTime.Parse(model.From_Date + " 00:00:00.000") &&
+                            Where(  x => x.Receive_Date >= DateTime.Parse(filterParam.From_Date + " 00:00:00.000") &&
                                     x.Generated_QRCode.Trim() == "N" &&
-                                    x.Receive_Date <= DateTime.Parse(model.To_Date + " 23:59:59.000")
+                                    x.Receive_Date <= DateTime.Parse(filterParam.To_Date + " 23:59:59.000")
                                     );
-            if (model.Supplier_ID != null && model.Supplier_ID != "") {
-                packingSearch = packingSearch.Where(x => x.Supplier_ID.Trim() == model.Supplier_ID.Trim());
+            if (filterParam.Supplier_ID != null && filterParam.Supplier_ID != string.Empty) {
+                packingSearch = packingSearch.Where(x => x.Supplier_ID.Trim() == filterParam.Supplier_ID.Trim());
             }
-            if (model.MO_No != null && model.MO_No != "") {
-                packingSearch = packingSearch.Where(x => x.MO_No.Trim() == model.MO_No.Trim());
+            if (filterParam.MO_No != null && filterParam.MO_No != string.Empty) {
+                packingSearch = packingSearch.Where(x => x.MO_No.Trim() == filterParam.MO_No.Trim());
             }
             return await PagedList<Packing_List_Dto>.CreateAsync(packingSearch, param.PageNumber, param.PageSize);
         }

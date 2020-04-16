@@ -1,6 +1,6 @@
-namespace Bottom_API.ViewModel
+namespace Bottom_API.Helpers
 {
-    public class QRCodeSearchViewModel
+    public class FilterQrCodeParam
     {
         public string MO_No {get;set;}
         public string From_Date {get;set;}

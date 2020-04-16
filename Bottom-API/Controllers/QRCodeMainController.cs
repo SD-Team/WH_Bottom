@@ -30,8 +30,8 @@ namespace Bottom_API.Controllers
         }
 
         [HttpPost("searchPlan")]
-        public async Task<IActionResult> SearchByPlanNo([FromQuery]PaginationParams param, QRCodeSearchViewModel dataSearch) {
-            var lists = await _service.SearchByPlanNo(param,dataSearch);
+        public async Task<IActionResult> SearchByPlanNo([FromQuery]PaginationParams param, FilterQrCodeParam filterParam) {
+            var lists = await _service.SearchByPlanNo(param,filterParam);
             Response.AddPagination(lists.CurrentPage, lists.PageSize, lists.TotalCount, lists.TotalPages);
             return Ok(lists);
         }

@@ -164,20 +164,20 @@ namespace Bottom_API._Services.Services
             };
             return result;
         }
-        public async Task<List<MaterialMainViewModel>> SearchByModel(MaterialSearchViewModel model)
+        public async Task<List<MaterialMainViewModel>> SearchByModel(FilterMaterialParam filterParam)
         {
             var listMaterialView = await _repoMaterialView.FindAll().ToListAsync();
             var materialPurchaseList = await _repoPurchase.FindAll()
-            .Where(x => x.Confirm_Delivery >= Convert.ToDateTime(model.From_Date + " 00:00:00.000") &&
-                        x.Confirm_Delivery <= Convert.ToDateTime(model.To_Date + " 23:59:59.997")).Select(x => new {
+            .Where(x => x.Confirm_Delivery >= Convert.ToDateTime(filterParam.From_Date + " 00:00:00.000") &&
+                        x.Confirm_Delivery <= Convert.ToDateTime(filterParam.To_Date + " 23:59:59.997")).Select(x => new {
                             Purchase_No = x.Purchase_No,
                             Status = x.Status,
                             Missing_No = ""
                         }).Distinct().ToListAsync();
 
             var materialMissingList = await _repoMissing.GetAll()
-            .Where(x => x.Confirm_Delivery >= Convert.ToDateTime(model.From_Date + " 00:00:00.000") &&
-                        x.Confirm_Delivery <= Convert.ToDateTime(model.To_Date + " 23:59:59.997"))
+            .Where(x => x.Confirm_Delivery >= Convert.ToDateTime(filterParam.From_Date + " 00:00:00.000") &&
+                        x.Confirm_Delivery <= Convert.ToDateTime(filterParam.To_Date + " 23:59:59.997"))
                         .Select(x => new {
                             Purchase_No = x.Purchase_No,
                             Status = x.Status,
@@ -237,14 +237,14 @@ namespace Bottom_API._Services.Services
             // var list2 =  Queryable.Union(test1.AsQueryable(), test2.AsQueryable());
             // var list4 = list2.AsQueryable();
             // var list3 = Queryable.Concat(materialPurchaseList.AsQueryable(),materialMissingList.AsQueryable());
-            if(model.Purchase_No != null && model.Purchase_No != "") {
-                listMaterial = listMaterial.Where(x => x.Purchase_No.Trim() == model.Purchase_No.Trim()).ToList();
+            if(filterParam.Purchase_No != null && filterParam.Purchase_No != string.Empty) {
+                listMaterial = listMaterial.Where(x => x.Purchase_No.Trim() == filterParam.Purchase_No.Trim()).ToList();
             }
-            if(model.Supplier_ID != null && model.Supplier_ID != "") {
-                listMaterial = listMaterial.Where(x => x.Supplier_ID.Trim() == model.Supplier_ID.Trim()).ToList();
+            if(filterParam.Supplier_ID != null && filterParam.Supplier_ID != string.Empty) {
+                listMaterial = listMaterial.Where(x => x.Supplier_ID.Trim() == filterParam.Supplier_ID.Trim()).ToList();
             }
-            if (model.Status != "all") {
-                listMaterial = listMaterial.Where(x => x.Status.Trim() == model.Status.Trim()).ToList();
+            if (filterParam.Status != "all") {
+                listMaterial = listMaterial.Where(x => x.Status.Trim() == filterParam.Status.Trim()).ToList();
             }
             return listMaterial;
         }

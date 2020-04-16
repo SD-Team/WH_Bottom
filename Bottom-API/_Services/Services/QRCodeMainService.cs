@@ -89,14 +89,14 @@ namespace Bottom_API._Services.Services
             await _repoQrcode.SaveAll();
             return checkCreate;
         }
-        public async Task<PagedList<QRCodeMainViewModel>> SearchByPlanNo(PaginationParams param ,QRCodeSearchViewModel dataSearch)
+        public async Task<PagedList<QRCodeMainViewModel>> SearchByPlanNo(PaginationParams param ,FilterQrCodeParam filterParam)
         {
             var listPackingList =  _repoPacking.GetAll()
-                .Where( x => x.Receive_Date >= Convert.ToDateTime(dataSearch.From_Date + " 00:00:00.000") &&
-                        x.Receive_Date <= Convert.ToDateTime(dataSearch.To_Date + " 23:59:59.997"));
+                .Where( x => x.Receive_Date >= Convert.ToDateTime(filterParam.From_Date + " 00:00:00.000") &&
+                        x.Receive_Date <= Convert.ToDateTime(filterParam.To_Date + " 23:59:59.997"));
             var listQrCodeMain = _repoQrcode.GetAll().Where(x => x.Valid_Status.Trim() == "Y");
-            if (dataSearch.MO_No != null && dataSearch.MO_No != "") {
-                listPackingList = listPackingList.Where(x => x.MO_No.Trim() == dataSearch.MO_No.Trim());
+            if (filterParam.MO_No != null && filterParam.MO_No != string.Empty) {
+                listPackingList = listPackingList.Where(x => x.MO_No.Trim() == filterParam.MO_No.Trim());
             }
             var listQrCodeModel = (from x in listQrCodeMain join y in listPackingList
                                     on x.Receive_No.Trim() equals y.Receive_No.Trim()

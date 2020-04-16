@@ -18,8 +18,8 @@ namespace Bottom_API.Controllers
         }
         
         [HttpPost("search")]
-        public async Task<IActionResult> SearchByModel([FromBody]MaterialSearchViewModel model) {
-            var lists = await _service.SearchByModel(model);
+        public async Task<IActionResult> SearchByModel([FromBody]FilterMaterialParam filterParam) {
+            var lists = await _service.SearchByModel(filterParam);
             return Ok(lists);
         }
 

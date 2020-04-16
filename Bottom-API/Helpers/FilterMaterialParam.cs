@@ -1,6 +1,6 @@
-namespace Bottom_API.ViewModel
+namespace Bottom_API.Helpers
 {
-    public class MaterialSearchViewModel
+    public class FilterMaterialParam
     {
         public string Purchase_No {get;set;}
         public string Supplier_ID {get;set;}
