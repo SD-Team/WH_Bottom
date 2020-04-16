@@ -43,9 +43,10 @@ namespace Bottom_API._Services.Services
             throw new System.NotImplementedException();
         }
 
-        public async Task<object> FindByReceiveNo(string Receive_No)
+        public async Task<object> FindByQrCodeID(string qrCodeID)
         {
-            var lists = await _repo.GetAll().Where(x => x.Receive_No.Trim() == Receive_No.Trim()).ToListAsync();
+            var qrCodeMan = await _repoQrcode.GetAll().Where(x => x.QRCode_ID.Trim() == qrCodeID.Trim()).FirstOrDefaultAsync();
+            var lists = await _repo.GetAll().Where(x => x.Receive_No.Trim() == qrCodeMan.Receive_No.Trim()).ToListAsync();
             var packingListDetailModel = new List<PackingListDetailViewModel>();
             decimal totalQty = 0;
             foreach (var item in lists)
@@ -97,7 +98,7 @@ namespace Bottom_API._Services.Services
             var objectResult = new List<object>();
             foreach (var item in data)
             {  
-                var object1 = await this.FindByReceiveNo(item);
+                var object1 = await this.FindByQrCodeID(item);
                 var qrCodeMainItem = await listQrCodeModel.Where(x => x.QRCode_ID.Trim() == item.Trim()).FirstOrDefaultAsync();
                 var objectItem = new {
                     object1,

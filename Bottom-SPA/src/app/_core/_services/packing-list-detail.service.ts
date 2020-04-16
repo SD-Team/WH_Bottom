@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { PackingDetailResult } from '../_viewmodels/packing-detail-result';
 import { PackingPrintAll } from '../_viewmodels/packing-print-all';
 
@@ -10,11 +10,13 @@ import { PackingPrintAll } from '../_viewmodels/packing-print-all';
 })
 export class PackingListDetailService {
   baseUrl = environment.apiUrl;
+  packingPrintSourse = new BehaviorSubject<PackingPrintAll[]>([]);
+  currentPackingPrint = this.packingPrintSourse.asObservable();
   constructor(private http: HttpClient) { }
-  findByReceive(receive: string): Observable<PackingDetailResult> {
-    return this.http.get<any>(this.baseUrl + 'packingListDetail/findByReceive/' + receive, {});
-  }
-  findByRecevieNoList(receives: string[]): Observable<PackingPrintAll[]> {
+  findByQrCodeIdList(receives: string[]): Observable<PackingPrintAll[]> {
     return this.http.post<any>(this.baseUrl + 'packingListDetail/findPrint/', receives);
+  }
+  changePackingPrint(packingPrintAll: PackingPrintAll[]) {
+    this.packingPrintSourse.next(packingPrintAll);
   }
 }

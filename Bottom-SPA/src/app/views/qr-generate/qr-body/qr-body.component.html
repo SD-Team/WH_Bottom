@@ -133,20 +133,3 @@
         </div>
         </div>
     </div>
-
-
-<!----------------------------------------------Start Body Print QrCode ----------------------------------------------->
-<app-qr-print [packingListDetail] = "packingListDetail"
-                [qrCodeMainItem] = "qrCodeMainItem"
-                [totalQty] = "totalQty"></app-qr-print>
-<!----------------------------------------------End Body Print QrCode ------------------------------------------------->
-
-<!-------------------------------------------- Start Print more QrCode ------------------------------------------------>
-<div class="container div-hidden" *ngIf="packingPrintAll !== undefined" id="wrap-print-all">
-    <app-qr-print *ngFor="let item of packingPrintAll"
-    [qrCodeMainItem] = "item.qrCodeMainItem"
-    [packingListDetail] = "item.object1.packingListDetailModel"
-    [totalQty] = "item.object1.totalQty"></app-qr-print>
-</div>
-<!-------------------------------------------- End Print more QrCode -------------------------------------------------->
-
