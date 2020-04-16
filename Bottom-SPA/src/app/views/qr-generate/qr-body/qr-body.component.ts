@@ -22,9 +22,6 @@ export class QrBodyComponent implements OnInit {
   toDate = new Date();
   bsConfig: Partial<BsDatepickerConfig>;
   listQrCodeMainModel: QRCodeMainModel[] = [];
-  packingDetailResult: PackingDetailResult;
-  packingDetailResultList: PackingDetailResult[] = [];
-  packingListDetail: PackingListDetailModel[] = [];
   packingListDetailAll: PackingListDetailModel[][] = [];
   time_start: string;
   time_end: string;
@@ -34,9 +31,6 @@ export class QrBodyComponent implements OnInit {
   totalQtyList: number[] = [];
   checkArray: any[] = [];
   packingPrintAll: PackingPrintAll[] = [];
-  // ------print qr code----------------------
-  elementType: 'url' | 'canvas' | 'img' = 'url';
-  // -----------------------------------------
   constructor(private router: Router,
               private qrCodeMainService: QrcodeMainService,
               private packingListDetailService: PackingListDetailService,
@@ -56,19 +50,8 @@ export class QrBodyComponent implements OnInit {
       this.time_start = timeNow;
       this.time_end = timeNow;
       this.bsConfig = Object.assign({}, { containerClass: 'theme-blue' });
-      // Nếu khi đã vừa print
-      if (window.sessionStorage.getItem('checkPrint') === '1') {
-        this.search();
-        let modelSearch = JSON.parse(window.sessionStorage.getItem('modelSearch'));
-        // Set lại giá trị date khi mới in xong.
-        this.time_start = this.convertDate(modelSearch.from_Date);
-        this.time_end =  this.convertDate(modelSearch.to_Date);
-      }
-      // window.sessionStorage.clear();
   }
   search() {
-    // Khi chưa print
-    if(window.sessionStorage.getItem('checkPrint') === null) {
       if (this.time_start === undefined || this.time_end === undefined) {
         this.alertifyService.error('Please option start and end time');
       } else {
@@ -91,38 +74,17 @@ export class QrBodyComponent implements OnInit {
           this.alertifyService.error(error);
         });
       }
-    } else {
-      // Khi đã vừa print xong.
-      this.qrCodeMainService.search(this.pagination.currentPage , this.pagination.itemsPerPage, JSON.parse(window.sessionStorage.getItem('modelSearch')))
-        .subscribe((res: PaginatedResult<QRCodeMainModel[]>) => {
-          this.listQrCodeMainModel = res.result;
-          this.pagination = res.pagination;
-        }, error => {
-          this.alertifyService.error(error);
-        });
-        window.sessionStorage.removeItem('checkPrint');
-    }
   }
   print(qrCodeMain) {
       window.sessionStorage.setItem('checkPrint', '1');
       this.qrCodeMainItem =  qrCodeMain;
-      this.packingListDetailService.findByReceive(this.qrCodeMainItem.receive_No).subscribe(res => {
-        this.packingDetailResult = res;
-        this.totalQty = this.packingDetailResult.totalQty;
-        this.packingListDetail = this.packingDetailResult.packingListDetailModel;
+      let qrCodeId = [];
+      qrCodeId.push(this.qrCodeMainItem.qrCode_ID);
+      this.packingListDetailService.findByQrCodeIdList(qrCodeId).subscribe(res => {
+        this.packingPrintAll = res;
+        this.packingListDetailService.changePackingPrint(this.packingPrintAll);
+        this.router.navigate(['/qr/print']);
       })
-      let self = this;
-      setTimeout(function(){
-        self.printHtml('wrap-print');
-        window.location.reload();
-      },1000);
-  }
-  printHtml(divID: string) {
-      let printContents = document.getElementById(divID).innerHTML;
-      let originalContents = document.body.innerHTML;
-      document.body.innerHTML = printContents;
-      window.print();
-      document.body.innerHTML = originalContents;
   }
   pageChanged(event: any): void {
     this.pagination.currentPage = event.page;
@@ -160,20 +122,15 @@ export class QrBodyComponent implements OnInit {
     }
   }
   printAll() {
-    window.sessionStorage.setItem('checkPrint', '1');
     this.totalQtyList.length = 0;
     this.packingListDetailAll.length = 0;
     console.log(this.checkArray);
     if (this.checkArray.length > 0) {
-      this.packingListDetailService.findByRecevieNoList(this.checkArray).subscribe(res => {
+      this.packingListDetailService.findByQrCodeIdList(this.checkArray).subscribe(res => {
         this.packingPrintAll = res;
-        console.log(this.packingPrintAll);
+        this.packingListDetailService.changePackingPrint(this.packingPrintAll);
+        this.router.navigate(['/qr/print']);
       });
-      let self = this;
-      setTimeout(function(){
-        self.printHtml('wrap-print-all');
-        window.location.reload();
-      },2000);
     } else {
       this.alertifyService.error('Please check in checkbox!');
     }

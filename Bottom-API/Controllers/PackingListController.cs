@@ -22,8 +22,8 @@ namespace Bottom_API.Controllers
         }
 
         [HttpPost("search")]
-        public async Task<IActionResult> Search([FromQuery]PaginationParams param, PackingListSearchViewModel model) {
-            var lists = await _service.SearchViewModel(param, model);
+        public async Task<IActionResult> Search([FromQuery]PaginationParams param, FilterPackingListParam filterParam) {
+            var lists = await _service.SearchViewModel(param, filterParam);
             Response.AddPagination(lists.CurrentPage, lists.PageSize, lists.TotalCount, lists.TotalPages);
             return Ok(lists);
         }

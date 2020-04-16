@@ -9,6 +9,7 @@ using Bottom_API.Helpers;
 using System;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper.QueryableExtensions;
+using System.Linq;
 
 namespace Bottom_API._Services.Services
 {
@@ -22,6 +23,7 @@ namespace Bottom_API._Services.Services
         private readonly IMaterialMissingRepository _repoMaterialMissing;
         private readonly IMaterialPurchaseRepository _repoMatPurchase;
         private readonly IMaterialMissingRepository _repoMatMissing;
+        private readonly IMaterialViewRepository _repoMaterialView;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
         public InputService(
@@ -33,6 +35,7 @@ namespace Bottom_API._Services.Services
             IMaterialMissingRepository repoMaterialMissing,
             IMaterialPurchaseRepository repoMatPurchase,
             IMaterialMissingRepository repoMatMissing,
+            IMaterialViewRepository repoMaterialView,
             IMapper mapper, MapperConfiguration configMapper)
         {
             _configMapper = configMapper;
@@ -45,6 +48,7 @@ namespace Bottom_API._Services.Services
             _repoMaterialMissing = repoMaterialMissing;
             _repoMatMissing = repoMatMissing;
             _repoMatPurchase = repoMatPurchase;
+            _repoMaterialView = repoMaterialView;
         }
         public async Task<Transaction_Dto> GetByQRCodeID(object qrCodeID)
         {
@@ -296,6 +300,34 @@ namespace Bottom_API._Services.Services
                 detailQRCode.Updated_By = "Nam";
                 detailQRCode.Updated_Time = DateTime.Now;
                 _repoQRCodeDetail.Add(detailQRCode);
+            }
+        }
+
+        public async Task<PagedList<Transaction_Main_Dto>> FilterQrCodeAgain(PaginationParams param, FilterQrCodeAgainParam filterParam)
+        {
+            var lists =  _repoTransactionMain.GetAll().Where(x => x.Missing_No != "")
+                .ProjectTo<Transaction_Main_Dto>(_configMapper);
+            if (filterParam.MO_No != null && filterParam.MO_No != "") {
+                lists = lists.Where(x => x.MO_No.Trim() == filterParam.MO_No);
+            }
+            if (filterParam.Rack_Location != null && filterParam.Rack_Location != "") {
+                lists = lists.Where(x => x.Rack_Location.Trim() == filterParam.Rack_Location);
+            }
+            if (filterParam.Material_ID != null && filterParam.Material_ID != "") {
+                lists = lists.Where(x => x.Material_ID.Trim() == filterParam.Material_ID);
+            }
+            lists = lists.OrderByDescending(x => x.Updated_Time);
+            return await PagedList<Transaction_Main_Dto>.CreateAsync(lists, param.PageNumber, param.PageSize);
+        }
+
+        public async Task<string> FindMaterialName(string materialID)
+        {
+            if(materialID != null && materialID != "") {
+                var materialModel = await _repoMaterialView.GetAll()
+                .Where(x => x.Mat_.Trim() == materialID.Trim()).FirstOrDefaultAsync();
+                return materialModel.Mat__Name;
+            } else {
+                return "";
             }
         }
     }

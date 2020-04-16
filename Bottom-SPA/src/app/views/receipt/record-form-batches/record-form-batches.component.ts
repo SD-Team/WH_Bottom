@@ -6,6 +6,7 @@ import { BatchQtyItem } from '../../../_core/_viewmodels/batch-qty-item';
 import { MaterialMergingViewModel } from '../../../_core/_viewmodels/material-merging';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
 import { ReceiveNoMain } from '../../../_core/_viewmodels/receive_no_main';
+import { OrderSizeByBatch } from '../../../_core/_viewmodels/order-size-by-batch';
 
 @Component({
   selector: 'app-record-form-batches',
@@ -15,8 +16,8 @@ import { ReceiveNoMain } from '../../../_core/_viewmodels/receive_no_main';
 export class RecordFormBatchesComponent implements OnInit {
   type: string = 'Batches';
   materialModel: MaterialModel;
-  materialByBatchList: BatchQtyItem[] = [];
-  orderSizeByBatch: BatchQtyItem[];
+  materialByBatchList: OrderSizeByBatch[] = [];
+  orderSizeByBatch: OrderSizeByBatch[];
   materialMerging: MaterialMergingViewModel[];
   receiveNoMain: ReceiveNoMain[] = [];
   delivery_No: string;

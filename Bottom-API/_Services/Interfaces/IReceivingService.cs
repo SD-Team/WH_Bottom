@@ -9,7 +9,7 @@ namespace Bottom_API._Services.Interfaces
     public interface IReceivingService : IBottomService<Receiving_Dto>
     {
         Task<PagedList<Receiving_Dto>> Filter(PaginationParams param);
-        Task<List<MaterialMainViewModel>> SearchByModel(MaterialSearchViewModel model);
+        Task<List<MaterialMainViewModel>> SearchByModel(FilterMaterialParam filterParam);
         Task<object> MaterialMerging(MaterialMainViewModel model);
         Task<List<ReceiveNoMain>> UpdateMaterial(List<OrderSizeByBatch> data);
         Task<bool> UpdateStatusMaterial(string purchaseNo, string mOSeq, string missingNo); 

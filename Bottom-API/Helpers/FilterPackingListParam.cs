@@ -1,6 +1,6 @@
-namespace Bottom_API.ViewModel
+namespace Bottom_API.Helpers
 {
-    public class PackingListSearchViewModel
+    public class FilterPackingListParam
     {
         public string Supplier_ID {get;set;}
         public string MO_No {get;set;}

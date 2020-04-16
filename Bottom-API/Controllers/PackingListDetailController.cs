@@ -22,7 +22,7 @@ namespace Bottom_API.Controllers
 
         [HttpGet("findByReceive/{receive_No}")]
         public async Task<IActionResult> FindByReceiveNo(string receive_No) {
-            var data = await _service.FindByReceiveNo(receive_No);
+            var data = await _service.FindByQrCodeID(receive_No);
             return Ok(data);
         }
 

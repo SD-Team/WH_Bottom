@@ -6,6 +6,7 @@ import { MaterialMergingViewModel } from '../../../_core/_viewmodels/material-me
 import { BatchQtyItem } from '../../../_core/_viewmodels/batch-qty-item';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
 import { ReceiveNoMain } from '../../../_core/_viewmodels/receive_no_main';
+import { OrderSizeByBatch } from '../../../_core/_viewmodels/order-size-by-batch';
 declare var $: any;
 @Component({
   selector: 'app-record-form',
@@ -18,8 +19,8 @@ export class RecordFormComponent implements OnInit {
   delivery_No: string;
   type: string = 'No Batch';
   materialModel: MaterialModel;
-  orderSizeByBatch: BatchQtyItem[] = [];
-  orderSizeByBatchConst: BatchQtyItem[];
+  orderSizeByBatch: OrderSizeByBatch[] = [];
+  orderSizeByBatchConst: OrderSizeByBatch[];
   materialMerging: MaterialMergingViewModel[];
   receiveNoMain: ReceiveNoMain[] = [];
   // Mảng order_size khi input ko đc nhập gì cả.
