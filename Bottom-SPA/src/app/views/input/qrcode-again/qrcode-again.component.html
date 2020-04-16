@@ -1,0 +1,93 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <strong>Qr Generate</strong>
+          Qr Body
+          <button type="button" (click)="back()"
+          class="btn btn-sm btn-primary float-right">
+          <i class="fa fa-chevron-left"></i> Back
+          </button>
+        </div>
+        
+        <form class="form-horizontal">
+          <div class="card-body">
+          <div class="form-group row">
+              <label class="col-md-1 offset-md-1 col-form-label" for="Plan No"><strong class="float-right">Plan No </strong></label>
+              <div class="col-md-2">
+                <input type="text" [(ngModel)]="mO_No" placeholder="Enter Plan No" name="mO_No" class="form-control">
+              </div>
+              <label class="col-md-2 offset-md-1 col-form-label" for="Rack Location "><strong class="float-right">Rack Location </strong></label>
+              <div class="col-md-2">
+                <input type="text" [(ngModel)]="rack_Location" placeholder="Enter Rack Location" name="rack_location" class="form-control">
+              </div>
+              <div class="col-md-5">
+
+              </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-1 offset-md-1 col-form-label" for="Material"><strong class="float-right">Material </strong></label>
+            <div class="col-md-2">
+              <input type="text" (change)="findMaterialName()" [(ngModel)]="material_ID" placeholder="Enter Material" name="material_id" class="form-control">
+            </div>
+            <div class="col-md-5">
+              <input [(ngModel)]="material_Name" type="text" disabled name="material_name" class="form-control">
+            </div>
+            <div class="col-md-2"> 
+              <button type="button" (click)="search()" class="btn btn-success btn-block"><i class="fa fa-search"></i>
+                Search
+              </button>
+            </div>
+          </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <table class="table table-bordered text-center">
+            <thead>
+              <tr class="text-center vertical-middle">
+                <th>Plan No</th>
+                <th>Batch</th>
+                <th>Material</th>
+                <th>Rack Location</th>
+                <th>QRCode ID</th>
+                <th>Missing No</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let item of transactionMainList; let i = index">
+                <tr class="text-center vertical-middle">
+                  <td>{{item.mO_No}}</td>
+                  <td>{{item.mO_Seq}}</td>
+                  <td>{{item.material_ID}}</td>
+                  <td>{{item.rack_Location}}</td>
+                  <td>{{item.qrCode_ID}}</td>
+                  <td>{{item.missing_No}}</td>
+                  <td>
+                    <button class="btn btn-primary">QrCode</button>
+                    <button style="margin-left: 5px;" class="btn btn-warning">Missing</button>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+          <div class="d-flex float-right">
+          </div>
+        </div>
+        <div class="d-flex">
+          <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [(ngModel)]="pagination.currentPage"
+          [itemsPerPage]="pagination.itemsPerPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;"
+          nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [maxSize]=5>
+          </pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

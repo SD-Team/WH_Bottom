@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { InputMainComponent } from './input-main/input-main.component';
 import { InputPrintComponent } from './input-print/input-print.component';
 import { MissingPrintComponent } from './missing-print/missing-print.component';
+import { QrcodeAgainComponent } from './qrcode-again/qrcode-again.component';
 
 const routes: Routes = [
   {
@@ -33,6 +34,13 @@ const routes: Routes = [
         component: MissingPrintComponent,
         data: {
           title: 'Missing Print'
+        }
+      },
+      {
+        path: 'qrcode-again',
+        component: QrcodeAgainComponent,
+        data: {
+          title: 'QrCode Again'
         }
       },
     ]

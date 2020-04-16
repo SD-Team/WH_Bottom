@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Bottom_API._Services.Interfaces;
 using Bottom_API.DTO;
+using Bottom_API.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bottom_API.Controllers
@@ -66,6 +67,20 @@ namespace Bottom_API.Controllers
                 return Ok(model);
             else return NoContent();
         }
-    
+
+        [HttpPost("filterQrCodeAgain")]
+        public async Task<IActionResult> FilterQrCodeAgain([FromQuery]PaginationParams param, FilterQrCodeAgainParam filterParam) 
+        {
+            var data = await _service.FilterQrCodeAgain(param,filterParam);
+            Response.AddPagination(data.CurrentPage, data.PageSize, data.TotalCount, data.TotalPages);
+            return Ok(data);
+        }
+
+        [HttpGet("findMaterialName/{materialID}")]
+        public async Task<IActionResult> FindMaterialName (string materialID) 
+        {
+            var materialName = await _service.FindMaterialName(materialID);
+            return Ok(new {materialName = materialName});
+        }
     }
 }

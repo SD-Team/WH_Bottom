@@ -35,6 +35,11 @@ export const navItems: INavData[] = [
         url: "/output/main",
         icon: "icon-arrow-right-circle",
       },
+      {
+        name: "QrCode Again",
+        url: "/input/qrcode-again",
+        icon: "icon-arrow-right-circle",
+      },
     ],
   },
   {

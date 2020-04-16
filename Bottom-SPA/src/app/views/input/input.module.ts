@@ -13,6 +13,7 @@ import { InputPrintComponent } from './input-print/input-print.component';
 import { MissingPrintComponent } from './missing-print/missing-print.component';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { NgxPrintModule } from 'ngx-print';
+import { QrcodeAgainComponent } from './qrcode-again/qrcode-again.component';
 
 @NgModule({
     imports: [
@@ -30,7 +31,8 @@ import { NgxPrintModule } from 'ngx-print';
     declarations: [
         InputMainComponent,
         InputPrintComponent,
-        MissingPrintComponent
+        MissingPrintComponent,
+        QrcodeAgainComponent
     ]
 })
 
