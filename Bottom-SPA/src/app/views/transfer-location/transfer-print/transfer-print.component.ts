@@ -14,7 +14,7 @@ export class TransferPrintComponent implements OnInit, OnDestroy {
   transfers: TransferM[] = [];
   resultsPrint = [];
   today = new Date();
-  private returnUrl: string = undefined;
+
   constructor(
     private transferService: TransferService,
     private router: Router
@@ -52,6 +52,6 @@ export class TransferPrintComponent implements OnInit, OnDestroy {
   }
 
   back() {
-    this.router.navigate([this.returnUrl]);
+    this.router.navigate(['/transfer/main']);
   }
 }

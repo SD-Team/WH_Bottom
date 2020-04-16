@@ -26,6 +26,7 @@ namespace Bottom_API.Helpers.AutoMapper
             CreateMap<WMSB_Material_Purchase, Receiving_Dto>();
             CreateMap<WMSB_Material_Missing, Receiving_Dto>();
             CreateMap<WMSB_Transaction_Detail, TransferLocationDetail_Dto>();
+            CreateMap<WMSB_Material_Sheet_Size, Material_Sheet_Size_Dto>();
         }
     }
 }

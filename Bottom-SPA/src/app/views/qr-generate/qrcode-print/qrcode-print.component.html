@@ -51,48 +51,46 @@
                   {{ totalQty }}
                 </div>
               </div>
-              <br>
+              <br />
               <div class="row text-center">
                 <div class="col">
-                  {{qrCodePrint.material_ID}} - {{qrCodePrint.material_Name}}
+                  {{ qrCodePrint.material_ID }} -
+                  {{ qrCodePrint.material_Name }}
                 </div>
               </div>
-              <br>
+              <br />
               <div>
                 <table class="table border-0 text-center">
-                  <tbody>
-                    <tr>
-                      <td>TSize</td>
-                      <td *ngFor="let item of trasnferDetail">
-                        {{ item.tool_Size }}
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>Size</td>
-                      <td *ngFor="let item of trasnferDetail">
-                        {{ item.order_Size }}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>RQty</td>
-                      <td *ngFor="let item of trasnferDetail">
-                        {{ item.qty }}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Act</td>
-                      <td *ngFor="let item of trasnferDetail">
-                        {{ item.trans_Qty }}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Bal</td>
-                      <td *ngFor="let item of trasnferDetail">
-                        {{ item.untransac_Qty }}
-                      </td>
-                    </tr>
-                  </tbody>
+                  <tr>
+                    <td>TSize</td>
+                    <td *ngFor="let item of trasnferDetail">
+                      {{ item.tool_Size }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Size</td>
+                    <td *ngFor="let item of trasnferDetail">
+                      {{ item.order_Size }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>RQty</td>
+                    <td *ngFor="let item of trasnferDetail">
+                      {{ item.qty }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Act</td>
+                    <td *ngFor="let item of trasnferDetail">
+                      {{ item.trans_Qty }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Bal</td>
+                    <td *ngFor="let item of trasnferDetail">
+                      {{ item.untransac_Qty }}
+                    </td>
+                  </tr>
                 </table>
               </div>
               <hr />
@@ -108,7 +106,7 @@
                   {{ qrCodePrint.t3_Supplier_Name }}
                 </div>
               </div>
-              <br>
+              <br />
               <div class="row text-center">
                 <div class="col-3">
                   Suggested Location:

@@ -3,6 +3,7 @@ import { OutputM } from '../../../_core/_models/outputM';
 import { OutputService } from '../../../_core/_services/output.service';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
 import { FunctionUtility } from '../../../_core/_utility/function-utility';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-output-main',
@@ -12,21 +13,20 @@ import { FunctionUtility } from '../../../_core/_utility/function-utility';
 export class OutputMainComponent implements OnInit {
   ouputs: OutputM[] = [];
   qrCodeId = '';
-  outputSheetNo = '';
+  output: any = [];
 
   constructor(
     private outputService: OutputService,
     private alertify: AlertifyService,
-    private functionUtility: FunctionUtility
+    private functionUtility: FunctionUtility,
+    private router: Router
   ) {}
 
   ngOnInit() {
-    // lấy ra transferNo mới theo yêu cầu: TB(ngày thực hiện yyyymmdd) 3 mã số random number. (VD: TB20200310001)
-    this.outputSheetNo = this.functionUtility.getOutSheetNo();
   }
 
   getOutputMain(e) {
-    if (e.length >= 14) {
+    if (e.length >= 10) {
       let flag = true;
       this.ouputs.forEach((item) => {
         if (item.qrCodeId === e) {
@@ -37,9 +37,7 @@ export class OutputMainComponent implements OnInit {
         this.outputService.getMainByQrCodeId(this.qrCodeId).subscribe(
           (res) => {
             if (res != null) {
-              res.outputSheetNo = this.outputSheetNo;
-              this.ouputs.push(res);
-              debugger
+              this.ouputs = res;
             }
           },
           (error) => {
@@ -49,7 +47,6 @@ export class OutputMainComponent implements OnInit {
       } else {
         this.alertify.error('This QRCode scanded!');
       }
-      this.qrCodeId = '';
     }
   }
 
@@ -61,6 +58,22 @@ export class OutputMainComponent implements OnInit {
         }
       });
     });
+  }
+
+  checkEle(e) {
+    if (e.target.checked) {
+      this.ouputs[e.target.value].outputSheetNo = this.functionUtility.getOutSheetNo(this.ouputs[e.target.value].planNo);
+      this.ouputs[e.target.value].checked = true;
+      const output = this.ouputs[e.target.value];
+      const ele = document.getElementById(
+        e.target.value.toString()
+      ) as HTMLInputElement;
+      ele.disabled = true;
+    }
+  }
+
+  detail() {
+    this.router.navigate(['output/detail'])
   }
 
 }

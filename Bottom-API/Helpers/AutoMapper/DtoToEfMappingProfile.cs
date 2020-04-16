@@ -17,6 +17,7 @@ namespace Bottom_API.Helpers.AutoMapper
             CreateMap<Receiving_Dto, WMSB_Material_Purchase>();
             CreateMap<Receiving_Dto, WMSB_Material_Missing>();
             CreateMap<Material_View_Dto, VM_WMSB_Material_Purchase>();
+            CreateMap<Material_Sheet_Size_Dto, WMSB_Material_Sheet_Size>();
 
             CreateMap<HP_Material_Dto, HP_Material_j13>();
             CreateMap<HP_Style_Dto, HP_Style_j08>();

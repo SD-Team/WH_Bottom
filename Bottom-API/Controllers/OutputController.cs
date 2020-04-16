@@ -18,7 +18,7 @@ namespace Bottom_API.Controllers
         public async Task<IActionResult> GetByQrCodeId(string qrCodeId)
         {
             var model =  await _service.GetByQrCodeId(qrCodeId);
-            if(model.QrCodeId != null)
+            if(model.Count > 0)
                 return Ok(model);
             else return NoContent();
         }

@@ -14,60 +14,31 @@
         </div>
         <form class="form-horizontal">
           <div class="card-body">
-            <div class="table-responsive" *ngIf="transferType !== 'O'">
+            <div class="table-responsive">
               <table class="table table-bordered text-center">
-                <thead>
-                  <tr>
-                    <th>
-                      PO#Size
-                    </th>
-                    <th class="custom-background-print" *ngFor="let item of transferDetails">
-                      {{ item.tool_Size }}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="custom-thead">
-                      Accumated Qty
-                    </td>
-                    <td *ngFor="let item of transferDetails">{{ item.qty }}</td>
-                  </tr>
-                  <tr>
-                    <td class="custom-thead">Trans In Qty</td>
-                    <td *ngFor="let item of transferDetails">
-                      {{ item.trans_Qty }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="custom-thead">InStock Qty</td>
-                    <td *ngFor="let item of transferDetails">
-                      {{ item.instock_Qty }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="table-responsive" *ngIf="transferType === 'O'">
-              <table class="table table-bordered text-center">
-                <thead>
-                  <tr>
-                    <th>
-                      Tool Size
-                    </th>
-                    <th class="custom-background-print" *ngFor="let item of transferDetails">
-                      {{ item.tool_Size }}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="custom-thead">Tran Out Qty</td>
-                    <td *ngFor="let item of transferDetails">
-                      {{ item.trans_Qty }}
-                    </td>
-                  </tr>
-                </tbody>
+                <tr>
+                  <td class="custom-thead">Tool Size</td>
+                  <td
+                    class="custom-background-print"
+                    *ngFor="let item of transferDetails"
+                  >
+                    {{ item.tool_Size }}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="custom-thead">
+                    PO#Size
+                  </td>
+                  <td *ngFor="let item of transferDetails">
+                    {{ item.order_Size }}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="custom-thead">Trans Qty</td>
+                  <td *ngFor="let item of transferDetails">
+                    {{ item.trans_Qty }}
+                  </td>
+                </tr>
               </table>
             </div>
           </div>

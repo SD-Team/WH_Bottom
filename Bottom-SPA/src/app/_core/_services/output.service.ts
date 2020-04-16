@@ -12,6 +12,6 @@ export class OutputService {
   constructor(private http: HttpClient) { }
 
   getMainByQrCodeId(qrCodeId: string) {
-    return this.http.get<OutputM>(this.baseUrl + 'Output/GetByQrCodeId', {params: {qrCodeId: qrCodeId}});
+    return this.http.get<OutputM[]>(this.baseUrl + 'Output/GetByQrCodeId', {params: {qrCodeId: qrCodeId}});
   }
 }
