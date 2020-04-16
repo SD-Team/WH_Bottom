@@ -531,7 +531,7 @@ namespace Bottom_API._Services.Services
         {
             var packingList = _repoPackingList.GetAll().Where(x => x.Purchase_No.Trim() == model.Purchase_No.Trim());
             var material = new List<Material_Dto>();
-            var status = "no";
+            var status = "ok";
             if(model.Missing_No == "") {
                 material = await _repoPurchase.GetAll().Where(x => x.Purchase_No.Trim() == model.Purchase_No.Trim())
                     .ProjectTo<Material_Dto>(_configMapper).ToListAsync();

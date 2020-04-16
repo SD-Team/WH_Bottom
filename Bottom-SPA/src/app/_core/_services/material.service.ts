@@ -10,6 +10,7 @@ import { BatchQtyItem } from '../_viewmodels/batch-qty-item';
 import { ReceiveNoMain } from '../_viewmodels/receive_no_main';
 import { ReceiveNoDetail } from '../_viewmodels/receive-no-detail';
 import { MaterialEditModel } from '../_viewmodels/material-edit-model';
+import { OrderSizeByBatch } from '../_viewmodels/order-size-by-batch';
 
 @Injectable({
   providedIn: 'root'
@@ -59,7 +60,7 @@ export class MaterialService {
   searchByPurchase(model: MaterialModel) {
     return this.http.post<any>(this.baseUrl + 'receiving/searchTable/', model);
   }
-  updateMaterial(model: BatchQtyItem[]): Observable<ReceiveNoMain[]> {
+  updateMaterial(model: OrderSizeByBatch[]): Observable<ReceiveNoMain[]> {
     return this.http.post<any>(this.baseUrl + 'receiving/updateMaterial/', model);
   }
   receiveNoDetails(receiveNo: any): Observable<ReceiveNoDetail[]> {
