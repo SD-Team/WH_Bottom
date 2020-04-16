@@ -6,6 +6,7 @@ import { QRCodeMainModel } from '../_viewmodels/qrcode-main-model';
 import { QRCodeMainSearch } from '../_viewmodels/qrcode-main-search';
 import { PaginatedResult } from '../_models/pagination';
 import { map } from 'rxjs/operators';
+import { QrcodePrint } from '../_models/qrcode-print';
 
 @Injectable({
   providedIn: 'root'
@@ -41,5 +42,9 @@ constructor(private http: HttpClient) { }
   }
   changeQrCodeMainList(qrCodeMainList: QRCodeMainModel[]) {
     this.qrCodeMainListSource.next(qrCodeMainList);
+  }
+
+  printQrCode(qrCodeId: string, qrCodeVersion: number) {
+    return this.http.get<QrcodePrint>(this.baseUrl + 'QRCodeMain/printqrcode/' + qrCodeId + '/version/' + qrCodeVersion, {});
   }
 }

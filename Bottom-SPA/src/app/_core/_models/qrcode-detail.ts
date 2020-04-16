@@ -6,7 +6,7 @@ export interface QRCodeDetail {
     order_Size: string;
     model_Size: string;
     spec_Size: string;
-    qty: string;
+    qty: number;
     seq: string;
     serial_Num: string;
     updated_Time: Date;

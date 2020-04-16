@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { QrMainComponent } from './qr-main/qr-main.component';
 import { QrPrintComponent } from './qr-print/qr-print.component';
 import { QrBodyComponent } from './qr-body/qr-body.component';
+import { QrcodePrintComponent } from './qrcode-print/qrcode-print.component';
 
 const routes: Routes = [
     {
@@ -34,6 +35,13 @@ const routes: Routes = [
                 // resolve: { brands: BrandListResolver },
                 data: {
                     title: 'QR Body'
+                }
+            },
+            {
+                path: 'qrcode-print',
+                component: QrcodePrintComponent,
+                data: {
+                    title: 'QRCode Print'
                 }
             },
         ]

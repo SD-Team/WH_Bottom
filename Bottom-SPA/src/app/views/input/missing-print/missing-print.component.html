@@ -44,6 +44,7 @@
               <div
                 class="row"
                 class="custom-thead pt-3 pb-3 border-3 border-primary"
+                style="border:solid 1px #e4e5e6 !important;"
               >
                 <div class="col">
                   <div class="row m-2">
@@ -91,21 +92,29 @@
                   <thead>
                     <tr>
                       <th width="30%">PO# Size</th>
-                      <td *ngFor="let item of transferDetailByMissing">{{item.order_Size}}</td>
+                      <td *ngFor="let item of transferDetailByMissing">
+                        {{ item.order_Size }}
+                      </td>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
                       <td class="custom-thead">Accumated Qty</td>
-                      <td *ngFor="let item of transferDetailByMissing">{{item.qty}}</td>
+                      <td *ngFor="let item of transferDetailByMissing">
+                        {{ item.qty }}
+                      </td>
                     </tr>
                     <tr>
                       <td class="custom-thead">Trans In Qty</td>
-                      <td *ngFor="let item of transferDetailByMissing">{{item.trans_Qty}}</td>
+                      <td *ngFor="let item of transferDetailByMissing">
+                        {{ item.trans_Qty }}
+                      </td>
                     </tr>
                     <tr>
                       <td class="custom-thead">Blance Qty</td>
-                      <td *ngFor="let item of transferDetailByMissing">{{item.untransac_Qty}}</td>
+                      <td *ngFor="let item of transferDetailByMissing">
+                        {{ item.untransac_Qty }}
+                      </td>
                     </tr>
                   </tbody>
                 </table>

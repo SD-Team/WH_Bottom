@@ -20,6 +20,8 @@ namespace Bottom_API._Services.Services
         private readonly IPackingListRepository _repoPacking;
         private readonly IPackingListDetailRepository _repoPackingDetail;
         private readonly IQRCodeDetailRepository _repoQrCodeDetail;
+        private readonly ITransactionDetailRepo _repoTransactionDetail;
+        private readonly ITransactionMainRepo _repoTransactionMain;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
         public QRCodeMainService(   IQRCodeMainRepository repoQrcode,
@@ -27,13 +29,17 @@ namespace Bottom_API._Services.Services
                                     IPackingListDetailRepository repoPackingDetail,
                                     IQRCodeDetailRepository repoQrCodeDetail,
                                     IMapper mapper,
-                                    MapperConfiguration configMapper) {
+                                    MapperConfiguration configMapper,
+                                    ITransactionDetailRepo repoTransactionDetail,
+                                    ITransactionMainRepo repoTransactionMain) {
             _repoQrcode = repoQrcode;
             _repoPacking = repoPacking;
             _repoPackingDetail = repoPackingDetail;
             _repoQrCodeDetail = repoQrCodeDetail;
             _mapper = mapper;
             _configMapper = configMapper;
+            _repoTransactionDetail = repoTransactionDetail;
+            _repoTransactionMain =  repoTransactionMain;
         }
         public Task<bool> Add(QRCode_Main_Dto model)
         {
@@ -164,6 +170,17 @@ namespace Bottom_API._Services.Services
             throw new System.NotImplementedException();
         }
 
-        
+        public async Task<QRCodePrint_Dto> GetQrCodePrint(string qrCodeId, int qrCodeVersion)
+        {
+            var qrCodeModel = _repoQrcode.FindSingle(x => x.QRCode_ID.Trim() == qrCodeId.Trim() && x.QRCode_Version == qrCodeVersion);
+            var packingListModel = await _repoPacking.FindAll(x => x.Receive_No.Trim() == qrCodeModel.Receive_No.Trim()).ProjectTo<Packing_List_Dto>(_configMapper).FirstOrDefaultAsync();
+            var transactionMainModel = _repoTransactionMain.FindSingle(x => x.QRCode_ID.Trim() == qrCodeModel.QRCode_ID.Trim() && x.QRCode_Version == qrCodeModel.QRCode_Version && x.Transac_Type.Trim() == "I");
+            var transactionDetailModel = await _repoTransactionDetail.FindAll(x => x.Transac_No.Trim() == transactionMainModel.Transac_No.Trim()).ProjectTo<TransferLocationDetail_Dto>(_configMapper).ToListAsync();
+            QRCodePrint_Dto result = new QRCodePrint_Dto();
+            result.TransactionDetailByQrCodeId = transactionDetailModel;
+            result.PackingListByQrCodeId = packingListModel;
+
+            return result;
+        }
     }
 }
