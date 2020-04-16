@@ -105,8 +105,6 @@ namespace Bottom_API._Services.Services
 
                     // Update TransactionMain cũ:  Can_Move = "N"
                     transactionMain.Can_Move = "N";
-                    transactionMain.Updated_Time = DateTime.Now;
-                    transactionMain.Updated_By = item.UpdateBy;
                     _repoTransactionMain.Update(transactionMain);
                     await _repoTransactionMain.SaveAll();
 
@@ -114,7 +112,7 @@ namespace Bottom_API._Services.Services
                     transactionMain.ID = 0; // Trong DB có identity tự tăng
                     transactionMain.Transac_Type = "M";
                     transactionMain.Can_Move = "Y";
-                    transactionMain.Rack_Location = item.FromLocation;
+                    transactionMain.Rack_Location = item.ToLocation;
                     transactionMain.Updated_By = item.UpdateBy;
                     transactionMain.Updated_Time = DateTime.Now;
                     transactionMain.Transac_Time = item.TransacTime;

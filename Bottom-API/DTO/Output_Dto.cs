@@ -4,6 +4,7 @@ namespace Bottom_API.DTO
 {
     public class Output_Dto
     {
+        public long Id { get; set; }
         public string OutputSheetNo { get; set; }
         public string QrCodeId { get; set; }
         public string PlanNo { get; set; }
@@ -19,6 +20,5 @@ namespace Bottom_API.DTO
         public decimal? InStockQty { get; set; }
         public decimal? TransOutQty { get; set; }
         public decimal? RemainingQty { get; set; }
-        public List<TransferLocationDetail_Dto> OutputDetail { get; set; }
     }
 }

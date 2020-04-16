@@ -43,14 +43,14 @@
               <thead>
                 <tr>
                   <th>
-                    <div class="custom-control custom-checkbox">
+                    <!-- <div class="custom-control custom-checkbox disabled">
                       <input
                         type="checkbox"
                         class="custom-control-input"
                         id="all"
                       />
                       <label class="custom-control-label" for="all"></label>
-                    </div>
+                    </div> -->
                   </th>
                   <th>Output Sheet No</th>
                   <th>QRcode Id</th>
@@ -68,22 +68,27 @@
                 </tr>
               </thead>
               <tbody>
-                <ng-container *ngFor="let item of ouputs">
+                <ng-container *ngFor="let item of ouputs; let i = index">
                   <tr>
                     <td rowspan="2" class="align-middle">
                       <div class="custom-control custom-checkbox">
                         <input
                           type="checkbox"
                           class="custom-control-input"
-                          [id]="item.outputSheetNo"
+                          id="{{i}}"
+                          [value]="i"
+                          (change)="checkEle($event)"
+                          name="output"
                         />
                         <label
                           class="custom-control-label"
-                          [for]="item.outputSheetNo"
+                          for="{{i}}"
                         ></label>
                       </div>
                     </td>
-                    <td rowspan="2" class="align-middle">{{ item.outputSheetNo }}</td>
+                    <td rowspan="2" class="align-middle">
+                      {{ item.outputSheetNo }}
+                    </td>
                     <td>{{ item.qrCodeId }}</td>
                     <td>{{ item.planNo }}</td>
                     <td>{{ item.supplierNo }} - {{ item.supplierName }}</td>
@@ -96,18 +101,20 @@
                     <td>{{ item.transOutQty }}</td>
                     <td>{{ item.remainingQty }}</td>
                     <td rowspan="2">
-                      <button class="btn btn-warning mr-2">
+                      <button class="btn btn-warning mr-2" (click)="detail()">
                         <i class="fa fa-search-plus"></i> Detail
                       </button>
-                      <button class="btn btn-danger" (click)="remove(item.qrCodeId)">
+                      <button
+                        class="btn btn-danger"
+                        (click)="remove(item.qrCodeId)"
+                        *ngIf="!item.checked"
+                      >
                         <i class="fa fa-trash"></i> Delete
                       </button>
                     </td>
                   </tr>
                   <tr>
-                    <td colspan="11">
-                      {{ item. matId }} - {{ item. matName }}
-                    </td>
+                    <td colspan="11">{{ item.matId }} - {{ item.matName }}</td>
                   </tr>
                 </ng-container>
               </tbody>
@@ -121,9 +128,6 @@
           </button>
           <button class="btn btn-success mr-2">
             <i class="fa fa-check"></i> Submit
-          </button>
-          <button class="btn btn-primary">
-            <i class="fa fa-print"></i> Print
           </button>
         </div>
       </div>

@@ -17,6 +17,7 @@ namespace Bottom_API.Data
         public DbSet<VM_WMSB_Material_Purchase> VM_WMSB_Material_Purchase {get;set;}
         public DbSet<WMSB_Transaction_Main> WMSB_Transaction_Main { get; set; }
         public DbSet<WMSB_Transaction_Detail> WMSB_Transaction_Detail { get; set; }
+        public DbSet<WMSB_Material_Sheet_Size> WMSB_Material_Sheet_Size { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,6 +26,9 @@ namespace Bottom_API.Data
             modelBuilder.Entity<WMSB_QRCode_Main>().HasKey(x => new {x.QRCode_ID, x.QRCode_Version});
             modelBuilder.Entity<VM_WMSB_Material_Purchase>().HasKey(x => new {
                 x.Plan_No, x.Purchase_No, x.Mat_
+            });
+            modelBuilder.Entity<WMSB_Material_Sheet_Size>().HasKey(x => new {
+                x.Manno, x.Cur_Ent, x.Material_ID, x.Order_Size
             });
         }
     }

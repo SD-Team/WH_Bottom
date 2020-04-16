@@ -29,21 +29,18 @@ export class FunctionUtility {
         const transferNo =
             'TB' +
             new Date().getFullYear().toString() +
-            (new Date().getMonth() + 1).toString() +
-            new Date().getDate().toString() +
+            ((new Date().getMonth() + 1 > 9) ? (new Date().getMonth() + 1).toString() : ('0' + (new Date().getMonth() + 1).toString())) +
+            (new Date().getDate() > 9 ? new Date().getDate().toString() : '0' + new Date().getDate().toString()) +
             Math.floor(Math.random() * (999 - 100 + 1) + 100);
         return transferNo;
     }
 
     /**
-     *Trả ra outputSheetNo mới theo yêu cầu: TB(ngày thực hiện yyyymmdd) 3 mã số random number. (VD: TB20200310001)
+     *Trả ra outputSheetNo mới theo yêu cầu: BO+(Plan No)+ 3 số random (001,002,003…). VD: BO0124696503001
      */
-    getOutSheetNo() {
+    getOutSheetNo(planNo: string) {
         const outputSheetNo =
-            'OB' +
-            new Date().getFullYear().toString() +
-            (new Date().getMonth() + 1).toString() +
-            new Date().getDate().toString() +
+            'BO' + planNo +
             Math.floor(Math.random() * (999 - 100 + 1) + 100);
         return outputSheetNo;
     }
