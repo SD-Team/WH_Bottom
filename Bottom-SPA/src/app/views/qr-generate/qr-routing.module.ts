@@ -38,7 +38,7 @@ const routes: Routes = [
                 }
             },
             {
-                path: 'qrcode-print',
+                path: 'qrcode-print/:qrCodeId/version/:qrCodeVersion',
                 component: QrcodePrintComponent,
                 data: {
                     title: 'QRCode Print'

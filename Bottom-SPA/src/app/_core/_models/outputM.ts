@@ -1,5 +1,5 @@
-export class OutputM {
-    outputSheetNo: string;
+export interface OutputM {
+    transacNo: string;
     qrCodeId: string;
     planNo: string;
     supplierNo: string;
@@ -14,5 +14,4 @@ export class OutputM {
     inStockQty: number;
     transOutQty: number;
     remainingQty: number;
-    checked: boolean = false;
 }

@@ -30,7 +30,7 @@ const routes: Routes = [
         }
       },
       {
-        path: 'missing-print',
+        path: 'missing-print/:missingNo',
         component: MissingPrintComponent,
         data: {
           title: 'Missing Print'

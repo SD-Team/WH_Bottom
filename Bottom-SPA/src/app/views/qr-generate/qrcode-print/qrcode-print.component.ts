@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { QrcodeMainService } from '../../../_core/_services/qrcode-main.service';
 import { TransferDetail } from '../../../_core/_models/transfer-detail';
 
@@ -17,14 +17,16 @@ export class QrcodePrintComponent implements OnInit {
   trasnferDetail: TransferDetail[] = [];
   totalQty = 0;
 
-  constructor(private router: Router, private qrcodeMainService: QrcodeMainService) { }
+  constructor(private router: Router, private qrcodeMainService: QrcodeMainService, private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.qrCodeId = this.route.snapshot.params['qrCodeId'];
+    this.qrCodeVersion = this.route.snapshot.params['qrCodeVersion'];
     this.getQrCodePrint();
   }
 
   back() {
-    this.router.navigate(['qr/main']);
+    this.router.navigate(['/input/qrcode-again']);
   }
 
   print(e) {
