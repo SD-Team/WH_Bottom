@@ -5,7 +5,6 @@ import { QRCodeMainModel } from '../../../_core/_viewmodels/qrcode-main-model';
 import { Pagination, PaginatedResult } from '../../../_core/_models/pagination';
 import { BsDatepickerConfig } from 'ngx-bootstrap';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
-import { PackingDetailResult } from '../../../_core/_viewmodels/packing-detail-result';
 import { PackingListDetailService } from '../../../_core/_services/packing-list-detail.service';
 import { PackingListDetailModel } from '../../../_core/_viewmodels/packing-list-detail-model';
 import { PackingPrintAll } from '../../../_core/_viewmodels/packing-print-all';
@@ -65,7 +64,6 @@ export class QrBodyComponent implements OnInit {
           from_Date: form_date,
           to_Date: to_date
         };
-        window.sessionStorage.setItem('modelSearch', JSON.stringify(object));
         this.qrCodeMainService.search(this.pagination.currentPage , this.pagination.itemsPerPage, object)
         .subscribe((res: PaginatedResult<QRCodeMainModel[]>) => {
           this.listQrCodeMainModel = res.result;
@@ -76,7 +74,6 @@ export class QrBodyComponent implements OnInit {
       }
   }
   print(qrCodeMain) {
-      window.sessionStorage.setItem('checkPrint', '1');
       this.qrCodeMainItem =  qrCodeMain;
       let qrCodeId = [];
       qrCodeId.push(this.qrCodeMainItem.qrCode_ID);

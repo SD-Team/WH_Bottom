@@ -82,7 +82,7 @@
           </div>
         </div>
         <div class="d-flex">
-          <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [(ngModel)]="pagination.currentPage"
+          <pagination *ngIf="transactionMainList.length > 0" [boundaryLinks]="true" [totalItems]="pagination.totalItems" [(ngModel)]="pagination.currentPage"
           [itemsPerPage]="pagination.itemsPerPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;"
           nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [maxSize]=5>
           </pagination>
