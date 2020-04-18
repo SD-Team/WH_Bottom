@@ -37,7 +37,8 @@ export class OutputMainComponent implements OnInit {
         this.outputService.getMainByQrCodeId(this.qrCodeId).subscribe(
           (res) => {
             if (res != null) {
-              this.ouputs = res;
+              this.ouputs = res.outputs;
+              this.outputService.changeListMaterialSheetSize(res.materialSheetSizes);
             }
           },
           (error) => {
@@ -60,20 +61,9 @@ export class OutputMainComponent implements OnInit {
     });
   }
 
-  checkEle(e) {
-    if (e.target.checked) {
-      this.ouputs[e.target.value].outputSheetNo = this.functionUtility.getOutSheetNo(this.ouputs[e.target.value].planNo);
-      this.ouputs[e.target.value].checked = true;
-      const output = this.ouputs[e.target.value];
-      const ele = document.getElementById(
-        e.target.value.toString()
-      ) as HTMLInputElement;
-      ele.disabled = true;
-    }
-  }
-
-  detail() {
-    this.router.navigate(['output/detail'])
+  detail(output: OutputM) {
+    this.outputService.changeOutputM(output);
+    this.router.navigate(['output/detail']);
   }
 
 }

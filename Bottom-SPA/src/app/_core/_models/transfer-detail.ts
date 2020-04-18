@@ -1,4 +1,4 @@
-export class TransferDetail {
+export interface TransferDetail {
     id: number;
     transac_No: string;
     tool_Size: string;

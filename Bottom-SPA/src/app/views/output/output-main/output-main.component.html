@@ -42,16 +42,6 @@
             <table class="table table-bordered text-center">
               <thead>
                 <tr>
-                  <th>
-                    <!-- <div class="custom-control custom-checkbox disabled">
-                      <input
-                        type="checkbox"
-                        class="custom-control-input"
-                        id="all"
-                      />
-                      <label class="custom-control-label" for="all"></label>
-                    </div> -->
-                  </th>
                   <th>Output Sheet No</th>
                   <th>QRcode Id</th>
                   <th>Plan No</th>
@@ -71,23 +61,7 @@
                 <ng-container *ngFor="let item of ouputs; let i = index">
                   <tr>
                     <td rowspan="2" class="align-middle">
-                      <div class="custom-control custom-checkbox">
-                        <input
-                          type="checkbox"
-                          class="custom-control-input"
-                          id="{{i}}"
-                          [value]="i"
-                          (change)="checkEle($event)"
-                          name="output"
-                        />
-                        <label
-                          class="custom-control-label"
-                          for="{{i}}"
-                        ></label>
-                      </div>
-                    </td>
-                    <td rowspan="2" class="align-middle">
-                      {{ item.outputSheetNo }}
+                      {{ item.transacNo }}
                     </td>
                     <td>{{ item.qrCodeId }}</td>
                     <td>{{ item.planNo }}</td>
@@ -101,15 +75,8 @@
                     <td>{{ item.transOutQty }}</td>
                     <td>{{ item.remainingQty }}</td>
                     <td rowspan="2">
-                      <button class="btn btn-warning mr-2" (click)="detail()">
+                      <button class="btn btn-warning mr-2" (click)="detail(item)">
                         <i class="fa fa-search-plus"></i> Detail
-                      </button>
-                      <button
-                        class="btn btn-danger"
-                        (click)="remove(item.qrCodeId)"
-                        *ngIf="!item.checked"
-                      >
-                        <i class="fa fa-trash"></i> Delete
                       </button>
                     </td>
                   </tr>

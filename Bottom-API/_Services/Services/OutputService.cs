@@ -40,52 +40,21 @@ namespace Bottom_API._Services.Services
             _repoMaterialSheetSize = repoMaterialSheetSize;
         }
 
-        // public Task<bool> CheckedOutput(Output_Dto output)
-        // {
-        //     return false;
-        //     // // Tìm ra TransactionMain theo id
-        //     // var transactionMain = _repoTransactionMain.FindSingle(x => x.ID == output.Id);
-        //     // // tạo biến lấy ra Transac_No của TransactionMain
-        //     // var transacNo = transactionMain.Transac_No;
-
-        //     // // Thêm TransactionMain mới dựa vào TransactionMain cũ: thêm mới chỉ thay đổi mấy trường dưới còn lại giữ nguyên
-        //     // transactionMain.ID = 0; // Trong DB có identity tự tăng
-        //     // transactionMain.Transac_Type = "O";
-        //     // transactionMain.Can_Move = "Y";
-        //     // transactionMain.Rack_Location = item.ToLocation;
-        //     // transactionMain.Updated_By = item.UpdateBy;
-        //     // transactionMain.Updated_Time = DateTime.Now;
-        //     // transactionMain.Transac_Time = item.TransacTime;
-        //     // transactionMain.Transac_No = item.TransferNo;
-        //     // transactionMain.Transac_Sheet_No = item.TransferNo;
-        //     // _repoTransactionMain.Add(transactionMain);
-
-        //     // // Thêm TransactionDetail mới dựa vào TransactionDetail của TransactionMain cũ(có bao nhiêu TransactionDetail cũ là thêm bấy nhiêu TransactionDetail mới): chỉ thay đổi Transac_No thành của TransactionMain mới
-        //     // var transactionDetails = await _repoTransactionDetail.FindAll(x => x.Transac_No.Trim() == transacNo.Trim()).ToListAsync();
-        //     // foreach (var transactionDetail in transactionDetails)
-        //     // {
-        //     //     // thêm mới chỉ thay đổi mấy trường dưới, còn lại giữ nguyên
-        //     //     transactionDetail.ID = 0; // Trong DB có identity tự tăng
-        //     //     transactionDetail.Transac_No = item.TransferNo;
-        //     //     transactionDetail.Updated_Time = DateTime.Now;
-        //     //     transactionDetail.Updated_By = item.UpdateBy;
-        //     //     _repoTransactionDetail.Add(transactionDetail);
-        //     // }
-        //     // return await _repoTransactionMain.SaveAll();
-        // }
-
-        public async Task<List<Output_Dto>> GetByQrCodeId(string qrCodeId)
+        public async Task<Output_Dto> GetByQrCodeId(string qrCodeId)
         {
-            List<Output_Dto> listOuput = new List<Output_Dto>();
+            var listMaterialSheetSize = await _repoMaterialSheetSize.FindAll(x => x.Sheet_No.Trim() == qrCodeId.Trim()).ProjectTo<Material_Sheet_Size_Dto>(_configMapper).ToListAsync();
+
+            List<OutputMain_Dto> listOuput = new List<OutputMain_Dto>();
             var materialSheetSize = await _repoMaterialSheetSize.FindAll(x => x.Sheet_No.Trim() == qrCodeId.Trim()).FirstOrDefaultAsync();
             if (materialSheetSize != null)
             {
-                var transactionModel = await _repoTransactionMain.FindAll(x => x.MO_No.Trim() == materialSheetSize.Manno.Trim() && x.MO_Seq.Trim() == materialSheetSize.Batch.Trim() && x.Material_ID == materialSheetSize.Material_ID && x.Can_Move == "Y").ToListAsync();
-                
+                var transactionModel = await _repoTransactionMain.FindAll(x => x.MO_No.Trim() == materialSheetSize.Manno.Trim() && x.MO_Seq.Trim() == materialSheetSize.Batch.Trim() && x.Material_ID == materialSheetSize.Material_ID && x.Can_Move == "Y" && x.Transac_Type != "O").ToListAsync();
+
                 foreach (var item in transactionModel)
                 {
-                    Output_Dto output = new Output_Dto();
+                    OutputMain_Dto output = new OutputMain_Dto();
                     output.Id = item.ID;
+                    output.TransacNo = item.Transac_No;
                     output.QrCodeId = item.QRCode_ID.Trim();
                     output.PlanNo = item.MO_No.Trim();
                     output.Batch = item.MO_Seq;
@@ -107,12 +76,10 @@ namespace Bottom_API._Services.Services
                 }
             }
 
-            return listOuput.OrderBy(x => x.InStockQty).ToList();
-        }
-
-        public Task<List<OutputDetail_Dto>> GetDetailOutput(string transacNo)
-        {
-            throw new NotImplementedException();
+            Output_Dto result = new Output_Dto();
+            result.Outputs = listOuput.OrderBy(x => x.InStockQty).ToList();
+            result.MaterialSheetSizes = listMaterialSheetSize;
+            return result;
         }
     }
 }

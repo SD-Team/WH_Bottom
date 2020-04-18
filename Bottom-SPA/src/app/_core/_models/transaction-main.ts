@@ -6,7 +6,7 @@ export interface TransactionMain {
     can_Move: string
     transac_Time: Date;
     qrCode_ID: string
-    qRCode_Version: string;
+    qrCode_Version: string;
     mO_No: string;
     Purchase_No: string;
     mO_Seq: string;

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MissingPrint } from '../../../_core/_models/missing-print';
 import { InputService } from '../../../_core/_services/input.service';
 import { Material } from '../../../_core/_models/material';
@@ -19,9 +19,10 @@ export class MissingPrintComponent implements OnInit {
   blanceQty = 0;
   missingNo: string = 'BTM20200413466';
 
-  constructor(private router: Router, private inputService: InputService) { }
+  constructor(private router: Router, private inputService: InputService, private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.missingNo = this.route.snapshot.params['missingNo'];
     this.getMissingPrint();
   }
 
@@ -35,7 +36,7 @@ export class MissingPrintComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['input/main']);
+    this.router.navigate(['/input/qrcode-again']);
   }
 
   getMissingPrint() {

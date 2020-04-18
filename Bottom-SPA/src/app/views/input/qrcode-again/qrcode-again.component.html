@@ -71,8 +71,8 @@
                   <td>{{item.qrCode_ID}}</td>
                   <td>{{item.missing_No}}</td>
                   <td>
-                    <button class="btn btn-primary">QrCode</button>
-                    <button style="margin-left: 5px;" class="btn btn-warning">Missing</button>
+                    <button [routerLink]="['/qr/qrcode-print/' + item.qrCode_ID + '/version/' + item.qrCode_Version]"  class="btn btn-primary">QrCode</button>
+                    <button [routerLink]="['/input/missing-print/', item.missing_No]" style="margin-left: 5px;" class="btn btn-warning">Missing</button>
                   </td>
                 </tr>
               </ng-container>
