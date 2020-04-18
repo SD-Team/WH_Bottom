@@ -19,7 +19,7 @@ namespace Bottom_API._Repositories.Repositories
             var model = await _context.WMSB_QRCode_Main.FirstOrDefaultAsync(x => x.QRCode_ID.Trim() == qrCodeID.ToString().Trim());
             return model;
         }
-         public WMSB_QRCode_Main GetByQRCodeIDAndVersion(object qrCodeID, object version)
+        public WMSB_QRCode_Main GetByQRCodeIDAndVersion(object qrCodeID, object version)
         {
             var model = _context.WMSB_QRCode_Main.FirstOrDefault(x => x.QRCode_ID.Trim() == qrCodeID.ToString().Trim() && x.QRCode_Version.ToString() == version.ToString());
             return model;

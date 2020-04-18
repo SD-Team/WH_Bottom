@@ -84,18 +84,24 @@ export class InputMainComponent implements OnInit {
   }
 
   submitInput() {
+    let err = true;
     this.result.forEach((e, i) => {
-      this.listInputNo.push(e.input_No);
+      if (e.input_No == null)
+        err = false;
+      else
+        this.listInputNo.push(e.input_No);
     });
     console.log("Lists qr: ", this.listInputNo);
-    this.inputService.submitInputMain(this.listInputNo).subscribe(
-      () => {
-        this.alertify.success("Submit succeed");
-      },
-      error => {
-        this.alertify.error(error);
-      }
-    )
+    if( err)
+      this.inputService.submitInputMain(this.listInputNo).subscribe(
+        () => {
+          this.alertify.success("Submit succeed");
+        },
+        error => {
+          this.alertify.error(error);
+        }
+      )
+    else this.alertify.error("error");
   }
 
 }
