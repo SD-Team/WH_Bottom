@@ -8,6 +8,8 @@ using Bottom_API._Repositories.Interfaces;
 using Bottom_API._Services.Interfaces;
 using Bottom_API.DTO;
 using Microsoft.EntityFrameworkCore;
+using Bottom_API.Helpers;
+using Bottom_API.Models;
 
 namespace Bottom_API._Services.Services
 {
@@ -69,8 +71,8 @@ namespace Bottom_API._Services.Services
 
                     var qrCodeModel = await _repoQRCodeMain.GetByQRCodeID(item.QRCode_ID);
                     var packingListModel = await _repoPackingList.GetByReceiveNo(qrCodeModel.Receive_No);
-                    output.SupplierName = packingListModel.Supplier_Name.Trim();
-                    output.SupplierNo = packingListModel.Supplier_ID.Trim();
+                    // output.SupplierName = packingListModel.Supplier_Name.Trim();
+                    // output.SupplierNo = packingListModel.Supplier_ID.Trim();
 
                     listOuput.Add(output);
                 }
@@ -80,6 +82,38 @@ namespace Bottom_API._Services.Services
             result.Outputs = listOuput.OrderBy(x => x.InStockQty).ToList();
             result.MaterialSheetSizes = listMaterialSheetSize;
             return result;
+        }
+
+        public async Task<bool> SaveOutput(OutputParam outputParam)
+        {
+            // Tìm ra TransactionMain theo id
+            var transactionMain = _repoTransactionMain.FindSingle(x => x.ID == outputParam.output.Id);
+
+            WMSB_Transaction_Main model = new WMSB_Transaction_Main();
+            model = transactionMain;
+            model.ID = 0;
+            model.Transac_Type = "O";
+            model.Transac_No = outputParam.output.TransacNo;
+            model.Transac_Sheet_No = "";
+            model.Transac_Time = DateTime.Now;
+            model.Updated_Time = DateTime.Now;
+            model.Updated_By = "Emma";
+            _repoTransactionMain.Add(model);
+
+            foreach (var item in outputParam.transactionDetail)
+            {
+                var itemModel = _mapper.Map<WMSB_Transaction_Detail>(item);
+                _repoTransactionDetail.Add(itemModel);
+            }
+
+            // Nếu output ra chưa hết
+            // if (outputParam.output.RemainingQty > 0)
+            // {
+            //     model.Transac_Type = "R";
+            //     model.Transac_No = "R" + transactionMain.Transac_No;
+            // }
+
+            return await _repoTransactionMain.SaveAll();
         }
     }
 }

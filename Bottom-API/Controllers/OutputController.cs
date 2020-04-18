@@ -1,5 +1,7 @@
 using System.Threading.Tasks;
 using Bottom_API._Services.Interfaces;
+using Bottom_API.DTO;
+using Bottom_API.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bottom_API.Controllers
@@ -21,6 +23,14 @@ namespace Bottom_API.Controllers
             if(model != null)
                 return Ok(model);
             else return NoContent();
+        }
+
+        [HttpPost("save")]
+        public async Task<IActionResult> Save(OutputParam outputParam)
+        {
+            return Ok(new {
+                a = "a"
+            });
         }
     }
 }

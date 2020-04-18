@@ -104,18 +104,18 @@
               </tr>
               <tr>
                 <td class="custom-thead">Trans Out Qty B</td>
-                <td *ngFor="let item of result1; let i = index">
+                <td *ngFor="let item of result3; let i = index">
                   <input
                     type="number"
                     class="text-center"
                     style="width: 60px !important;"
-                    [value]="result1[i]?.value > result2[i]?.value ? result2[i]?.value : result1[i]?.value"
+                    [(ngModel)]="result3[i].value"
                   />
                 </td>
               </tr>
               <tr>
                 <td class="custom-thead">Remaining Qty C = A - B</td>
-                <td *ngFor="let item of result2; let i = index">{{item.value - (result1[i].value > result2[i].value ? result2[i].value : result1[i].value)}}</td>
+                <td *ngFor="let item of result2; let i = index">{{item.value - result3[i].value}}</td>
               </tr>
             </table>
           </div>
@@ -125,7 +125,7 @@
           <button class="btn btn-danger mr-2">
             <i class="fa fa-ban"></i> Cancel
           </button>
-          <button class="btn btn-success mr-2">
+          <button class="btn btn-success mr-2" (click)="save()">
             <i class="fa fa-check"></i> Save
           </button>
         </div>

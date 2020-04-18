@@ -36,7 +36,7 @@ namespace Bottom_API._Services.Services
         {
             TransferLocation_Dto model = new TransferLocation_Dto();
             // Lấy ra TransactionMain cùng QRCode_ID và Can_Move == "Y" và QRCode_Version mới nhất
-            var transctionModel = await _repoTransactionMain.FindAll(x => x.QRCode_ID.Trim() == qrCodeId.ToString().Trim() && x.Can_Move == "Y").OrderByDescending(x => x.QRCode_Version).FirstOrDefaultAsync();
+            var transctionModel = await _repoTransactionMain.FindAll(x => x.QRCode_ID.Trim() == qrCodeId.ToString().Trim() && x.Can_Move == "Y" && (x.Transac_Type.Trim() == "I" || x.Transac_Type.Trim() == "M")).OrderByDescending(x => x.QRCode_Version).FirstOrDefaultAsync();
             var qrCodeModel = await _repoQRCodeMain.GetByQRCodeID(qrCodeId);
             if (transctionModel != null)
             {
@@ -94,6 +94,7 @@ namespace Bottom_API._Services.Services
 
         public async Task<bool> SubmitTransfer(List<TransferLocation_Dto> lists)
         {
+            DateTime timeNow = DateTime.Now;
             if (lists.Count > 0)
             {
                 foreach (var item in lists)
@@ -114,7 +115,7 @@ namespace Bottom_API._Services.Services
                     transactionMain.Can_Move = "Y";
                     transactionMain.Rack_Location = item.ToLocation;
                     transactionMain.Updated_By = item.UpdateBy;
-                    transactionMain.Updated_Time = DateTime.Now;
+                    transactionMain.Updated_Time = timeNow;
                     transactionMain.Transac_Time = item.TransacTime;
                     transactionMain.Transac_No = item.TransferNo;
                     transactionMain.Transac_Sheet_No = item.TransferNo;
@@ -127,7 +128,7 @@ namespace Bottom_API._Services.Services
                         // thêm mới chỉ thay đổi mấy trường dưới, còn lại giữ nguyên
                         transactionDetail.ID = 0; // Trong DB có identity tự tăng
                         transactionDetail.Transac_No = item.TransferNo;
-                        transactionDetail.Updated_Time = DateTime.Now;
+                        transactionDetail.Updated_Time = timeNow;
                         transactionDetail.Updated_By = item.UpdateBy;
                         _repoTransactionDetail.Add(transactionDetail);
                     }
