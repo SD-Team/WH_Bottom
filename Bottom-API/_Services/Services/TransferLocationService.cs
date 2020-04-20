@@ -59,6 +59,7 @@ namespace Bottom_API._Services.Services
 
         public async Task<List<TransferLocationDetail_Dto>> GetDetailTransaction(string transacNo)
         {
+            // lấy ra tất cả transaction detail dựa vào transacno
             var model = _repoTransactionDetail.FindAll(x => x.Transac_No.Trim() == transacNo.Trim());
             var data = await model.ProjectTo<TransferLocationDetail_Dto>(_configMapper).ToListAsync();
             return data;
@@ -67,7 +68,7 @@ namespace Bottom_API._Services.Services
         public async Task<PagedList<TransferLocation_Dto>> Search(TransferLocationParam transferLocationParam, PaginationParams paginationParams)
         {
             DateTime t1 = Convert.ToDateTime(transferLocationParam.FromDate);
-            DateTime t2 = DateTime.Parse(transferLocationParam.ToDate + " 23:59:59");
+            DateTime t2 = DateTime.Parse(transferLocationParam.ToDate + " 23:59:59");// ép về kiểu ngày truyền vào và giờ là 23h59'
             var model = _repoTransactionMain.FindAll(x => x.Transac_Time >= t1 && x.Transac_Time <= t2);
 
             if (transferLocationParam.Status != string.Empty && transferLocationParam.Status != null)

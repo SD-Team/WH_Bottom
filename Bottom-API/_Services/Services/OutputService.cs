@@ -44,6 +44,7 @@ namespace Bottom_API._Services.Services
 
         public async Task<Output_Dto> GetByQrCodeId(string qrCodeId)
         {
+            // biến qrcodeid là sheet no của bảng materialsheetsize, dựa theo mã đó lấy ra listmaterialsheetsize là danh sánh đơn output ra
             var listMaterialSheetSize = await _repoMaterialSheetSize.FindAll(x => x.Sheet_No.Trim() == qrCodeId.Trim()).ProjectTo<Material_Sheet_Size_Dto>(_configMapper).ToListAsync();
 
             List<OutputMain_Dto> listOuput = new List<OutputMain_Dto>();
@@ -54,6 +55,7 @@ namespace Bottom_API._Services.Services
 
                 foreach (var item in transactionModel)
                 {
+                    // dữ liệu output cần hiển thị: trong bảng tranasaction main, transaction detail ...
                     OutputMain_Dto output = new OutputMain_Dto();
                     output.Id = item.ID;
                     output.TransacNo = item.Transac_No;
@@ -78,6 +80,7 @@ namespace Bottom_API._Services.Services
                 }
             }
 
+            // dữ liệu cần lấy ra để hiển thị: listoutputmain là trong bảng transaction main với type bằng I, R, M và listmaterialsheetsize là số lượng cần output ra của đơn
             Output_Dto result = new Output_Dto();
             result.Outputs = listOuput.OrderBy(x => x.InStockQty).ToList();
             result.MaterialSheetSizes = listMaterialSheetSize;
@@ -92,10 +95,10 @@ namespace Bottom_API._Services.Services
 
             // Tìm ra TransactionMain theo id
             var transactionMain = _repoTransactionMain.FindSingle(x => x.ID == outputParam.output.Id);
-            transactionMain.Can_Move = "N";
+            transactionMain.Can_Move = "N"; // update transaction main cũ: Can_Move thành N
             _repoTransactionMain.Update(transactionMain);
 
-            // thêm type O
+            // thêm transaction main type O
             WMSB_Transaction_Main modelTypeO = new WMSB_Transaction_Main();
             modelTypeO.Transac_Type = "O";
             modelTypeO.Can_Move = "N";
@@ -118,9 +121,10 @@ namespace Bottom_API._Services.Services
             modelTypeO.MO_Seq = transactionMain.MO_Seq;
             _repoTransactionMain.Add(modelTypeO);
 
+            // Thêm transaction detail mới theo type = o, dựa vào transaction detail của transaction main cũ
             foreach (var item in outputParam.transactionDetail)
             {
-                item.ID = 0;
+                item.ID = 0;// ID trong db là tự tăng: dựa vào transaction detail cũ nên thêm mới gán id bằng 0, không cần phải new hết thuộc tính của đổi tượng ra
                 item.Transac_No = outputParam.output.TransacNo;
                 item.Updated_By = "Emma";
                 item.Updated_Time = timeNow;
@@ -128,11 +132,11 @@ namespace Bottom_API._Services.Services
                 _repoTransactionDetail.Add(itemModel);
             }
 
-            // Nếu output ra chưa hết
+            // Nếu output ra chưa hết thì thêm transaction main type R, và transaction detail 
             if (outputParam.output.RemainingQty > 0)
             {
                 //  thêm type R
-                // nếu type là R thì update lại
+                // nếu type là R: thì update lại
                 if (transactionMain.Transac_Type.Trim() == "R")
                 {
                     transactionMain.Updated_Time = timeNow;
@@ -140,6 +144,7 @@ namespace Bottom_API._Services.Services
                     transactionMain.Transacted_Qty = outputParam.output.TransOutQty;
                     _repoTransactionMain.Update(transactionMain);
 
+                    // update transaction main thì cũng phải update transaction detail
                     var transactionDetail = await _repoTransactionDetail.FindAll(x => x.Transac_No.Trim() == transactionMain.Transac_No.Trim()).ToListAsync();
                     foreach (var item in transactionDetail)
                     {
@@ -174,10 +179,11 @@ namespace Bottom_API._Services.Services
                     modelTypeR.Can_Move = "Y";
                     modelTypeR.Transac_Time = transactionMain.Transac_Time;
                     _repoTransactionMain.Add(modelTypeR);
-                    // thêm transactiondetail của type R
+
+                    // thêm transaction main cũng phải thêm transaction detail
                     foreach (var itemTypeR in outputParam.transactionDetail)
                     {
-                        itemTypeR.ID = 0;
+                        itemTypeR.ID = 0;// ID trong db là tự tăng: dựa vào transaction detail cũ nên thêm mới gán id bằng 0, không cần phải new hết thuộc tính của đổi tượng ra
                         itemTypeR.Transac_No = modelTypeR.Transac_No;
                         itemTypeR.Updated_By = "Emma";
                         itemTypeR.Updated_Time = timeNow;
@@ -186,7 +192,7 @@ namespace Bottom_API._Services.Services
                     }
                 }
 
-                // thêm qrcode mới
+                // thêm qrcode mới, nếu output ra chưa hết thì thêm qrcode main mới dựa vào cái cũ và update version lên
                 var qrCodeMain = await _repoQRCodeMain.FindAll(x => x.QRCode_ID.Trim() == outputParam.output.QrCodeId.Trim()).OrderByDescending(x => x.QRCode_Version).FirstOrDefaultAsync();
                 WMSB_QRCode_Main modelQrCodeMain = new WMSB_QRCode_Main();
                 modelQrCodeMain.QRCode_ID = qrCodeMain.QRCode_ID;
@@ -198,7 +204,8 @@ namespace Bottom_API._Services.Services
                 modelQrCodeMain.Updated_Time = timeNow;
                 modelQrCodeMain.Updated_By = "Emma";
                 _repoQRCodeMain.Add(modelQrCodeMain);
-                // thêm qrcodedetail của qrcode mới
+
+                // thêm qrcodedetail của qrcode mới: thêm qrcode main cũng phải thêm qrcode detail
                 var qrCodeDetails = await _repoQRCodeDetail.FindAll(x => x.QRCode_ID.Trim() == qrCodeMain.QRCode_ID.Trim() && x.QRCode_Version == qrCodeMain.QRCode_Version).ToListAsync();
                 foreach (var itemQrCodeDetail in qrCodeDetails)
                 {
@@ -211,6 +218,7 @@ namespace Bottom_API._Services.Services
                 }
             }
 
+            // lưu Db
             return await _repoTransactionMain.SaveAll();
         }
     }
