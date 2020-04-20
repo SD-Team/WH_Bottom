@@ -5,6 +5,7 @@ import { OutputService } from '../../../_core/_services/output.service';
 import { TransferService } from '../../../_core/_services/transfer.service';
 import { TransferDetail } from '../../../_core/_models/transfer-detail';
 import { OutputM } from '../../../_core/_models/outputM';
+import { FunctionUtility } from '../../../_core/_utility/function-utility';
 
 @Component({
   selector: 'app-output-detail',
@@ -23,7 +24,8 @@ export class OutputDetailComponent implements OnInit {
     private router: Router,
     private outputService: OutputService,
     private transferService: TransferService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private functionUtility: FunctionUtility
   ) { }
 
   ngOnInit() {
@@ -79,24 +81,49 @@ export class OutputDetailComponent implements OnInit {
   }
 
   save() {
+    let listOutputM: OutputM[];
+    this.outputService.currentListOutputM.subscribe(res => listOutputM = res);
+    const indexOutput = listOutputM.indexOf(this.output);
+
+    this.output.transacNo = this.functionUtility.getOutSheetNo(this.output.planNo);
+    this.output.transOutQty = this.result3.reduce((value, i) => {
+      return value += i.value;
+    }, 0);
+    this.output.remainingQty = this.output.inStockQty - this.output.transOutQty;
+
+    if (indexOutput !== -1) {
+      listOutputM[indexOutput] = this.output;
+    }
+
     const tmpTranssactionDetails = [];
+    const tmpResult3 = this.result3;
+    const tmpResult2 = this.result2;
+
     this.result3.forEach(i => {
       this.result2.forEach(j => {
         if (i.name === j.name) {
           j.array.forEach(k => {
             if (i.value > k.instock_Qty) {
-              const tmp = k.instock_Qty;
+              const tmpInstock_Qty = k.instock_Qty;
               k.instock_Qty = 0;
-              i.value = i.value - tmp;
-            } else {
+              i.value = i.value - tmpInstock_Qty;
+              k.qty = k.trans_Qty;
+              k.trans_Qty = tmpInstock_Qty;
+            } else if (i.value !== 0) {
               k.instock_Qty = k.instock_Qty - i.value;
+              k.qty = k.trans_Qty;
+              k.trans_Qty = i.value;
+              i.value = 0;
             }
+            tmpTranssactionDetails.push(k);
           });
+
         }
-        tmpTranssactionDetails.push(j.array);
       });
     });
 
     this.outputService.saveOutput(this.output, tmpTranssactionDetails).subscribe();
+    this.outputService.changeListOutputM(listOutputM);
+    this.router.navigate(['/output/main']);
   }
 }

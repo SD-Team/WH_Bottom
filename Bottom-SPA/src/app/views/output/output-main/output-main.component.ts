@@ -4,6 +4,7 @@ import { OutputService } from '../../../_core/_services/output.service';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
 import { FunctionUtility } from '../../../_core/_utility/function-utility';
 import { Router } from '@angular/router';
+import { QrcodeMainService } from '../../../_core/_services/qrcode-main.service';
 
 @Component({
   selector: 'app-output-main',
@@ -11,24 +12,35 @@ import { Router } from '@angular/router';
   styleUrls: ['./output-main.component.scss']
 })
 export class OutputMainComponent implements OnInit {
-  ouputs: OutputM[] = [];
+  outputs: OutputM[] = [];
   qrCodeId = '';
   output: any = [];
+  flagFinish: boolean = false;
 
   constructor(
     private outputService: OutputService,
     private alertify: AlertifyService,
     private functionUtility: FunctionUtility,
-    private router: Router
-  ) {}
+    private router: Router,
+    private qrCodeMainService: QrcodeMainService
+  ) { }
 
   ngOnInit() {
+    this.outputService.currentListOutputM.subscribe(res => {
+      this.outputs = res;
+    });
+    this.outputService.currentQrCodeId.subscribe(res => {
+      this.qrCodeId = res;
+    });
+    this.outputService.currentFlagFinish.subscribe(res => {
+      this.flagFinish = res;
+    });
   }
 
   getOutputMain(e) {
     if (e.length >= 10) {
       let flag = true;
-      this.ouputs.forEach((item) => {
+      this.outputs.forEach((item) => {
         if (item.qrCodeId === e) {
           flag = false;
         }
@@ -37,8 +49,9 @@ export class OutputMainComponent implements OnInit {
         this.outputService.getMainByQrCodeId(this.qrCodeId).subscribe(
           (res) => {
             if (res != null) {
-              this.ouputs = res.outputs;
+              this.outputs = res.outputs;
               this.outputService.changeListMaterialSheetSize(res.materialSheetSizes);
+              this.outputService.changeListOutputM(this.outputs);
             }
           },
           (error) => {
@@ -51,19 +64,34 @@ export class OutputMainComponent implements OnInit {
     }
   }
 
-  remove(qrCodeId: string) {
-    this.alertify.confirm('Delete', 'Are you sure Delete', () => {
-      this.ouputs.forEach((e, i) => {
-        if (e.qrCodeId === qrCodeId) {
-          this.ouputs.splice(i, 1);
-        }
-      });
-    });
-  }
-
   detail(output: OutputM) {
     this.outputService.changeOutputM(output);
+    this.outputService.changeQrCodeId(this.qrCodeId);
+
     this.router.navigate(['output/detail']);
   }
 
+  process(output: OutputM) {
+    this.outputService.changeOutputM(output);
+    this.outputService.changeQrCodeId(this.qrCodeId);
+
+    this.router.navigate(['output/process']);
+  }
+
+  print(qrCodeId: string) {
+    let qrCodeVerison = 0;
+    this.qrCodeMainService.getQrCodeVersionLastest(qrCodeId).subscribe(res => {
+      qrCodeVerison = res;
+      this.router.navigate(['/qr/qrcode-print/' + qrCodeId + '/version/' + qrCodeVerison]);
+    });
+  }
+
+  submit() {
+    this.outputService.changeListMaterialSheetSize([]);
+    this.outputService.changeListOutputM([]);
+    this.outputService.changeFlagFinish(false);
+    this.outputService.changeQrCodeId('');
+    // this.outputs = [];
+    // this.qrCodeId = '';
+  }
 }

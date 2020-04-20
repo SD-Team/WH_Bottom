@@ -20,5 +20,6 @@ namespace Bottom_API.DTO
         public decimal? InStockQty { get; set; }
         public decimal? TransOutQty { get; set; }
         public decimal? RemainingQty { get; set; }
+        public string PickupNo { get; set; }
     }
 }

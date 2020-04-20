@@ -13,6 +13,7 @@ import { OutputPrintComponent } from './output-print/output-print.component';
 import { OutputDetailComponent } from './output-detail/output-detail.component';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { NgxPrintModule } from 'ngx-print';
+import { OutputProcessComponent } from './output-process/output-process.component';
 
 @NgModule({
     imports: [
@@ -30,7 +31,8 @@ import { NgxPrintModule } from 'ngx-print';
     declarations: [
         OutputMainComponent,
         OutputPrintComponent,
-        OutputDetailComponent
+        OutputDetailComponent,
+        OutputProcessComponent
     ]
 })
 

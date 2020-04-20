@@ -47,4 +47,8 @@ constructor(private http: HttpClient) { }
   printQrCode(qrCodeId: string, qrCodeVersion: number) {
     return this.http.get<QrcodePrint>(this.baseUrl + 'QRCodeMain/printqrcode/' + qrCodeId + '/version/' + qrCodeVersion, {});
   }
+
+  getQrCodeVersionLastest(qrCodeId: string) {
+    return this.http.get<number>(this.baseUrl + 'QRCodeMain/GetQrCodeVersionLastest', {params: {qrCodeId: qrCodeId}});
+  }
 }

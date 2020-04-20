@@ -44,5 +44,12 @@ namespace Bottom_API.Controllers
                 return Ok(model);
             else return NoContent();
         }
+
+        [HttpGet("GetQrCodeVersionLastest")]
+        public async Task<int> GetQrCodeVersionLastest(string qrCodeId)
+        {
+            var model = await _service.GetQrCodeVersionLastest(qrCodeId);
+            return model;
+        }
     }
 }

@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { OutputMainComponent } from './output-main/output-main.component';
 import { OutputPrintComponent } from './output-print/output-print.component';
 import { OutputDetailComponent } from './output-detail/output-detail.component';
+import { OutputProcessComponent } from './output-process/output-process.component';
 
 
 const routes: Routes = [
@@ -32,6 +33,13 @@ const routes: Routes = [
                 component: OutputDetailComponent,
                 data: {
                     title: 'Output Detail'
+                }
+            },
+            {
+                path: 'process',
+                component: OutputProcessComponent,
+                data: {
+                    title: 'Output Process'
                 }
             },
         ]

@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Bottom_API._Services.Interfaces;
 using Bottom_API.DTO;
@@ -19,8 +20,8 @@ namespace Bottom_API.Controllers
         [HttpGet("GetByQrCodeId")]
         public async Task<IActionResult> GetByQrCodeId(string qrCodeId)
         {
-            var model =  await _service.GetByQrCodeId(qrCodeId);
-            if(model != null)
+            var model = await _service.GetByQrCodeId(qrCodeId);
+            if (model != null)
                 return Ok(model);
             else return NoContent();
         }
@@ -28,9 +29,12 @@ namespace Bottom_API.Controllers
         [HttpPost("save")]
         public async Task<IActionResult> Save(OutputParam outputParam)
         {
-            return Ok(new {
-                a = "a"
-            });
+            if (await _service.SaveOutput(outputParam)) 
+            {
+                return Ok();
+            }
+
+            throw new Exception("Submit failed on save");
         }
     }
 }

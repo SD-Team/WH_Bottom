@@ -184,5 +184,11 @@ namespace Bottom_API._Services.Services
 
             return result;
         }
+
+        public async Task<int> GetQrCodeVersionLastest(string qrCodeId)
+        {
+            var model = await _repoQrcode.FindAll(x => x.QRCode_ID.Trim() == qrCodeId.Trim()).OrderByDescending(x => x.QRCode_Version).FirstOrDefaultAsync();
+            return model.QRCode_Version;
+        }
     }
 }

@@ -14,4 +14,5 @@ export interface OutputM {
     inStockQty: number;
     transOutQty: number;
     remainingQty: number;
+    pickupNo: string;
 }
