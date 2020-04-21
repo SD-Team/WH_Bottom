@@ -25,16 +25,16 @@ export class LoginComponent implements OnInit {
   login() {
     console.log(this.user);
     this.spinner.show();
-    this.authService.login(this.user).subscribe(
-      next => {
-        this.alertify.success("Login Success!!")
-      },
-      error => {
-        this.alertify.error("Login failed!!")
-      },
-      () => {
-        this.router.navigate(["/dashboard"]);
-      }
-    );
+    // this.authService.login(this.user).subscribe(
+    //   next => {
+    //     this.alertify.success("Login Success!!")
+    //   },
+    //   error => {
+    //     this.alertify.error("Login failed!!")
+    //   },
+    //   () => {
+    //     this.router.navigate(["/dashboard"]);
+    //   }
+    // );
   }
 }
