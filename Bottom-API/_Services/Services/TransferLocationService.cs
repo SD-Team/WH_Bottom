@@ -61,7 +61,7 @@ namespace Bottom_API._Services.Services
         {
             // lấy ra tất cả transaction detail dựa vào transacno
             var model = _repoTransactionDetail.FindAll(x => x.Transac_No.Trim() == transacNo.Trim());
-            var data = await model.ProjectTo<TransferLocationDetail_Dto>(_configMapper).ToListAsync();
+            var data = await model.ProjectTo<TransferLocationDetail_Dto>(_configMapper).OrderBy(x => x.Tool_Size).ToListAsync();
             return data;
         }
 

@@ -88,7 +88,5 @@ export class OutputMainComponent implements OnInit {
     this.outputService.changeListOutputM([]);
     this.outputService.changeFlagFinish(false);
     this.outputService.changeQrCodeId('');
-    // this.outputs = [];
-    // this.qrCodeId = '';
   }
 }

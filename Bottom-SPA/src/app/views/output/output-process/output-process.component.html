@@ -110,12 +110,17 @@
                     class="text-center"
                     style="width: 60px !important;"
                     [(ngModel)]="result3[i].value"
+                    (ngModelChange)="changeInput($event, i)"
+                    name="name-{{ result3[i] }}"
+                    id="id-{{ i }}"
                   />
                 </td>
               </tr>
               <tr>
                 <td class="custom-thead">Remaining Qty C = A - B</td>
-                <td *ngFor="let item of result2; let i = index">{{item.value - result3[i].value}}</td>
+                <td *ngFor="let item of result2; let i = index">
+                  {{ item.value - result3[i].value }}
+                </td>
               </tr>
             </table>
           </div>

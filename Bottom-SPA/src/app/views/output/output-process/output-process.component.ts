@@ -18,6 +18,7 @@ export class OutputProcessComponent implements OnInit {
   transactionDetails: TransferDetail[] = [];
   result1 = []; // là listmaterialsheetsize sau khi group by theo toolsize, vì lúc hiện theo toolsize
   result2 = []; // là transactiondetail sau khi group by theo toolsize, vì lúc hiện theo toolsize
+  // tslint:disable-next-line: max-line-length
   result3 = []; // mảng chứa số lượng cần output ra theo từng size: là mảng để so sánh result1 và result2 xem ai nhỏ hơn thì lấy, và result 3 có thể thay đổi được nên tách ra thêm mảng nữa
   output: any = [];
 
@@ -63,6 +64,20 @@ export class OutputProcessComponent implements OnInit {
 
   back() {
     this.router.navigate(['output/main']);
+  }
+  changeInput(e, i) {
+    // khi thay đổi giá trị input thì bắt ràng buộc
+    const tmp = this.result1[i].value > this.result2[i].value ? this.result2[i].value : this.result1[i].value;
+    if (e > tmp) {
+      const ele = document.getElementById('id-' + i) as HTMLInputElement;
+      ele.value = tmp;
+      this.result3[i].value = tmp;
+    }
+    if (e < 0) {
+      const ele = document.getElementById('id-' + i) as HTMLInputElement;
+      ele.value = '0';
+      this.result3[i].value = 0;
+    }
   }
   getData() {
     // lấy ra transaction detail dựa vào transaction main
@@ -130,7 +145,7 @@ export class OutputProcessComponent implements OnInit {
     if (indexOutput !== -1) {
       listOutputM[indexOutput] = this.output;
     }
-    //// -------- 
+    //// --------
 
     //// -------- tạo biến lưu danh sách transactiondetail có giá trị thay đổi mới sau khi output để gửi lên server lưu db
     const tmpTranssactionDetails = [];

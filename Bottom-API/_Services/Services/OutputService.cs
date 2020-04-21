@@ -21,6 +21,8 @@ namespace Bottom_API._Services.Services
         private readonly ITransactionMainRepo _repoTransactionMain;
         private readonly ITransactionDetailRepo _repoTransactionDetail;
         private readonly IMaterialSheetSizeRepository _repoMaterialSheetSize;
+        private readonly IRackLocationRepo _repoRackLocation;
+        private readonly ICodeIDDetailRepo _repoCode;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
         public OutputService(
@@ -30,6 +32,8 @@ namespace Bottom_API._Services.Services
             ITransactionMainRepo repoTransactionMain,
             ITransactionDetailRepo repoTransactionDetail,
             IMaterialSheetSizeRepository repoMaterialSheetSize,
+            IRackLocationRepo repoRackLocation,
+            ICodeIDDetailRepo repoCode,
             IMapper mapper, MapperConfiguration configMapper)
         {
             _configMapper = configMapper;
@@ -40,12 +44,14 @@ namespace Bottom_API._Services.Services
             _repoTransactionMain = repoTransactionMain;
             _repoTransactionDetail = repoTransactionDetail;
             _repoMaterialSheetSize = repoMaterialSheetSize;
+            _repoRackLocation = repoRackLocation;
+            _repoCode = repoCode;
         }
 
         public async Task<Output_Dto> GetByQrCodeId(string qrCodeId)
         {
             // biến qrcodeid là sheet no của bảng materialsheetsize, dựa theo mã đó lấy ra listmaterialsheetsize là danh sánh đơn output ra
-            var listMaterialSheetSize = await _repoMaterialSheetSize.FindAll(x => x.Sheet_No.Trim() == qrCodeId.Trim()).ProjectTo<Material_Sheet_Size_Dto>(_configMapper).ToListAsync();
+            var listMaterialSheetSize = await _repoMaterialSheetSize.FindAll(x => x.Sheet_No.Trim() == qrCodeId.Trim()).ProjectTo<Material_Sheet_Size_Dto>(_configMapper).OrderBy(x => x.Tool_Size).ToListAsync();
 
             List<OutputMain_Dto> listOuput = new List<OutputMain_Dto>();
             var materialSheetSize = await _repoMaterialSheetSize.FindAll(x => x.Sheet_No.Trim() == qrCodeId.Trim()).FirstOrDefaultAsync();
@@ -55,6 +61,7 @@ namespace Bottom_API._Services.Services
 
                 foreach (var item in transactionModel)
                 {
+                    var rackLocation = await _repoRackLocation.FindAll(x => x.Rack_Location.Trim() == item.Rack_Location.Trim()).FirstOrDefaultAsync();
                     // dữ liệu output cần hiển thị: trong bảng tranasaction main, transaction detail ...
                     OutputMain_Dto output = new OutputMain_Dto();
                     output.Id = item.ID;
@@ -64,8 +71,9 @@ namespace Bottom_API._Services.Services
                     output.Batch = item.MO_Seq;
                     output.MatId = item.Material_ID.Trim();
                     output.MatName = item.Material_Name.Trim();
-                    output.Building = "";
-                    output.Area = "";
+                    // output.Building = _repoCode.FindSingle(x => x.Code_Type == 3 && x.Code_ID == rackLocation.Build_ID).Code_Ename;// building With WMS_Code.Code_TYPE = 3
+                    // output.Area = _repoCode.FindSingle(x => x.Code_Type == 5 && x.Code_ID == rackLocation.Area_ID).Code_Ename;// building With WMS_Code.Code_TYPE = 5
+                    // output.WH = _repoCode.FindSingle(x => x.Code_Type == 2 && x.Code_ID == rackLocation.WH_ID).Code_Ename;// building With WMS_Code.Code_TYPE = 2
                     output.RackLocation = item.Rack_Location;
                     output.InStockQty = _repoTransactionDetail.GetQtyByTransacNo(item.Transac_No);
                     output.TransOutQty = 0;
@@ -113,15 +121,23 @@ namespace Bottom_API._Services.Services
 
             // Tìm ra TransactionMain theo id
             var transactionMain = _repoTransactionMain.FindSingle(x => x.ID == outputParam.output.Id);
-            transactionMain.Can_Move = "N"; // update transaction main cũ: Can_Move thành N
-            _repoTransactionMain.Update(transactionMain);
+            if (transactionMain.Transac_Type != "R")
+            {
+                transactionMain.Can_Move = "N"; // nếu type != R update transaction main cũ: Can_Move thành N
+                _repoTransactionMain.Update(transactionMain);
+            }
+            if (transactionMain.Transac_Type == "R" && outputParam.output.RemainingQty == 0)
+            {
+                transactionMain.Can_Move = "N"; // nếu type == R và output ra hết update transaction main cũ: Can_Move thành N
+                _repoTransactionMain.Update(transactionMain);
+            }
 
             // thêm transaction main type O
             WMSB_Transaction_Main modelTypeO = new WMSB_Transaction_Main();
             modelTypeO.Transac_Type = "O";
             modelTypeO.Can_Move = "N";
             modelTypeO.Transac_No = outputParam.output.TransacNo;
-            modelTypeO.Transac_Sheet_No = outputParam.output.RemainingQty > 0 ? "OB" + DateTime.Now.ToString("yyyyMMdd") + num.ToString() : "";
+            // modelTypeO.Transac_Sheet_No = outputParam.output.RemainingQty > 0 ? "OB" + DateTime.Now.ToString("yyyyMMdd") + num.ToString() : "";
             modelTypeO.Transacted_Qty = outputParam.output.TransOutQty;
             modelTypeO.Pickup_No = outputParam.output.PickupNo;
             modelTypeO.Transac_Time = timeNow;
@@ -180,7 +196,7 @@ namespace Bottom_API._Services.Services
                     WMSB_Transaction_Main modelTypeR = new WMSB_Transaction_Main();
                     modelTypeR.Transac_Type = "R";
                     modelTypeR.Transac_No = "R" + transactionMain.Transac_No;
-                    modelTypeR.Transac_Sheet_No = "R" + transactionMain.Transac_No;
+                    modelTypeR.Transac_Sheet_No = "R" + transactionMain.Transac_Sheet_No;
                     modelTypeR.Transacted_Qty = outputParam.output.TransOutQty;
                     modelTypeR.Updated_By = "Emma";
                     modelTypeR.Updated_Time = timeNow;
