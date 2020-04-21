@@ -46,6 +46,7 @@ export class OutputDetailComponent implements OnInit {
           value: this.outputDetail.transactionDetail.filter((i) => i.tool_Size === g).reduce((trans_Qty, j) => {
             return trans_Qty += j.trans_Qty;
           }, 0),
+          colspan: this.outputDetail.transactionDetail.filter((i) => i.tool_Size === g).length
         })
       );
       this.result1 = results;

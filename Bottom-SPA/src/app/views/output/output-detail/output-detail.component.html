@@ -86,24 +86,33 @@
           <div class="table-responsive">
             <table class="table table-bordered text-center">
               <tr>
-                <td width="30%" class="custom-thead">Tool Size</td>
+                <td class="custom-thead">Order_Size</td>
                 <td
                   class="custom-background-print"
-                  *ngFor="let item of result1"
+                  *ngFor="let item of outputDetail.transactionDetail"
+                >
+                  {{ item.order_Size }}
+                </td>
+              </tr>
+              <tr>
+                <td class="custom-thead">Trans Out Qty</td>
+                <td *ngFor="let item of outputDetail.transactionDetail">
+                  {{ item.trans_Qty }}
+                </td>
+              </tr>
+              <tr>
+                <td width="30%" class="custom-thead">Tool Size</td>
+                <td
+                  [attr.colspan]="item.colspan"
+                  *ngFor="let item of result1; let i = index"
                 >
                   {{ item.name }}
                 </td>
               </tr>
               <tr>
-                <td class="custom-thead">Trans Out Qty B</td>
-                <td *ngFor="let item of result1; let i = index">
-                  <input
-                    type="number"
-                    class="text-center"
-                    style="width: 60px !important;"
-                    value="{{item.value}}"
-                    disabled
-                  />
+                <td class="custom-thead">Trans Out Qty</td>
+                <td [attr.colspan]="item.colspan" *ngFor="let item of result1">
+                  {{ item.value }}
                 </td>
               </tr>
             </table>
