@@ -99,6 +99,15 @@
                 <th>Supplier Name</th>
               </tr>
             </thead>
+            <tbody *ngIf="materialLists!== undefined && materialLists.length === 0">
+              <tr>
+                <td colspan="9">
+                  <alert class="text-center" type='danger'>
+                    <strong>No Data matching!</strong> 
+                  </alert>
+                </td>
+              </tr>
+            </tbody>
             <tbody >
               <ng-container *ngFor="let item of materialLists; let index = index">
                 <tr>

@@ -9,6 +9,7 @@ import { PackingListService } from '../../../_core/_services/packing-list.servic
 import { Material } from '../../../_core/_models/material';
 import { MaterialModel } from '../../../_core/_viewmodels/material-model';
 import { ReceiveNoMain } from '../../../_core/_viewmodels/receive_no_main';
+import { AlertConfig } from 'ngx-bootstrap/alert';// 
 import * as _ from 'lodash'; 
 @Component({
   selector: 'app-receipt-main',
@@ -25,9 +26,24 @@ export class ReceiptMainComponent implements OnInit {
   purchase_No: string;
   supplier_ID: string;
   supplier_Name: string;
-  materialLists: MaterialModel[] = [];
-  receiveNoMain: ReceiveNoMain[] = [];
+  materialLists: MaterialModel[];
+  receiveNoMain: ReceiveNoMain[];
   status: string = 'all';
+  alerts: any = [
+    {
+      type: 'success',
+      msg: `You successfully read this important alert message.`
+    },
+    {
+      type: 'info',
+      msg: `This alert needs your attention, but it's not super important.`
+    },
+    {
+      type: 'danger',
+      msg: `Better check yourself, you're not looking too good.`
+    }
+  ];
+
   constructor(private materialService: MaterialService,
               private packingListService: PackingListService,
               private router: Router,
@@ -93,6 +109,10 @@ export class ReceiptMainComponent implements OnInit {
       this.materialService.search(object)
       .subscribe(res => {
         this.materialLists = res;
+        if(this.materialLists.length === 0) {
+          this.alertifyService.error('No Data!');
+        }
+        console.log(this.materialLists.length);
       }, error => {
         this.alertifyService.error(error);
       });

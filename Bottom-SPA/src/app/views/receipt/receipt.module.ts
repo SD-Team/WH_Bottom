@@ -6,7 +6,7 @@ import { ReceiptRoutingModule } from './receipt-routing.module';
 import { PaginationModule } from 'ngx-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-
+import { AlertModule } from 'ngx-bootstrap/alert';
 //Component
 import { ReceiptMainComponent } from './receipt-main/receipt-main.component';
 import { RecordComponent } from './record/record.component';
@@ -24,7 +24,8 @@ import { RecordEditComponent } from './record-edit/record-edit.component';
         ReceiptRoutingModule,
         PaginationModule,
         NgSelectModule,
-        BsDatepickerModule
+        BsDatepickerModule,
+        AlertModule.forRoot()
     ],
     declarations: [
         ReceiptMainComponent,
