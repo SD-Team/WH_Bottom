@@ -82,13 +82,13 @@ export function tokenGetter() {
     NgxQRCodeModule,
     NgxPrintModule,
     BsDatepickerModule.forRoot(),
-    JwtModule.forRoot({
-      config: {
-        tokenGetter: tokenGetter,
-        whitelistedDomains: ['localhost:5000'],
-        blacklistedRoutes: ['localhost:5000/api/auth']
-      }
-    })
+    // JwtModule.forRoot({
+    //   config: {
+    //     tokenGetter: tokenGetter,
+    //     whitelistedDomains: ['10.4.0.48:5000'],
+    //     // blacklistedRoutes: ['localhost:5000/api/auth']
+    //   }
+    // })
   ],
   declarations: [
     AppComponent,
