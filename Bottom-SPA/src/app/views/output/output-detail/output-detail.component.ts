@@ -6,6 +6,7 @@ import { TransferService } from '../../../_core/_services/transfer.service';
 import { TransferDetail } from '../../../_core/_models/transfer-detail';
 import { OutputM } from '../../../_core/_models/outputM';
 import { FunctionUtility } from '../../../_core/_utility/function-utility';
+import { OutputDetail } from '../../../_core/_models/output-detail';
 
 @Component({
   selector: 'app-output-detail',
@@ -13,12 +14,9 @@ import { FunctionUtility } from '../../../_core/_utility/function-utility';
   styleUrls: ['./output-detail.component.scss'],
 })
 export class OutputDetailComponent implements OnInit {
-  materialSheetSize: MaterialSheetSize[] = [];
-  transactionDetails: TransferDetail[] = [];
+  outputDetail: any = [];
   result1 = [];
-  result2 = [];
-  result3 = [];
-  output: any = [];
+  transacNo: string = '';
 
   constructor(
     private router: Router,
@@ -29,26 +27,7 @@ export class OutputDetailComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.outputService.currentOutputM.subscribe(res => {
-      this.output = res;
-    });
-
-    this.outputService.currentListMaterialSheetSize.subscribe((res) => {
-      this.materialSheetSize = res;
-
-      // Group by theo tool_Size
-      const groups = new Set(this.materialSheetSize.map((item) => item.tool_Size)), results = [];
-      groups.forEach((g) =>
-        results.push({
-          name: g,
-          value: this.materialSheetSize.filter((i) => i.tool_Size === g).reduce((qty, j) => {
-            return qty += j.qty;
-          }, 0)
-        })
-      );
-      this.result1 = results;
-    });
-
+    this.transacNo = this.route.snapshot.params['transacNo'];
     this.getData();
   }
 
@@ -56,74 +35,20 @@ export class OutputDetailComponent implements OnInit {
     this.router.navigate(['output/main']);
   }
   getData() {
-    this.transferService.getTransferDetail(this.output.transacNo).subscribe(res => {
-      this.transactionDetails = res;
+    this.outputService.getOutputDetail(this.transacNo).subscribe(res => {
+      this.outputDetail = res;
 
       // Group by theo tool_Size
-      const groups = new Set(this.transactionDetails.map((item) => item.tool_Size)), results = [];
+      const groups = new Set(this.outputDetail.transactionDetail.map((item) => item.tool_Size)), results = [];
       groups.forEach((g) =>
         results.push({
           name: g,
-          value: this.transactionDetails.filter((i) => i.tool_Size === g).reduce((instock_Qty, j) => {
-            return instock_Qty += j.instock_Qty;
+          value: this.outputDetail.transactionDetail.filter((i) => i.tool_Size === g).reduce((trans_Qty, j) => {
+            return trans_Qty += j.trans_Qty;
           }, 0),
-          array: this.transactionDetails.filter((i) => i.tool_Size === g)
         })
       );
-      this.result2 = results;
-      for (let i = 0; i < this.result1.length; i++) {
-        this.result3.push({
-          value: this.result1[i].value > this.result2[i].value ? this.result2[i].value : this.result1[i].value,
-          name: this.result1[i].name
-        });
-      }
+      this.result1 = results;
     });
-  }
-
-  save() {
-    let listOutputM: OutputM[];
-    this.outputService.currentListOutputM.subscribe(res => listOutputM = res);
-    const indexOutput = listOutputM.indexOf(this.output);
-
-    this.output.transacNo = this.functionUtility.getOutSheetNo(this.output.planNo);
-    this.output.transOutQty = this.result3.reduce((value, i) => {
-      return value += i.value;
-    }, 0);
-    this.output.remainingQty = this.output.inStockQty - this.output.transOutQty;
-
-    if (indexOutput !== -1) {
-      listOutputM[indexOutput] = this.output;
-    }
-
-    const tmpTranssactionDetails = [];
-    const tmpResult3 = this.result3;
-    const tmpResult2 = this.result2;
-
-    this.result3.forEach(i => {
-      this.result2.forEach(j => {
-        if (i.name === j.name) {
-          j.array.forEach(k => {
-            if (i.value > k.instock_Qty) {
-              const tmpInstock_Qty = k.instock_Qty;
-              k.instock_Qty = 0;
-              i.value = i.value - tmpInstock_Qty;
-              k.qty = k.trans_Qty;
-              k.trans_Qty = tmpInstock_Qty;
-            } else if (i.value !== 0) {
-              k.instock_Qty = k.instock_Qty - i.value;
-              k.qty = k.trans_Qty;
-              k.trans_Qty = i.value;
-              i.value = 0;
-            }
-            tmpTranssactionDetails.push(k);
-          });
-
-        }
-      });
-    });
-
-    this.outputService.saveOutput(this.output, tmpTranssactionDetails).subscribe();
-    this.outputService.changeListOutputM(listOutputM);
-    this.router.navigate(['/output/main']);
   }
 }

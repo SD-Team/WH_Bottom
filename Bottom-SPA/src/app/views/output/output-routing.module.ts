@@ -29,7 +29,7 @@ const routes: Routes = [
                 }
             },
             {
-                path: 'detail',
+                path: 'detail/:transacNo',
                 component: OutputDetailComponent,
                 data: {
                     title: 'Output Detail'

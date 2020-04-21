@@ -23,7 +23,7 @@
                   class="form-control"
                   name="qrCodeId"
                   disabled
-                  [value]="output.qrCodeId"
+                  [value]="outputDetail.qrCodeId"
                 />
               </div>
             </div>
@@ -36,7 +36,7 @@
                   class="form-control"
                   name="planNo"
                   disabled
-                  [value]="output.planNo"
+                  [value]="outputDetail.planNo"
                 />
               </div>
               <label class="col-md-1 text-right">Batch</label>
@@ -47,7 +47,7 @@
                   class="form-control"
                   name="batch"
                   disabled
-                  [value]="output.batch"
+                  [value]="outputDetail.batch"
                 />
               </div>
             </div>
@@ -60,7 +60,7 @@
                   class="form-control"
                   name="matId"
                   disabled
-                  [value]="output.matId"
+                  [value]="outputDetail.matId"
                 />
               </div>
               <div class="col-md-6">
@@ -70,7 +70,7 @@
                   class="form-control"
                   name="matName"
                   disabled
-                  [value]="output.matName"
+                  [value]="outputDetail.matName"
                 />
               </div>
             </div>
@@ -95,41 +95,21 @@
                 </td>
               </tr>
               <tr>
-                <td class="custom-thead">InStock Qty A</td>
-                <td *ngFor="let item of result2">{{ item.value }}</td>
-              </tr>
-              <tr>
-                <td class="custom-thead">Pickup Qty</td>
-                <td *ngFor="let item of result1">{{ item.value }}</td>
-              </tr>
-              <tr>
                 <td class="custom-thead">Trans Out Qty B</td>
-                <td *ngFor="let item of result3; let i = index">
+                <td *ngFor="let item of result1; let i = index">
                   <input
                     type="number"
                     class="text-center"
                     style="width: 60px !important;"
-                    [(ngModel)]="result3[i].value"
+                    value="{{item.value}}"
                     disabled
                   />
                 </td>
-              </tr>
-              <tr>
-                <td class="custom-thead">Remaining Qty C = A - B</td>
-                <td *ngFor="let item of result2; let i = index">{{item.value - result3[i].value}}</td>
               </tr>
             </table>
           </div>
           <div class="d-flex"></div>
         </div>
-        <!-- <div class="card-footer">
-          <button class="btn btn-danger mr-2">
-            <i class="fa fa-ban"></i> Cancel
-          </button>
-          <button class="btn btn-success mr-2" (click)="save()">
-            <i class="fa fa-check"></i> Save
-          </button>
-        </div> -->
       </div>
     </div>
   </div>

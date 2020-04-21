@@ -87,6 +87,24 @@ namespace Bottom_API._Services.Services
             return result;
         }
 
+        public async Task<OutputDetail_Dto> GetDetailOutput(string transacNo)
+        {
+            var transactionMain = _repoTransactionMain.FindSingle(x => x.Transac_No.Trim() == transacNo.Trim());
+            var transactionDetail = await _repoTransactionDetail.FindAll(x => x.Transac_No.Trim() == transactionMain.Transac_No.Trim()).ProjectTo<TransferLocationDetail_Dto>(_configMapper).OrderBy(x => x.Tool_Size).ToListAsync();
+
+            // Lấy ra những thuộc tính cần in
+            OutputDetail_Dto result = new OutputDetail_Dto();
+            result.Id = transactionMain.ID;
+            result.QrCodeId = transactionMain.QRCode_ID;
+            result.PlanNo = transactionMain.MO_No;
+            result.MatId = transactionMain.Material_ID;
+            result.MatName = transactionMain.Material_Name;
+            result.Batch = transactionMain.MO_Seq;
+            result.TransactionDetail = transactionDetail;
+
+            return result;
+        }
+
         public async Task<bool> SaveOutput(OutputParam outputParam)
         {
             DateTime timeNow = DateTime.Now;

@@ -7,6 +7,7 @@ import { MaterialSheetSize } from '../_models/material-sheet-size';
 import { OutputM } from '../_models/outputM';
 import { TransferDetail } from '../_models/transfer-detail';
 import { OutputParams } from '../_viewmodels/output-param';
+import { OutputDetail } from '../_models/output-detail';
 
 @Injectable({
   providedIn: 'root'
@@ -46,8 +47,10 @@ export class OutputService {
     return this.http.get<Output>(this.baseUrl + 'Output/GetByQrCodeId', { params: { qrCodeId: qrCodeId } });
   }
   saveOutput(outputM: OutputM, listTransactionDetail: TransferDetail[]) {
-    debugger
     const param = {output: outputM, transactionDetail: listTransactionDetail};
     return this.http.post(this.baseUrl + 'Output/Save', param);
+  }
+  getOutputDetail(transacNo: string) {
+    return this.http.get<OutputDetail>(this.baseUrl + 'Output/detail/' + transacNo);
   }
 }

@@ -36,5 +36,14 @@ namespace Bottom_API.Controllers
 
             throw new Exception("Submit failed on save");
         }
+
+        [HttpGet("detail/{transacNo}")]
+        public async Task<IActionResult> OutputDetail(string transacNo)
+        {
+            var model = await _service.GetDetailOutput(transacNo);
+            if (model != null)
+                return Ok(model);
+            else return NoContent();
+        }
     }
 }

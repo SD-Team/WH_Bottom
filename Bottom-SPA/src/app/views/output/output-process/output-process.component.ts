@@ -16,9 +16,9 @@ import { AlertifyService } from '../../../_core/_services/alertify.service';
 export class OutputProcessComponent implements OnInit {
   materialSheetSize: MaterialSheetSize[] = [];
   transactionDetails: TransferDetail[] = [];
-  result1 = [];// là listmaterialsheetsize sau khi group by theo toolsize, vì lúc hiện theo toolsize
-  result2 = [];// là transactiondetail sau khi group by theo toolsize, vì lúc hiện theo toolsize
-  result3 = [];// mảng chứa số lượng cần output ra theo từng size: là mảng để so sánh result1 và result2 xem ai nhỏ hơn thì lấy, và result 3 có thể thay đổi được nên tách ra thêm mảng nữa
+  result1 = []; // là listmaterialsheetsize sau khi group by theo toolsize, vì lúc hiện theo toolsize
+  result2 = []; // là transactiondetail sau khi group by theo toolsize, vì lúc hiện theo toolsize
+  result3 = []; // mảng chứa số lượng cần output ra theo từng size: là mảng để so sánh result1 và result2 xem ai nhỏ hơn thì lấy, và result 3 có thể thay đổi được nên tách ra thêm mảng nữa
   output: any = [];
 
   constructor(
@@ -89,7 +89,8 @@ export class OutputProcessComponent implements OnInit {
         );
         this.result2 = results;
 
-        // chạy từng phần tử trong result1 và result2 để so sánh phần tử nào nhỏ hơn thì lấy phần tử đó gán vào result3: result1 và result2 có cùng độ dài và result3 cũng bằng độ dài
+        // chạy từng phần tử trong result1 và result2 để so sánh phần tử nào nhỏ hơn thì lấy phần tử đó gán vào result3: 
+        // result1 và result2 có cùng độ dài và result3 cũng bằng độ dài
         for (let i = 0; i < this.result1.length; i++) {
           this.result3.push({
             value:
@@ -103,7 +104,7 @@ export class OutputProcessComponent implements OnInit {
   }
 
   save() {
-    ////-------- lúc lưu thì lấy biến listoutputmain lưu trên outputservice rồi gán giá trị mới của outputmain mới lưu
+    //// -------- lúc lưu thì lấy biến listoutputmain lưu trên outputservice rồi gán giá trị mới của outputmain mới lưu
     let listOutputM: OutputM[];
     this.outputService.currentListOutputM.subscribe(
       (res) => (listOutputM = res)
@@ -129,9 +130,9 @@ export class OutputProcessComponent implements OnInit {
     if (indexOutput !== -1) {
       listOutputM[indexOutput] = this.output;
     }
-    ////-------- 
+    //// -------- 
 
-    ////-------- tạo biến lưu danh sách transactiondetail có giá trị thay đổi mới sau khi output để gửi lên server lưu db
+    //// -------- tạo biến lưu danh sách transactiondetail có giá trị thay đổi mới sau khi output để gửi lên server lưu db
     const tmpTranssactionDetails = [];
     this.result3.forEach((i) => {
       this.result2.forEach((j) => {
@@ -167,7 +168,7 @@ export class OutputProcessComponent implements OnInit {
         }
       );
 
-    ////--------
+    //// --------
 
     // lưu lại những biến dùng chung ở outputservice rồi chuyển lại trang main
     this.outputService.changeListOutputM(listOutputM);

@@ -65,10 +65,7 @@ export class OutputMainComponent implements OnInit {
   }
 
   detail(output: OutputM) {
-    this.outputService.changeOutputM(output);
-    this.outputService.changeQrCodeId(this.qrCodeId);
-
-    this.router.navigate(['output/detail']);
+    this.router.navigate(['output/detail', output.transacNo]);
   }
 
   process(output: OutputM) {
