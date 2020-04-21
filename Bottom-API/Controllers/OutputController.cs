@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Bottom_API._Services.Interfaces;
 using Bottom_API.DTO;
@@ -27,7 +28,7 @@ namespace Bottom_API.Controllers
         }
 
         [HttpPost("save")]
-        public async Task<IActionResult> Save(OutputParam outputParam)
+        public async Task<IActionResult> SaveOutput(OutputParam outputParam)
         {
             if (await _service.SaveOutput(outputParam)) 
             {
@@ -44,6 +45,17 @@ namespace Bottom_API.Controllers
             if (model != null)
                 return Ok(model);
             else return NoContent();
+        }
+
+        [HttpPost("submit")]
+        public async Task<IActionResult> SubmitOutput(List<OutputMain_Dto> outputs)
+        {
+            if (await _service.SubmitOutput(outputs)) 
+            {
+                return Ok();
+            }
+
+            throw new Exception("Submit failed on save");
         }
     }
 }

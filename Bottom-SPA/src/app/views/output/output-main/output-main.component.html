@@ -111,7 +111,7 @@
           <button class="btn btn-danger mr-2">
             <i class="fa fa-ban"></i> Cancel
           </button>
-          <button class="btn btn-success mr-2" (click)="submit()">
+          <button class="btn btn-success mr-2" [disabled]="!flagFinish" (click)="submit()">
             <i class="fa fa-check"></i> Submit
           </button>
         </div>

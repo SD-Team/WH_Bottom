@@ -9,7 +9,7 @@ import { QrcodeMainService } from '../../../_core/_services/qrcode-main.service'
 @Component({
   selector: 'app-output-main',
   templateUrl: './output-main.component.html',
-  styleUrls: ['./output-main.component.scss']
+  styleUrls: ['./output-main.component.scss'],
 })
 export class OutputMainComponent implements OnInit {
   outputs: OutputM[] = [];
@@ -23,16 +23,16 @@ export class OutputMainComponent implements OnInit {
     private functionUtility: FunctionUtility,
     private router: Router,
     private qrCodeMainService: QrcodeMainService
-  ) { }
+  ) {}
 
   ngOnInit() {
-    this.outputService.currentListOutputM.subscribe(res => {
+    this.outputService.currentListOutputM.subscribe((res) => {
       this.outputs = res;
     });
-    this.outputService.currentQrCodeId.subscribe(res => {
+    this.outputService.currentQrCodeId.subscribe((res) => {
       this.qrCodeId = res;
     });
-    this.outputService.currentFlagFinish.subscribe(res => {
+    this.outputService.currentFlagFinish.subscribe((res) => {
       this.flagFinish = res;
     });
   }
@@ -50,8 +50,24 @@ export class OutputMainComponent implements OnInit {
           (res) => {
             if (res != null) {
               this.outputs = res.outputs;
-              this.outputService.changeListMaterialSheetSize(res.materialSheetSizes);
               this.outputService.changeListOutputM(this.outputs);
+
+              // Group by materialsheetsize theo tool_Size rồi gán vào listmaterialsheetsize trong output service để dùng chung
+              const groups = new Set(
+                  res.materialSheetSizes.map((item) => item.tool_Size)
+                ),
+                results = [];
+              groups.forEach((g) =>
+                results.push({
+                  name: g,
+                  value: res.materialSheetSizes
+                    .filter((i) => i.tool_Size === g)
+                    .reduce((qty, j) => {
+                      return (qty += j.qty);
+                    }, 0),
+                })
+              );
+              this.outputService.changeListMaterialSheetSize(results);
             }
           },
           (error) => {
@@ -77,15 +93,33 @@ export class OutputMainComponent implements OnInit {
 
   print(qrCodeId: string) {
     let qrCodeVerison = 0;
-    this.qrCodeMainService.getQrCodeVersionLastest(qrCodeId).subscribe(res => {
-      qrCodeVerison = res;
-      this.router.navigate(['/qr/qrcode-print/' + qrCodeId + '/version/' + qrCodeVerison]);
-    });
+    this.qrCodeMainService
+      .getQrCodeVersionLastest(qrCodeId)
+      .subscribe((res) => {
+        qrCodeVerison = res;
+        this.router.navigate([
+          '/qr/qrcode-print/' + qrCodeId + '/version/' + qrCodeVerison,
+        ]);
+      });
   }
 
   submit() {
+    // kiểm tra output nào mà không output ra(không process) thì loại bỏ
+    this.outputs.forEach((e, i) => {
+      if (e.transOutQty === 0) {
+        this.outputs.splice(i, 1);
+      }
+    });
+    // gửi lên server để update transacsheet no những output được process
+    this.outputService.submitOutput(this.outputs).subscribe(
+      () => {
+        this.alertify.success('Submit succeed');
+      },
+      (error) => {
+        this.alertify.error(error);
+      }
+    );
     this.outputService.changeListMaterialSheetSize([]);
-    this.outputService.changeListOutputM([]);
     this.outputService.changeFlagFinish(false);
     this.outputService.changeQrCodeId('');
   }

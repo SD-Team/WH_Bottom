@@ -25,7 +25,6 @@ export class OutputService {
   flagFinishSource = new BehaviorSubject<boolean>(false);
   currentFlagFinish = this.flagFinishSource.asObservable();
 
-
   constructor(private http: HttpClient) { }
 
   changeListMaterialSheetSize(listMaterialSheetSize: Array<MaterialSheetSize>) {
@@ -52,5 +51,8 @@ export class OutputService {
   }
   getOutputDetail(transacNo: string) {
     return this.http.get<OutputDetail>(this.baseUrl + 'Output/detail/' + transacNo);
+  }
+  submitOutput(outputs: OutputM[]) {
+    return this.http.post(this.baseUrl + 'Output/submit', outputs);
   }
 }

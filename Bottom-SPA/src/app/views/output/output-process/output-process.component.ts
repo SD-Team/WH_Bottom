@@ -14,7 +14,6 @@ import { AlertifyService } from '../../../_core/_services/alertify.service';
   styleUrls: ['./output-process.component.scss'],
 })
 export class OutputProcessComponent implements OnInit {
-  materialSheetSize: MaterialSheetSize[] = [];
   transactionDetails: TransferDetail[] = [];
   result1 = []; // là listmaterialsheetsize sau khi group by theo toolsize, vì lúc hiện theo toolsize
   result2 = []; // là transactiondetail sau khi group by theo toolsize, vì lúc hiện theo toolsize
@@ -39,24 +38,7 @@ export class OutputProcessComponent implements OnInit {
 
     // lấy ra materialsheetsize: số lượng xuất ra theo đơn: lưu trong output service lúc load main lên là có lưu
     this.outputService.currentListMaterialSheetSize.subscribe((res) => {
-      this.materialSheetSize = res;
-
-      // Group by materialsheetsize theo tool_Size rồi gán vào result1
-      const groups = new Set(
-          this.materialSheetSize.map((item) => item.tool_Size)
-        ),
-        results = [];
-      groups.forEach((g) =>
-        results.push({
-          name: g,
-          value: this.materialSheetSize
-            .filter((i) => i.tool_Size === g)
-            .reduce((qty, j) => {
-              return (qty += j.qty);
-            }, 0),
-        })
-      );
-      this.result1 = results;
+      this.result1 = res;
     });
 
     this.getData();
@@ -147,6 +129,12 @@ export class OutputProcessComponent implements OnInit {
     }
     //// --------
 
+    // thay đổi giá trị result1 sau khi output lần đầu nếu output chưa hết bằng giá trị cũ trừ cho giá trị đã output ra
+    this.result1.forEach((element, i) => {
+      element.value = element.value - this.result3[i].value;
+    });
+    this.outputService.changeListMaterialSheetSize(this.result1);
+
     //// -------- tạo biến lưu danh sách transactiondetail có giá trị thay đổi mới sau khi output để gửi lên server lưu db
     const tmpTranssactionDetails = [];
     this.result3.forEach((i) => {
@@ -171,7 +159,7 @@ export class OutputProcessComponent implements OnInit {
       });
     });
 
-    // gửi lên server với output và transactiondetail có giá trị mới
+    // gửi lên server với output và transactiondetail dựa vào output có giá trị mới
     this.outputService
       .saveOutput(this.output, tmpTranssactionDetails)
       .subscribe(

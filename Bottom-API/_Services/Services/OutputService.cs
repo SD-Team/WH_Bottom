@@ -255,5 +255,19 @@ namespace Bottom_API._Services.Services
             // lưu Db
             return await _repoTransactionMain.SaveAll();
         }
+
+        public Task<bool> SubmitOutput(List<OutputMain_Dto> outputs)
+        {
+            Random ran = new Random();
+            int num = ran.Next(100, 999);
+            string outputSheetNo = "OB" + DateTime.Now.ToString("yyyyMMdd") + num;// OB + 20200421 + 001
+            foreach (var item in outputs)
+            {
+                var transactionMain = _repoTransactionMain.FindSingle(x => x.Transac_No.Trim() == item.TransacNo.Trim());
+                transactionMain.Transac_Sheet_No = outputSheetNo;
+                _repoTransactionMain.Update(transactionMain);
+            }
+            return _repoTransactionMain.SaveAll();
+        }
     }
 }
