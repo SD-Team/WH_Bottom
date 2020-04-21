@@ -89,6 +89,15 @@
                 <th>Math_Name</th>
               </tr>
             </thead>
+            <tbody *ngIf="packingLists !== undefined && packingLists.length === 0">
+              <tr>
+                <td colspan="6">
+                  <alert class="text-center" type="danger">
+                    <strong>No Data Matching!</strong>
+                  </alert>
+                </td>
+              </tr>
+            </tbody>
             <tbody >
               <ng-container *ngFor="let item of packingLists; let i = index">
                 <tr>
@@ -114,12 +123,12 @@
           </div>
         </div>
         <div class="d-flex">
-          <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [(ngModel)]="pagination.currentPage"
+          <pagination *ngIf="packingLists!== undefined && packingLists.length > 0" [boundaryLinks]="true" [totalItems]="pagination.totalItems" [(ngModel)]="pagination.currentPage"
           [itemsPerPage]="pagination.itemsPerPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;"
           nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [maxSize]=5>
           </pagination>
         </div>
-        <div class="card-footer" *ngIf="packingLists.length > 0">
+        <div class="card-footer" *ngIf="packingLists!== undefined && packingLists.length > 0">
           <button class="btn btn-danger mr-2"
             (click)="cancel()">
             <i class="fa fa-ban"></i>

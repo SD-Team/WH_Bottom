@@ -6,7 +6,7 @@ import { PackingListService } from '../../../_core/_services/packing-list.servic
 import { PackingList } from '../../../_core/_models/packingList';
 import { Pagination, PaginatedResult } from '../../../_core/_models/pagination';
 import { QrcodeMainService } from '../../../_core/_services/qrcode-main.service';
-
+import { AlertModule } from 'ngx-bootstrap/alert';
 @Component({
   selector: 'app-qr-main',
   templateUrl: './qr-main.component.html',
@@ -20,11 +20,25 @@ export class QrMainComponent implements OnInit {
   fromDate = new Date();
   toDate = new Date();
   clickSearch: boolean = false;
-  packingLists: PackingList[] = [];
+  packingLists: PackingList[];
   supplier_ID: string;
   mO_No: string;
   supplier_Name: string;
   checkArray: any[] = [];
+  alerts: any = [
+    {
+      type: 'success',
+      msg: `You successfully read this important alert message.`
+    },
+    {
+      type: 'info',
+      msg: `This alert needs your attention, but it's not super important.`
+    },
+    {
+      type: 'danger',
+      msg: `Better check yourself, you're not looking too good.`
+    }
+  ];
   constructor(private router: Router,
               private packingListService: PackingListService,
               private qrcodeService: QrcodeMainService,
@@ -72,6 +86,9 @@ export class QrMainComponent implements OnInit {
       .subscribe((res: PaginatedResult<PackingList[]>) => {
         this.packingLists = res.result;
         this.pagination = res.pagination;
+        if(this.packingLists.length === 0) {
+          this.alertifyService.error('No Data!');
+        }
       }, error => {
         this.alertifyService.error(error);
       });

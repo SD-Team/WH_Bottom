@@ -4,7 +4,7 @@ import { InputService } from '../../../_core/_services/input.service';
 import { TransactionMain } from '../../../_core/_models/transaction-main';
 import { Pagination, PaginatedResult } from '../../../_core/_models/pagination';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
-
+import { AlertModule } from 'ngx-bootstrap/alert';
 @Component({
   selector: 'app-qrcode-again',
   templateUrl: './qrcode-again.component.html',
@@ -16,7 +16,21 @@ export class QrcodeAgainComponent implements OnInit {
   material_ID: string;
   material_Name: string;
   pagination: Pagination;
-  transactionMainList:  TransactionMain[] = [];
+  transactionMainList:  TransactionMain[];
+  alerts: any = [
+    {
+      type: 'success',
+      msg: `You successfully read this important alert message.`
+    },
+    {
+      type: 'info',
+      msg: `This alert needs your attention, but it's not super important.`
+    },
+    {
+      type: 'danger',
+      msg: `Better check yourself, you're not looking too good.`
+    }
+  ];
   constructor(private inputService: InputService,
               private alertifyService: AlertifyService) { }
 
@@ -36,9 +50,11 @@ export class QrcodeAgainComponent implements OnInit {
     }
     this.inputService.qrCodeAgainFilter(this.pagination.currentPage , this.pagination.itemsPerPage,filterparam)
     .subscribe((res: PaginatedResult<TransactionMain[]>) => {
-      console.log(res);
       this.transactionMainList = res.result;
       this.pagination = res.pagination;
+      if(this.transactionMainList.length === 0) {
+        this.alertifyService.error('No Data!');
+      }
     }, error => {
       this.alertifyService.error(error);
     });
