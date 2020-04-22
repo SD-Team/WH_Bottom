@@ -174,13 +174,14 @@ namespace Bottom_API._Services.Services
         {
             var qrCodeModel = _repoQrcode.FindSingle(x => x.QRCode_ID.Trim() == qrCodeId.Trim() && x.QRCode_Version == qrCodeVersion);
             var packingListModel = await _repoPacking.FindAll(x => x.Receive_No.Trim() == qrCodeModel.Receive_No.Trim()).ProjectTo<Packing_List_Dto>(_configMapper).FirstOrDefaultAsync();
-            var transactionMainModel = _repoTransactionMain.FindSingle(x => x.QRCode_ID.Trim() == qrCodeModel.QRCode_ID.Trim() && x.QRCode_Version == qrCodeModel.QRCode_Version && x.Transac_Type.Trim() == "I");
+            var transactionMainModel = _repoTransactionMain.FindSingle(x => x.QRCode_ID.Trim() == qrCodeModel.QRCode_ID.Trim() && x.QRCode_Version == qrCodeModel.QRCode_Version && (x.Transac_Type.Trim() == "I" || x.Transac_Type.Trim() == "R"));
             var transactionDetailModel = await _repoTransactionDetail.FindAll(x => x.Transac_No.Trim() == transactionMainModel.Transac_No.Trim()).ProjectTo<TransferLocationDetail_Dto>(_configMapper).ToListAsync();
             
             // Lấy ra những thuộc tính cần in
             QRCodePrint_Dto result = new QRCodePrint_Dto();
             result.TransactionDetailByQrCodeId = transactionDetailModel;
             result.PackingListByQrCodeId = packingListModel;
+            result.RackLocation = transactionMainModel.Rack_Location;
 
             return result;
         }

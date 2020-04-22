@@ -49,7 +49,6 @@ export class OutputMainComponent implements OnInit {
         this.outputService.getMainByQrCodeId(this.qrCodeId).subscribe(
           (res) => {
             if (res != null) {
-              debugger
               this.outputs = res.outputs;
               this.outputService.changeListOutputM(this.outputs);
 
@@ -68,7 +67,6 @@ export class OutputMainComponent implements OnInit {
                     }, 0),
                 })
               );
-              debugger
               this.outputService.changeListMaterialSheetSize(results);
             }
           },
@@ -100,7 +98,7 @@ export class OutputMainComponent implements OnInit {
       .subscribe((res) => {
         qrCodeVerison = res;
         this.router.navigate([
-          '/qr/qrcode-print/' + qrCodeId + '/version/' + qrCodeVerison,
+          '/output/print-qrcode-again/' + qrCodeId + '/version/' + qrCodeVerison,
         ]);
       });
   }
