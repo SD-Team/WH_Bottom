@@ -15,27 +15,33 @@ namespace Bottom_API._Services.Services
 {
     public class PackingListDetailService : IPackingListDetailService
     {
-        private readonly IPackingListRepository _repoPacking;
-        private readonly IPackingListDetailRepository _repo;
+        private readonly IPackingListRepository _repoPackingList;
+        private readonly IPackingListDetailRepository _repoPackingListDetail;
         private readonly IQRCodeMainRepository _repoQrcode;
+        private readonly ITransactionMainRepo _repoTransactionMain;
+        private readonly ITransactionDetailRepo _repoTransactionDetail;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
-        public PackingListDetailService(    IPackingListDetailRepository repo,
-                                            IPackingListRepository repoPacking,
+        public PackingListDetailService(    IPackingListDetailRepository repoPackingListDetail,
+                                            IPackingListRepository repoPackingList,
                                             IQRCodeMainRepository repoQrcode,
+                                            ITransactionMainRepo repoTransactionMain,
+                                            ITransactionDetailRepo repoTransactionDetail,
                                             IMapper mapper,
                                             MapperConfiguration configMapper) {
-            _repo = repo;
-            _repoPacking = repoPacking;
+            _repoPackingListDetail = repoPackingListDetail;
+            _repoPackingList = repoPackingList;
             _repoQrcode = repoQrcode;
+            _repoTransactionMain = repoTransactionMain;
+            _repoTransactionDetail = repoTransactionDetail;
             _mapper = mapper;
             _configMapper = configMapper;
         }
         public async Task<bool> Add(Packing_List_Detail_Dto model)
         {
             var data = _mapper.Map<WMSB_PackingList_Detail>(model);
-            _repo.Add(data);
-            return await _repo.SaveAll();
+            _repoPackingListDetail.Add(data);
+            return await _repoPackingListDetail.SaveAll();
         }
 
         public Task<bool> Delete(object id)
@@ -45,8 +51,10 @@ namespace Bottom_API._Services.Services
 
         public async Task<object> FindByQrCodeID(string qrCodeID)
         {
-            var qrCodeMan = await _repoQrcode.GetAll().Where(x => x.QRCode_ID.Trim() == qrCodeID.Trim()).FirstOrDefaultAsync();
-            var lists = await _repo.GetAll().Where(x => x.Receive_No.Trim() == qrCodeMan.Receive_No.Trim()).ToListAsync();
+            var qrCodeMan = await _repoQrcode.GetAll()
+                    .Where(x => x.QRCode_ID.Trim() == qrCodeID.Trim()).FirstOrDefaultAsync();
+            var lists = await _repoPackingListDetail.GetAll()
+            .Where(x => x.Receive_No.Trim() == qrCodeMan.Receive_No.Trim()).ToListAsync();
             var packingListDetailModel = new List<PackingListDetailViewModel>();
             decimal totalQty = 0;
             foreach (var item in lists)
@@ -64,16 +72,35 @@ namespace Bottom_API._Services.Services
                 totalQty = totalQty + item.Purchase_Qty;
                 packingListDetailModel.Add(packingItem);
             }
+
+            // Lấy dữ liệu show phần Suggested Location 
+            var transactionMain = await _repoTransactionMain.GetAll()
+                    .Where(x => x.QRCode_ID.Trim() == qrCodeID.Trim() &&
+                    (x.Transac_Type == "I" || x.Transac_Type == "M" || x.Transac_Type == "R") &&
+                    x.Can_Move.Trim() == "Y").ToListAsync() ;
+            var transactionDetail = await _repoTransactionDetail.GetAll().ToListAsync();
+            var suggestedData = (from a in transactionMain join b in transactionDetail
+                                on a.Transac_No.Trim() equals b.Transac_No.Trim()
+                                select new {
+                                    Transac_No = a.Transac_No,
+                                    Rack_Location = a.Rack_Location,
+                                    Instock_Qty = b.Instock_Qty
+                                }).ToList();
+            var suggestedReturn = suggestedData.GroupBy(x => x.Transac_No).Select(x => new {
+                Rack_Location = x.First().Rack_Location,
+                Instock_Qty = x.Sum(cl => cl.Instock_Qty)
+            }).ToList();
             var result = new {
                 totalQty,
-                packingListDetailModel
+                packingListDetailModel,
+                suggestedReturn
             };
             return result;
         }
 
-        public async Task<List<object>> FindByQRCodeIDList(List<string> data)
+        public async Task<List<object>> PrintByQRCodeIDList(List<string> data)
         {
-            var listPackingList =  _repoPacking.GetAll();
+            var listPackingList =  _repoPackingList.GetAll();
             var listQrCodeMain = _repoQrcode.GetAll();
             var listQrCodeModel = listQrCodeMain
                 .Join(listPackingList, x => x.Receive_No.Trim(), y=> y.Receive_No.Trim(), (x,y) => new QRCodeMainViewModel
@@ -99,7 +126,9 @@ namespace Bottom_API._Services.Services
             foreach (var item in data)
             {  
                 var object1 = await this.FindByQrCodeID(item);
-                var qrCodeMainItem = await listQrCodeModel.Where(x => x.QRCode_ID.Trim() == item.Trim()).FirstOrDefaultAsync();
+                var qrCodeMainItem = await listQrCodeModel
+                    .Where(x => x.QRCode_ID.Trim() == item.Trim()).FirstOrDefaultAsync();
+                
                 var objectItem = new {
                     object1,
                     qrCodeMainItem
@@ -111,7 +140,7 @@ namespace Bottom_API._Services.Services
 
         public async Task<List<Packing_List_Detail_Dto>> GetAllAsync()
         {
-            return await _repo.GetAll().ProjectTo<Packing_List_Detail_Dto>(_configMapper).ToListAsync();
+            return await _repoPackingListDetail.GetAll().ProjectTo<Packing_List_Detail_Dto>(_configMapper).ToListAsync();
         }
 
         public Packing_List_Detail_Dto GetById(object id)
