@@ -123,27 +123,15 @@
                                     <span class="text-red">Rack Location</span>
                                 </div>
                             </div>
-                            <div class="col-3">
-                                <span><i class="fa fa-square-o fa-lg"></i> A-01-02</span>
-                                <div>
-                                    <ngx-qrcode id="qrCodeImage" [qrc-element-type]="elementType" [qrc-value] = "item.qrCodeMainItem.qrCode_ID">
-                                    </ngx-qrcode>
+                                <div 
+                                *ngFor="let suggesteditem of item.object1.suggestedReturn"
+                                class="col-3">
+                                    <span><i class="fa fa-square-o fa-lg"></i>{{suggesteditem.rack_Location}}( {{suggesteditem.instock_Qty}})</span>
+                                    <div>
+                                        <ngx-qrcode id="qrCodeImage" [qrc-element-type]="elementType" [qrc-value] = "suggesteditem.rack_Location">
+                                        </ngx-qrcode>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-3">
-                                <span><i class="fa fa-square-o fa-lg"></i> A-01-02</span>
-                                <div>
-                                    <ngx-qrcode id="qrCodeImage" [qrc-element-type]="elementType" [qrc-value] = "item.qrCodeMainItem.qrCode_ID">
-                                    </ngx-qrcode>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <span><i class="fa fa-square-o fa-lg"></i> A-01-02</span>
-                                <div>
-                                    <ngx-qrcode id="qrCodeImage" [qrc-element-type]="elementType" [qrc-value] = "item.qrCodeMainItem.qrCode_ID">
-                                    </ngx-qrcode>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="col-1">
