@@ -308,13 +308,13 @@ namespace Bottom_API._Services.Services
             var lists =  _repoTransactionMain.GetAll().Where(x => x.Missing_No != "")
                 .ProjectTo<Transaction_Main_Dto>(_configMapper);
             if (filterParam.MO_No != null && filterParam.MO_No != "") {
-                lists = lists.Where(x => x.MO_No.Trim() == filterParam.MO_No);
+                lists = lists.Where(x => x.MO_No.Trim() == filterParam.MO_No.Trim());
             }
             if (filterParam.Rack_Location != null && filterParam.Rack_Location != "") {
-                lists = lists.Where(x => x.Rack_Location.Trim() == filterParam.Rack_Location);
+                lists = lists.Where(x => x.Rack_Location.Trim() == filterParam.Rack_Location.Trim());
             }
             if (filterParam.Material_ID != null && filterParam.Material_ID != "") {
-                lists = lists.Where(x => x.Material_ID.Trim() == filterParam.Material_ID);
+                lists = lists.Where(x => x.Material_ID.Trim() == filterParam.Material_ID.Trim());
             }
             lists = lists.OrderByDescending(x => x.Updated_Time);
             return await PagedList<Transaction_Main_Dto>.CreateAsync(lists, param.PageNumber, param.PageSize);
@@ -324,7 +324,7 @@ namespace Bottom_API._Services.Services
         {
             if(materialID != null && materialID != "") {
                 var materialModel = await _repoMaterialView.GetAll()
-                .Where(x => x.Mat_.Trim() == materialID.Trim()).FirstOrDefaultAsync();
+                                    .Where(x => x.Mat_.Trim() == materialID.Trim()).FirstOrDefaultAsync();
                 return materialModel.Mat__Name;
             } else {
                 return "";

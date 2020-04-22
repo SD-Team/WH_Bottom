@@ -3,9 +3,9 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
-          <strong>Receipt</strong>
-          <button type="button" class="btn btn-sm btn-primary float-right"><i class="fa fa-chevron-left"></i>
-            Back</button>
+          <strong>Rack Location Main</strong>
+          <!-- <button type="button" class="btn btn-sm btn-primary float-right"><i class="fa fa-chevron-left"></i>
+            Back</button> -->
         </div>
         <form class="form-horizontal" #addAuditTypeForm="ngForm">
           <div class="card-body">
@@ -16,7 +16,7 @@
               <div class="col-md-2">
                 <select class="form-control" id="factory" name="factory" [(ngModel)]="params.factory" (change)="changeParams()">
                   <option value="">All</option>
-                  <option *ngFor="let item of factories" value="{{item.code_ID}}">{{item.code_Cname}}</option>
+                  <option *ngFor="let item of factories" value="{{item.code_ID}}">{{item.code_Ename}}</option>
                 </select>
               </div>
 
@@ -24,7 +24,7 @@
               <div class="col-md-2">
                 <select class="form-control" id="wh" name="wh" [(ngModel)]="params.wh" (change)="changeParams()">
                   <option value="">All</option>
-                  <option *ngFor="let item of whs" value="{{item.code_ID}}">{{item.code_Cname}}</option>
+                  <option *ngFor="let item of whs" value="{{item.code_ID}}">{{item.code_Ename}}</option>
                 </select>
               </div>
 
@@ -32,7 +32,7 @@
               <div class="col-md-2">
                 <select class="form-control" id="building" name="building" [(ngModel)]="params.building" (change)="changeParams()">
                   <option value="">All</option>
-                  <option *ngFor="let item of buildings" value="{{item.code_ID}}" >{{item.code_Cname}}</option>
+                  <option *ngFor="let item of buildings" value="{{item.code_ID}}" >{{item.code_Ename}}</option>
                 </select>
               </div>
 
@@ -40,7 +40,7 @@
               <div class="col-md-2">
                 <select class="form-control" id="floor" name="floor" [(ngModel)]="params.floor" (change)="changeParams()">
                   <option value="">All</option>
-                  <option *ngFor="let item of floors" value="{{item.code_ID}}">{{item.code_Cname}}</option>
+                  <option *ngFor="let item of floors" value="{{item.code_ID}}">{{item.code_Ename}}</option>
                 </select>
               </div>
               
@@ -50,7 +50,7 @@
               <div class="col-md-2">
                 <select class="form-control" id="area" name="area" [(ngModel)]="params.area" (change)="changeParams()">
                   <option value="">All</option>
-                  <option *ngFor="let item of areas" value="{{item.code_ID}}">{{item.code_Cname}}</option>
+                  <option *ngFor="let item of areas" value="{{item.code_ID}}">{{item.code_Ename}}</option>
                 </select>
               </div>
 

@@ -62,8 +62,12 @@
 
           </div>
           <div class="card-footer">
-            <button type="button" class="btn btn-danger"><i class="fa fa-ban"></i>
+            <button type="reset" class="btn btn-danger mr-2" *ngIf="flag=='0';else elseCancel"><i class="fa fa-ban"></i>
               Cancel</button>
+              <ng-template #elseCancel>
+                <button type="button" class="btn btn-danger mr-2" (click)="backList()"><i class="fa fa-ban"></i>
+                  Cancel</button>
+              </ng-template>
             <button type="button" class="btn btn-success" (click)="create()" *ngIf="flag=='0';else elseButton"><i
                 class="fa fa-check"></i> Create</button>
             <ng-template #elseButton>

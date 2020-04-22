@@ -7,5 +7,7 @@ namespace Bottom_API._Repositories.Interfaces
     {
         
         Task<WMSB_Transaction_Main> GetByInputNo(object inputNo);
+
+        Task<bool> CheckRackLocation(object rackLocation);
     }
 }

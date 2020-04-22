@@ -18,8 +18,10 @@ namespace Bottom_API._Services.Services
         private readonly IRackLocationRepo _repoRackLocation;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
-        public RackLocationService(IRackLocationRepo repoRackLocation, IMapper mapper, MapperConfiguration configMapper)
+        private readonly ITransactionMainRepo _repoTransaction;
+        public RackLocationService(IRackLocationRepo repoRackLocation, ITransactionMainRepo repoTransaction, IMapper mapper, MapperConfiguration configMapper)
         {
+            _repoTransaction = repoTransaction;
             _configMapper = configMapper;
             _mapper = mapper;
             _repoRackLocation = repoRackLocation;
@@ -35,23 +37,31 @@ namespace Bottom_API._Services.Services
 
         public async Task<bool> Update(RackLocation_Main_Dto model)
         {
-            var item = _mapper.Map<WMSB_RackLocation_Main>(model);
-            item.Updated_Time = DateTime.Now;
-            _repoRackLocation.Update(item);
-            return await _repoRackLocation.SaveAll();
+            var check = await _repoTransaction.CheckRackLocation(model.Rack_Location);
+            if(check) return false;
+            else {
+                var item = _mapper.Map<WMSB_RackLocation_Main>(model);
+                item.Updated_Time = DateTime.Now;
+                _repoRackLocation.Update(item);
+                return await _repoRackLocation.SaveAll();
+            }
         }
 
         public async Task<bool> Delete(object id)
         {
             var item = _repoRackLocation.FindById(id);
-            _repoRackLocation.Remove(item);
-            return await _repoRackLocation.SaveAll();
+            var check = await _repoTransaction.CheckRackLocation(item.Rack_Location);
+            if(check) return false;
+            else {
+                _repoRackLocation.Remove(item);
+                return await _repoRackLocation.SaveAll();
+            }
         }
 
-        public async  Task<PagedList<RackLocation_Main_Dto>> Filter(PaginationParams param, FilterRackLocationParam filterParam)
+        public async Task<PagedList<RackLocation_Main_Dto>> Filter(PaginationParams param, FilterRackLocationParam filterParam)
         {
-            var resultAll =  _repoRackLocation.FindAll().ProjectTo<RackLocation_Main_Dto>(_configMapper);
-            if(filterParam.Factory != "" && filterParam.Factory != null)
+            var resultAll = _repoRackLocation.FindAll().ProjectTo<RackLocation_Main_Dto>(_configMapper);
+            if (filterParam.Factory != "" && filterParam.Factory != null)
             {
                 resultAll = resultAll.Where(x => x.Factory_ID == filterParam.Factory);
             }
@@ -77,7 +87,7 @@ namespace Bottom_API._Services.Services
             }
             resultAll = resultAll.OrderByDescending(x => x.Updated_Time);
             return await PagedList<RackLocation_Main_Dto>.CreateAsync(resultAll, param.PageNumber, param.PageSize);
-           // return await resultAll.OrderByDescending(x => x.Updated_Time).ToListAsync();
+            // return await resultAll.OrderByDescending(x => x.Updated_Time).ToListAsync();
         }
 
         public Task<List<RackLocation_Main_Dto>> GetAllAsync()

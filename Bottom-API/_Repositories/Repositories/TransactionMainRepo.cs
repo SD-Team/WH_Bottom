@@ -18,6 +18,13 @@ namespace Bottom_API._Repositories.Repositories
             _context = context;
         }
 
+        public async Task<bool> CheckRackLocation(object rackLocation)
+        {
+            var model = await _context.WMSB_Transaction_Main.FirstOrDefaultAsync(x => x.Rack_Location.Trim() == rackLocation.ToString().Trim());
+            if(model != null) return true;
+            return false;
+        }
+
         public async Task<WMSB_Transaction_Main> GetByInputNo(object inputNo)
         {
             return await _context.WMSB_Transaction_Main.FirstOrDefaultAsync(x => x.Transac_No.Trim() == inputNo.ToString().Trim());
