@@ -43,6 +43,7 @@ export class OutputService {
     this.flagFinishSource.next(flag);
   }
   getMainByQrCodeId(qrCodeId: string) {
+    debugger
     return this.http.get<Output>(this.baseUrl + 'Output/GetByQrCodeId', { params: { qrCodeId: qrCodeId } });
   }
   saveOutput(outputM: OutputM, listTransactionDetail: TransferDetail[]) {

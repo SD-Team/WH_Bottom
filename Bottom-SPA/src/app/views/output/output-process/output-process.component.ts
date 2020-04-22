@@ -20,6 +20,7 @@ export class OutputProcessComponent implements OnInit {
   // tslint:disable-next-line: max-line-length
   result3 = []; // mảng chứa số lượng cần output ra theo từng size: là mảng để so sánh result1 và result2 xem ai nhỏ hơn thì lấy, và result 3 có thể thay đổi được nên tách ra thêm mảng nữa
   output: any = [];
+  sumResult1: number = 0;
 
   constructor(
     private router: Router,
@@ -39,6 +40,9 @@ export class OutputProcessComponent implements OnInit {
     // lấy ra materialsheetsize: số lượng xuất ra theo đơn: lưu trong output service lúc load main lên là có lưu
     this.outputService.currentListMaterialSheetSize.subscribe((res) => {
       this.result1 = res;
+      this.sumResult1 = this.result1.reduce((value, i) => {
+        return value += i.value;
+      }, 0);
     });
 
     this.getData();
