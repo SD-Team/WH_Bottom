@@ -1,0 +1,6 @@
+{
+    "/api/*": {
+        "target": "http://10.4.0.48:5000",
+        "secure": false
+    }
+}
