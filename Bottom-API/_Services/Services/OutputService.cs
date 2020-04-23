@@ -81,7 +81,7 @@ namespace Bottom_API._Services.Services
                     output.Batch = item.MO_Seq;
                     output.MatId = item.Material_ID.Trim();
                     output.MatName = item.Material_Name.Trim();
-                    if (_repoCode.FindSingle(x => x.Code_Type == 3 && x.Code_ID == rackLocation.Build_ID) != null)
+                    if (rackLocation != null)
                     {
                         output.Building = _repoCode.FindSingle(x => x.Code_Type == 3 && x.Code_ID == rackLocation.Build_ID).Code_Ename;// building With WMS_Code.Code_TYPE = 3
                         output.Area = _repoCode.FindSingle(x => x.Code_Type == 5 && x.Code_ID == rackLocation.Area_ID).Code_Ename;// building With WMS_Code.Code_TYPE = 5
@@ -116,7 +116,7 @@ namespace Bottom_API._Services.Services
             var transactionMain = _repoTransactionMain.FindSingle(x => x.Transac_No.Trim() == transacNo.Trim());
             var transactionDetail = await _repoTransactionDetail.FindAll(x => x.Transac_No.Trim() == transactionMain.Transac_No.Trim()).ProjectTo<TransferLocationDetail_Dto>(_configMapper).OrderBy(x => x.Tool_Size).ToListAsync();
 
-            // Lấy ra những thuộc tính cần in
+            // Lấy ra những thuộc tính cần
             OutputDetail_Dto result = new OutputDetail_Dto();
             result.Id = transactionMain.ID;
             result.QrCodeId = transactionMain.QRCode_ID;
@@ -182,7 +182,7 @@ namespace Bottom_API._Services.Services
                 _repoTransactionDetail.Add(itemModel);
             }
 
-            // Nếu output ra chưa hết thì thêm transaction main type R, và transaction detail 
+            // Nếu output ra chưa hết thì thêm transaction main type R, và transaction detail, thêm qrcode mới và update version lên
             if (outputParam.output.RemainingQty > 0)
             {
                 //  thêm type R
