@@ -91,7 +91,7 @@ namespace Bottom_API
                 app.UseDeveloperExceptionPage();
             }
             app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
-            // app.UseCors("CorsPolicy");
+            //app.UseCors("CorsPolicy");
             app.UseHttpsRedirection();
 
             app.UseRouting();

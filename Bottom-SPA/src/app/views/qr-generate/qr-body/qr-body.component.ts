@@ -36,19 +36,22 @@ export class QrBodyComponent implements OnInit {
               private alertifyService: AlertifyService) { }
 
   ngOnInit() {
-    this.pagination = {
-      currentPage: 1,
-      itemsPerPage: 3,
-      totalItems: 0,
-      totalPages: 0
-    };
-      // Lấy ngày hiện tại
+      this.pagination = {
+        currentPage: 1,
+        itemsPerPage: 3,
+        totalItems: 0,
+        totalPages: 0
+      };
+      this.getTimeNow();
+      this.bsConfig = Object.assign({}, { containerClass: 'theme-blue' });
+  }
+  getTimeNow() {
+     // Lấy ngày hiện tại
       const timeNow = new Date().getFullYear().toString() +
       '/' + (new Date().getMonth() + 1).toString() +
       '/' + new Date().getDate().toString();
       this.time_start = timeNow;
       this.time_end = timeNow;
-      this.bsConfig = Object.assign({}, { containerClass: 'theme-blue' });
   }
   search() {
       if (this.time_start === undefined || this.time_end === undefined) {
@@ -132,13 +135,9 @@ export class QrBodyComponent implements OnInit {
       this.alertifyService.error('Please check in checkbox!');
     }
   }
-  convertDate(dateString: string) {
-    let arrayDate = dateString.split('/');
-    let date = arrayDate[2] + '/' + arrayDate[0] + '/' + arrayDate[1];
-    return date;
-  }
-  back() {
-    window.sessionStorage.clear();
-    this.router.navigate(['/qr/main']);
+  cancel() {
+    this.getTimeNow();
+    this.mO_No = '';
+    this.listQrCodeMainModel= [];
   }
 }

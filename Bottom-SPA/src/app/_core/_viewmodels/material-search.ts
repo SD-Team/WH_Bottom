@@ -1,5 +1,5 @@
 export interface MaterialSearch {
-    purchase_No: string;
+    mO_No: string;
     supplier_ID: string;
     status: string;
     from_Date: string;
