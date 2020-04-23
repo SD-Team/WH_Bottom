@@ -21,12 +21,12 @@ export const navItems: INavData[] = [
     icon: "icon-frame",
     children: [
       {
-        name: "QRCode Main",
+        name: "Main",
         url: "/qr/main",
         icon: "icon-arrow-right-circle",
       },
       {
-        name: "QRCode Print",
+        name: "Print",
         url: "/qr/body",
         icon: "icon-arrow-right-circle",
       },

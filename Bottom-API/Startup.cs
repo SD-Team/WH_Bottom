@@ -84,11 +84,7 @@ namespace Bottom_API
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseCors(x => x
-            .AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader());
-            // app.UseCors("CorsPolicy");
+            app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
             app.UseHttpsRedirection();
 
             app.UseRouting();

@@ -224,6 +224,9 @@ export class RecordFormComponent implements OnInit {
       });
     }
   }
+  cancel() {
+    
+  }
   backForm() {
     this.router.navigate(['/receipt/record/']);
   }

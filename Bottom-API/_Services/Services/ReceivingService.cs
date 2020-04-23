@@ -237,8 +237,8 @@ namespace Bottom_API._Services.Services
             // var list2 =  Queryable.Union(test1.AsQueryable(), test2.AsQueryable());
             // var list4 = list2.AsQueryable();
             // var list3 = Queryable.Concat(materialPurchaseList.AsQueryable(),materialMissingList.AsQueryable());
-            if(filterParam.Purchase_No != null && filterParam.Purchase_No != string.Empty) {
-                listMaterial = listMaterial.Where(x => x.Purchase_No.Trim() == filterParam.Purchase_No.Trim()).ToList();
+            if(filterParam.MO_No != null && filterParam.MO_No != string.Empty) {
+                listMaterial = listMaterial.Where(x => x.Purchase_No.Trim() == filterParam.MO_No.Trim()).ToList();
             }
             if(filterParam.Supplier_ID != null && filterParam.Supplier_ID != string.Empty) {
                 listMaterial = listMaterial.Where(x => x.Supplier_ID.Trim() == filterParam.Supplier_ID.Trim()).ToList();

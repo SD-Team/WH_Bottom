@@ -23,7 +23,7 @@ export class ReceiptMainComponent implements OnInit {
   time_end: string;
   fromDate = new Date();
   toDate = new Date();
-  purchase_No: string;
+  mO_No: string;
   supplier_ID: string;
   supplier_Name: string;
   materialLists: MaterialModel[];
@@ -101,7 +101,7 @@ export class ReceiptMainComponent implements OnInit {
       let to_date = new Date(this.time_end).toLocaleDateString();
       let object = {
         supplier_ID: this.supplier_ID,
-        purchase_No: this.purchase_No,
+        mO_No: this.mO_No,
         from_Date: form_date,
         to_Date: to_date,
         status: this.status
