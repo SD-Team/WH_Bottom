@@ -4,6 +4,7 @@ import { OutputMainComponent } from './output-main/output-main.component';
 import { OutputPrintComponent } from './output-print/output-print.component';
 import { OutputDetailComponent } from './output-detail/output-detail.component';
 import { OutputProcessComponent } from './output-process/output-process.component';
+import { OutputPrintQrcodeAgainComponent } from './output-print-qrcode-again/output-print-qrcode-again.component';
 
 
 const routes: Routes = [
@@ -38,6 +39,13 @@ const routes: Routes = [
             {
                 path: 'process',
                 component: OutputProcessComponent,
+                data: {
+                    title: 'Output Process'
+                }
+            },
+            {
+                path: 'print-qrcode-again/:qrCodeId/version/:qrCodeVersion',
+                component: OutputPrintQrcodeAgainComponent,
                 data: {
                     title: 'Output Process'
                 }

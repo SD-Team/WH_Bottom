@@ -57,7 +57,17 @@ namespace Bottom_API._Services.Services
             var materialSheetSize = await _repoMaterialSheetSize.FindAll(x => x.Sheet_No.Trim() == qrCodeId.Trim()).FirstOrDefaultAsync();
             if (materialSheetSize != null)
             {
-                var transactionModel = await _repoTransactionMain.FindAll(x => x.MO_No.Trim() == materialSheetSize.Manno.Trim() && x.MO_Seq.Trim() == materialSheetSize.Batch.Trim() && x.Material_ID == materialSheetSize.Material_ID && x.Can_Move == "Y" && x.Transac_Type != "O").ToListAsync();
+                List<WMSB_Transaction_Main> transactionModel = new List<WMSB_Transaction_Main>();
+                // Nếu Prod_Delivery_Way == "A" thì chỉ lấy trong transaction main theo material_id và mo_no
+                if (materialSheetSize.Prod_Delivery_Way == "A")
+                {
+                    transactionModel = await _repoTransactionMain.FindAll(x => x.MO_No.Trim() == materialSheetSize.Manno.Trim() && x.Material_ID == materialSheetSize.Material_ID && x.Can_Move == "Y" && x.Transac_Type != "O").ToListAsync();
+                }
+                // ngược lại là lấy theeo mo_no, material_id và batch
+                else
+                {
+                    transactionModel = await _repoTransactionMain.FindAll(x => x.MO_No.Trim() == materialSheetSize.Manno.Trim() && x.MO_Seq.Trim() == materialSheetSize.Batch.Trim() && x.Material_ID == materialSheetSize.Material_ID && x.Can_Move == "Y" && x.Transac_Type != "O").ToListAsync();
+                }
 
                 foreach (var item in transactionModel)
                 {
@@ -71,9 +81,12 @@ namespace Bottom_API._Services.Services
                     output.Batch = item.MO_Seq;
                     output.MatId = item.Material_ID.Trim();
                     output.MatName = item.Material_Name.Trim();
-                    // output.Building = _repoCode.FindSingle(x => x.Code_Type == 3 && x.Code_ID == rackLocation.Build_ID).Code_Ename;// building With WMS_Code.Code_TYPE = 3
-                    // output.Area = _repoCode.FindSingle(x => x.Code_Type == 5 && x.Code_ID == rackLocation.Area_ID).Code_Ename;// building With WMS_Code.Code_TYPE = 5
-                    // output.WH = _repoCode.FindSingle(x => x.Code_Type == 2 && x.Code_ID == rackLocation.WH_ID).Code_Ename;// building With WMS_Code.Code_TYPE = 2
+                    if (_repoCode.FindSingle(x => x.Code_Type == 3 && x.Code_ID == rackLocation.Build_ID) != null)
+                    {
+                        output.Building = _repoCode.FindSingle(x => x.Code_Type == 3 && x.Code_ID == rackLocation.Build_ID).Code_Ename;// building With WMS_Code.Code_TYPE = 3
+                        output.Area = _repoCode.FindSingle(x => x.Code_Type == 5 && x.Code_ID == rackLocation.Area_ID).Code_Ename;// building With WMS_Code.Code_TYPE = 5
+                        output.WH = _repoCode.FindSingle(x => x.Code_Type == 2 && x.Code_ID == rackLocation.WH_ID).Code_Ename;// building With WMS_Code.Code_TYPE = 2
+                    }
                     output.RackLocation = item.Rack_Location;
                     output.InStockQty = _repoTransactionDetail.GetQtyByTransacNo(item.Transac_No);
                     output.TransOutQty = 0;
@@ -81,8 +94,11 @@ namespace Bottom_API._Services.Services
 
                     var qrCodeModel = await _repoQRCodeMain.GetByQRCodeID(item.QRCode_ID);
                     var packingListModel = await _repoPackingList.GetByReceiveNo(qrCodeModel.Receive_No);
-                    // output.SupplierName = packingListModel.Supplier_Name.Trim();
-                    // output.SupplierNo = packingListModel.Supplier_ID.Trim();
+                    if (packingListModel != null)
+                    {
+                        output.SupplierName = packingListModel.Supplier_Name.Trim();
+                        output.SupplierNo = packingListModel.Supplier_ID.Trim();
+                    }
 
                     listOuput.Add(output);
                 }
@@ -173,9 +189,11 @@ namespace Bottom_API._Services.Services
                 // nếu type là R: thì update lại
                 if (transactionMain.Transac_Type.Trim() == "R")
                 {
+                    var tmpQrcodeVersion = transactionMain.QRCode_Version + 1;
                     transactionMain.Updated_Time = timeNow;
                     transactionMain.Updated_By = "Emma";
                     transactionMain.Transacted_Qty = outputParam.output.TransOutQty;
+                    transactionMain.QRCode_Version = tmpQrcodeVersion;
                     _repoTransactionMain.Update(transactionMain);
 
                     // update transaction main thì cũng phải update transaction detail
@@ -193,6 +211,7 @@ namespace Bottom_API._Services.Services
                 // ngược lại thì thêm mới type R
                 else
                 {
+                    var tmpQrcodeVersion = transactionMain.QRCode_Version + 1;
                     WMSB_Transaction_Main modelTypeR = new WMSB_Transaction_Main();
                     modelTypeR.Transac_Type = "R";
                     modelTypeR.Transac_No = "R" + transactionMain.Transac_No;
@@ -206,7 +225,7 @@ namespace Bottom_API._Services.Services
                     modelTypeR.Purchase_No = transactionMain.Purchase_No;
                     modelTypeR.Rack_Location = transactionMain.Rack_Location;
                     modelTypeR.Purchase_Qty = transactionMain.Purchase_Qty;
-                    modelTypeR.QRCode_Version = transactionMain.QRCode_Version;
+                    modelTypeR.QRCode_Version = tmpQrcodeVersion;
                     modelTypeR.QRCode_ID = transactionMain.QRCode_ID;
                     modelTypeR.MO_No = transactionMain.MO_No;
                     modelTypeR.MO_Seq = transactionMain.MO_Seq;
