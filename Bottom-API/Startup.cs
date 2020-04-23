@@ -34,12 +34,6 @@ namespace Bottom_API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
-            // services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
-            // {
-            //     builder.AllowAnyOrigin()
-            //         .AllowAnyHeader()
-            //         .AllowAnyMethod().AllowCredentials().Build();
-            // }));
             services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<HPDataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("HPConnection")));
             services.AddControllers();
@@ -50,7 +44,7 @@ namespace Bottom_API
                 return new Mapper(AutoMapperConfig.RegisterMappings());
             });
             services.AddSingleton(AutoMapperConfig.RegisterMappings());
-             // Repository
+            // Repository
             services.AddScoped<IPackingListRepository, PackingListRepository>();
             services.AddScoped<ICodeIDDetailRepo, CodeIDDetailRepo>();
             services.AddScoped<IRackLocationRepo, RackLocationRepo>();
@@ -90,11 +84,16 @@ namespace Bottom_API
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+            app.UseCors(x => x
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
             // app.UseCors("CorsPolicy");
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            
 
             app.UseAuthorization();
 

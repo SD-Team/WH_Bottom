@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Bottom_API._Services.Interfaces;
 using Bottom_API.DTO;
 using Bottom_API.Helpers;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bottom_API.Controllers
@@ -37,7 +38,7 @@ namespace Bottom_API.Controllers
             throw new Exception("Creating the rack location failed on save");
         }
 
-        [HttpPut]
+        [HttpPost("edit", Name = "Edit")]
         public async Task<IActionResult> UpdateBrand(RackLocation_Main_Dto rackDto)
         {
             if (await _service.Update(rackDto))
@@ -45,7 +46,7 @@ namespace Bottom_API.Controllers
             return BadRequest($"Updating rack {rackDto.Rack_Location} failed on save");
         }
 
-        [HttpDelete("{id}")]
+        [HttpPost("delete/{id}", Name="Delete")]
         public async Task<IActionResult> DeleteBrand(int id)
         {
             if (await _service.Delete(id))

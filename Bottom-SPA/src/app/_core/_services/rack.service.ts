@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { WmsCode } from '../_models/wms-code';
 import { PaginatedResult } from '../_models/pagination';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -76,11 +76,11 @@ export class RackService {
   }
 
   update(rack: RackLocation) {
-    return this.http.put(this.baseUrl + 'rackLocation/', rack);
+    return this.http.post(this.baseUrl + 'rackLocation/edit', rack);
   }
 
   delete(id: number) {
-    return this.http.delete(this.baseUrl + 'rackLocation/' + id, {});
+    return this.http.post(this.baseUrl + 'rackLocation/delete/' + id, {});
   }
 
   changeRack(rack: RackLocation) {
