@@ -11,7 +11,7 @@
         <form class="form-horizontal" #addAuditTypeForm="ngForm">
           <div class="card-body">
             <div class="form-group row">
-              <label class="col-md-1 col-form-label" for="fromDate"><strong class="float-right">Receive No</strong></label>
+              <label class="col-md-1 col-form-label" for="fromDate"><strong class="float-right">Delivery Type</strong></label>
               <div class="col-md-3">
                 <select class="form-control" 
                 (change)= "changeForm()"
@@ -28,8 +28,8 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-md-10 offset-md-1">
-                <table style="margin-left: -40px !important;" class="table table-bordered">
+              <div class="col-md-10 offset-md-1 table-responsive">
+                <table class="table table-bordered">
                   <thead>
                     <tr class="text-center">
                       <th>Size</th>
@@ -52,15 +52,13 @@
                       <td *ngFor="let item of materialMerging">
                         <input (keyup)="changeInput(item.order_Size)"
                         value="{{item.delivery_Qty}}"
-                        type="text" id="{{item.order_Size}}" class="input-table">
+                        type="number" id="{{item.order_Size}}" class="input-table">
                       </td>
                     </tr>
                     <tr *ngFor="let item of orderSizeByBatch" class="text-center">
                       <td *ngIf="item.mO_Seq !== ''; else elseContent">{{item.mO_Seq}}</td>
                       <ng-template #elseContent><td>No Batch</td></ng-template>
                       <td *ngFor="let item1 of item.purchase_Qty">
-                        <!-- <input *ngIf="item1.purchase_Qty !== 0; else elseContent1" value="{{item1.purchase_Qty}}" type="text" disabled class="input-table">
-                        <ng-template #elseContent1><i style="color: #20a8d8;" class="fa fa-check fa-lg"></i></ng-template> -->
                         <input value="{{item1.purchase_Qty}}" type="text" disabled class="input-table">
                     </td>
                     </tr>
@@ -71,7 +69,7 @@
           </div>
         </form>
         <div class="card-footer">
-          <button type="button" class="btn btn-danger"><i class="fa fa-ban"></i> Cancel</button>
+          <button type="button" style="margin-right: 5px;" class="btn btn-danger"><i class="fa fa-ban"></i> Cancel</button>
           <button type="button" (click)="submitTable()" class="btn btn-success" [disabled]="!addAuditTypeForm.valid"><i
               class="fa fa-check"></i> Save</button>
         </div>

@@ -141,6 +141,7 @@ export class OutputProcessComponent implements OnInit {
 
     //// -------- tạo biến lưu danh sách transactiondetail có giá trị thay đổi mới sau khi output để gửi lên server lưu db
     const tmpTranssactionDetails = [];
+    // chạy từng phần tử rồi output từng phần tử ra theo sheetno(đơn hàng) sao cho không có cái nào nhỏ hơn 0
     this.result3.forEach((i) => {
       this.result2.forEach((j) => {
         if (i.name === j.name) {

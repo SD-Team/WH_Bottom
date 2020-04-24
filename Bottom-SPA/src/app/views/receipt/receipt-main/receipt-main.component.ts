@@ -4,12 +4,11 @@ import { BsDatepickerConfig } from 'ngx-bootstrap';
 import { MaterialService } from '../../../_core/_services/material.service';
 import { Router } from '@angular/router';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
-import { Pagination, PaginatedResult } from '../../../_core/_models/pagination';
+import { Pagination } from '../../../_core/_models/pagination';
 import { PackingListService } from '../../../_core/_services/packing-list.service';
-import { Material } from '../../../_core/_models/material';
 import { MaterialModel } from '../../../_core/_viewmodels/material-model';
 import { ReceiveNoMain } from '../../../_core/_viewmodels/receive_no_main';
-import { AlertConfig } from 'ngx-bootstrap/alert';// 
+import { AlertConfig } from 'ngx-bootstrap/alert';
 import * as _ from 'lodash'; 
 @Component({
   selector: 'app-receipt-main',
@@ -23,7 +22,7 @@ export class ReceiptMainComponent implements OnInit {
   time_end: string;
   fromDate = new Date();
   toDate = new Date();
-  purchase_No: string;
+  mO_No: string;
   supplier_ID: string;
   supplier_Name: string;
   materialLists: MaterialModel[];
@@ -101,7 +100,7 @@ export class ReceiptMainComponent implements OnInit {
       let to_date = new Date(this.time_end).toLocaleDateString();
       let object = {
         supplier_ID: this.supplier_ID,
-        purchase_No: this.purchase_No,
+        mO_No: this.mO_No,
         from_Date: form_date,
         to_Date: to_date,
         status: this.status

@@ -1,6 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { QRCodeMainModel } from '../../../_core/_viewmodels/qrcode-main-model';
-import { PackingListDetailModel } from '../../../_core/_viewmodels/packing-list-detail-model';
+import { Component, OnInit } from '@angular/core';
 import { PackingListDetailService } from '../../../_core/_services/packing-list-detail.service';
 import { PackingPrintAll } from '../../../_core/_viewmodels/packing-print-all';
 import { Router } from '@angular/router';
@@ -18,8 +16,14 @@ export class QrPrintComponent implements OnInit {
 
   ngOnInit() {
     this.packingListDetailService.currentPackingPrint.subscribe(res => this.packingPrint = res);
+    this.checkPackingPrint();
+  }
+  checkPackingPrint() {
+    if (this.packingPrint.length === 0) {
+      this.router.navigate(['/qr/body']);
+    }
   }
   back() {
-    this.router.navigate(['/qr/body'])
+    this.router.navigate(['/qr/body']);
   }
 }

@@ -7,6 +7,7 @@ export interface MaterialEditModel {
     purchase_Qty: number;
     accumated_Qty: number;
     delivery_Qty: number;
+    delivery_Qty_Const: number;
     received_Qty: number;
     received_Qty_Edit: number;
 }

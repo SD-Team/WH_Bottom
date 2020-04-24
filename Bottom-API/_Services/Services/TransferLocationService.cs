@@ -69,7 +69,7 @@ namespace Bottom_API._Services.Services
         {
             DateTime t1 = Convert.ToDateTime(transferLocationParam.FromDate);
             DateTime t2 = DateTime.Parse(transferLocationParam.ToDate + " 23:59:59");// ép về kiểu ngày truyền vào và giờ là 23h59'
-            var model = _repoTransactionMain.FindAll(x => x.Transac_Time >= t1 && x.Transac_Time <= t2);
+            var model = _repoTransactionMain.FindAll(x => x.Transac_Time >= t1 && x.Transac_Time <= t2 && x.Transac_Type != "R");
 
             if (transferLocationParam.Status != string.Empty && transferLocationParam.Status != null)
             {

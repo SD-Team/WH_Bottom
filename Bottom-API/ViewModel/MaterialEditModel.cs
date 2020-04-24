@@ -10,7 +10,8 @@ namespace Bottom_API.ViewModel
         public decimal? Purchase_Qty {get;set;}
         public decimal? Accumated_Qty {get;set;}
         public decimal? Delivery_Qty {get;set;}
+        public decimal? Delivery_Qty_Const {get;set;}
         public decimal? Received_Qty {get;set;}
-        public decimal Received_Qty_Edit {get;set;}
+        public decimal? Received_Qty_Edit {get;set;}
     }
 }
