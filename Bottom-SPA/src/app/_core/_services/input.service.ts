@@ -36,7 +36,7 @@ export class InputService {
   }
 
   submitInputMain(listInput: string[]) {
-    return this.http.put(this.baseUrl + 'input/submit', listInput);
+    return this.http.post(this.baseUrl + 'input/submit', listInput);
   }
 
   changeListInputMain(listInputDetail: InputDetail[]) {
