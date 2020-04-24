@@ -472,6 +472,14 @@ namespace Bottom_API._Services.Services
         {
             var packingList = await _packingListService.GetAllAsync();
             var packingListDetail = await _packingListDetailService.GetAllAsync();
+            var materialList = new List<Material_Dto>();
+            if(model.Missing_No == "") {
+                materialList = await _repoPurchase.GetAll().ProjectTo<Material_Dto>(_configMapper)
+                        .Where(x => x.Purchase_No.Trim() == model.Purchase_No.Trim()).ToListAsync();
+            } else {
+                materialList = await _repoMissing.GetAll().ProjectTo<Material_Dto>(_configMapper)
+                        .Where(x => x.Purchase_No.Trim() == model.Purchase_No.Trim()).ToListAsync();
+            }
             var data = (from a in packingList
                         join b in packingListDetail on a.Receive_No.Trim() equals b.Receive_No.Trim()
                         where a.Purchase_No.Trim() == model.Purchase_No.Trim()
@@ -503,6 +511,14 @@ namespace Bottom_API._Services.Services
                             Sheet_Type = cl.First().Sheet_Type,
                             Updated_By = cl.First().Updated_By
                         }).OrderByDescending(x => x.Receive_Date).ToList();
+                        foreach (var item1 in data)
+                        {
+                            var materialByPurchaseBath = materialList.Where(x => x.MO_Seq == item1.MO_Seq);
+                            var list1 = materialByPurchaseBath.GroupBy(x => x.Purchase_No).Select(cl => new {
+                                Accumated_Qty = cl.Sum(x => x.Accumlated_In_Qty)
+                            }).ToList();
+                            item1.Accumated_Qty_All = list1[0].Accumated_Qty;
+                        }
             return data;
         }
 

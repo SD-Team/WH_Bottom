@@ -56,7 +56,7 @@
                   <button (click)="changeFormDetail(item.receive_No)" class="btn btn-block btn-success">Show Detail</button>
                   <button (click)="editReceiveNo(item)" 
                   class="btn btn-block btn-warning" 
-                  *ngIf="item.generated_QRCode === 'N' && item.purchase_Qty !== item.accumated_Qty">Edit</button>
+                  *ngIf="item.generated_QRCode === 'N' && item.purchase_Qty !== item.accumated_Qty_All">Edit</button>
                   <!-- <ng-template #elseEdit>
                     <button disabled class="btn btn-block btn-warning">Edit</button>
                   </ng-template> -->

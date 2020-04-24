@@ -88,8 +88,7 @@ export class RecordFormComponent implements OnInit {
         break;
       }
     }
-    debugger
-    // Mảng giá trị Purchase_Qty tương ứng với Order_Size đó.
+    // Mảng giá trị Purchase_Qty tương ứng với Order_Size đó. 
     let listInput = [];
     this.orderSizeByBatch.forEach(element => {
       listInput.push(element.purchase_Qty[columnInput]);
@@ -97,9 +96,9 @@ export class RecordFormComponent implements OnInit {
     // Giá trị lấy được khi nhập input.
     let valueInput = (<HTMLInputElement>document.getElementById(thisInput.toString())).value;
     let materialMergingItem = this.materialMerging[columnInput];
-    if (parseFloat(valueInput) > materialMergingItem.purchase_Qty) {
-      (<HTMLInputElement>document.getElementById(thisInput.toString())).value = materialMergingItem.purchase_Qty.toString();
-      valueInput = materialMergingItem.purchase_Qty.toString();
+    if (parseFloat(valueInput) > materialMergingItem.delivery_Qty) {
+      (<HTMLInputElement>document.getElementById(thisInput.toString())).value = materialMergingItem.delivery_Qty.toString();
+      valueInput = materialMergingItem.delivery_Qty.toString();
     }
     let n;
     for (let x = 0; x < listInput.length; x++) {

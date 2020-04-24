@@ -13,6 +13,7 @@ namespace Bottom_API.ViewModel
         public DateTime? Receive_Date {get;set;}
         public decimal? Purchase_Qty {get;set;}
         public decimal? Accumated_Qty {get;set;}
+        public decimal? Accumated_Qty_All {get;set;}
         public string Generated_QRCode {get;set;}
         public string Sheet_Type {get;set;}
         public string Updated_By {get;set;}
