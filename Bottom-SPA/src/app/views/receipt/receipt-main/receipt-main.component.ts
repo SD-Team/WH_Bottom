@@ -4,12 +4,11 @@ import { BsDatepickerConfig } from 'ngx-bootstrap';
 import { MaterialService } from '../../../_core/_services/material.service';
 import { Router } from '@angular/router';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
-import { Pagination, PaginatedResult } from '../../../_core/_models/pagination';
+import { Pagination } from '../../../_core/_models/pagination';
 import { PackingListService } from '../../../_core/_services/packing-list.service';
-import { Material } from '../../../_core/_models/material';
 import { MaterialModel } from '../../../_core/_viewmodels/material-model';
 import { ReceiveNoMain } from '../../../_core/_viewmodels/receive_no_main';
-import { AlertConfig } from 'ngx-bootstrap/alert';// 
+import { AlertConfig } from 'ngx-bootstrap/alert';
 import * as _ from 'lodash'; 
 @Component({
   selector: 'app-receipt-main',

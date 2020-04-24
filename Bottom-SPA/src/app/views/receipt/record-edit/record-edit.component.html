@@ -22,8 +22,8 @@
         </form>
 
         <div class="row">
-          <div class="col-md-10 offset-md-1">
-            <table *ngIf="materialEditModels !== undefined" style="margin-left: -40px !important;" class="table table-bordered">
+          <div class="col-md-10 offset-md-1 table-responsive">
+            <table *ngIf="materialEditModels !== undefined" class="table table-bordered">
               <thead>
                 <tr class="text-center">
                   <th>Size</th>
@@ -42,9 +42,9 @@
                 <tr class="text-center">
                   <td>Delevery Qty</td>
                   <td *ngFor="let item of materialEditModels">
-                    <input type="text" id="{{item.order_Size}}" 
+                    <input type="number" id="{{item.order_Size}}" 
                     value="{{item.delivery_Qty}}" 
-                    (change)="changeInput(item.order_Size)" class="input-table">
+                    (keyup)="changeInput(item.order_Size)" class="input-table">
                   </td>
                 </tr>
                 <tr class="text-center">

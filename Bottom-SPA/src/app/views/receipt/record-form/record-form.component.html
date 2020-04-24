@@ -28,8 +28,8 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-md-10 offset-md-1">
-                <table style="margin-left: -40px !important;" class="table table-bordered">
+              <div class="col-md-10 offset-md-1 table-responsive">
+                <table class="table table-bordered">
                   <thead>
                     <tr class="text-center">
                       <th>Size</th>
@@ -52,7 +52,7 @@
                       <td *ngFor="let item of materialMerging">
                         <input (keyup)="changeInput(item.order_Size)"
                         value="{{item.delivery_Qty}}"
-                        type="text" id="{{item.order_Size}}" class="input-table">
+                        type="number" id="{{item.order_Size}}" class="input-table">
                       </td>
                     </tr>
                     <tr *ngFor="let item of orderSizeByBatch" class="text-center">

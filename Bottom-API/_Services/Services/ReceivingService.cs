@@ -597,18 +597,21 @@ namespace Bottom_API._Services.Services
                 Purchase_Qty = y.Sum(cl => cl.Purchase_Qty),
                 Accumated_Qty = y.Sum(cl => cl.Accumlated_In_Qty),
                 Delivery_Qty = y.Sum(cl => (cl.Purchase_Qty - cl.Accumlated_In_Qty)),
+                Delivery_Qty_Const = y.Sum(cl => (cl.Purchase_Qty - cl.Accumlated_In_Qty)),
+                Received_Qty = y.Sum(cl => cl.Purchase_Qty),
+                Received_Qty_Edit = y.Sum(cl => (cl.Purchase_Qty - cl.Accumlated_In_Qty)),
                 MO_Seq_Edit = model.MO_Seq,
             }).ToList();
-            foreach (var item in dataList1)
-            {
-                foreach (var item1 in packingListDetail)
-                {
-                    if(item1.Order_Size.Trim() == item.Order_Size.Trim()) {
-                        item.Received_Qty = item1.Received_Qty;
-                        item.Received_Qty_Edit = item1.Received_Qty;
-                    }
-                }
-            }
+            // foreach (var item in dataList1)
+            // {
+            //     foreach (var item1 in packingListDetail)
+            //     {
+            //         if(item1.Order_Size.Trim() == item.Order_Size.Trim()) {
+            //             // item.Received_Qty = item1.Purchase_Qty;
+            //             item.Received_Qty_Edit = item1.Received_Qty;
+            //         }
+            //     }
+            // }
             return dataList1;
         }
 
@@ -623,13 +626,13 @@ namespace Bottom_API._Services.Services
                 foreach (var item1 in data)
                 {
                     if (item1.Order_Size.Trim() == item.Order_Size.Trim()) {
-                        item.Received_Qty = item1.Received_Qty_Edit;
+                        item.Received_Qty = item.Received_Qty + item1.Received_Qty_Edit;
                     }
                 }
             }
             var SavePackingListDetail =  await _repoPackingListDetail.SaveAll();
             var saveMaterial = false;
-            // Áp dụng cho bảng Material_Missing
+            // Áp dụng cho bảng Material_Purchase
             if(missing_No == "") {
                 var materialPurchaseList = _repoPurchase.GetAll()
                     .Where(x => x.Purchase_No.Trim() == data[0].Purchase_No.Trim() &&
@@ -640,7 +643,7 @@ namespace Bottom_API._Services.Services
                     {
                         if(item4.Order_Size.Trim() == item2.Order_Size.Trim()) {
                             // Số lượng mới = số lượng hiện tại trừ đi số lượng đã nhận trước và + cho số lượng nhận mới.
-                            item4.Accumlated_In_Qty = item4.Accumlated_In_Qty - item2.Received_Qty + item2.Received_Qty_Edit;
+                            item4.Accumlated_In_Qty = item4.Accumlated_In_Qty + item2.Received_Qty_Edit;
                         }
                     }
                 }
@@ -660,7 +663,7 @@ namespace Bottom_API._Services.Services
                     {
                         if(item4.Order_Size.Trim() == item2.Order_Size.Trim()) {
                             // Số lượng mới = số lượng hiện tại trừ đi số lượng đã nhận trước và + cho số lượng nhận mới.
-                            item4.Accumlated_In_Qty = item4.Accumlated_In_Qty - item2.Received_Qty + item2.Received_Qty_Edit;
+                            item4.Accumlated_In_Qty = item4.Accumlated_In_Qty + item2.Received_Qty_Edit;
                         }
                     }
                 }

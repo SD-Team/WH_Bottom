@@ -29,7 +29,7 @@ export class RecordEditComponent implements OnInit {
     this.materialEditModelsConst.forEach(element1 => {
       this.materialEditModels.forEach(element2 => {
         if (element2.order_Size.trim() === element1.order_Size.trim()) {
-          if (element2.received_Qty_Edit > (element1.delivery_Qty + element1.received_Qty)) {
+          if (element1.purchase_Qty < (element2.received_Qty)) {
             checkOnEdit = checkOnEdit + 1;
             let errorMessage = 'Input of Order_Size ' + element1.order_Size.toString() + ' has errors';
             this.altertifyService.error(errorMessage);
@@ -38,6 +38,7 @@ export class RecordEditComponent implements OnInit {
       });
     });
     if (checkOnEdit < 1) {
+      // console.log(this.materialEditModels);
       this.materialService.editDetail(this.materialEditModels).subscribe(res => {
         this.altertifyService.success('Edit data successed!');
         this.router.navigate(['receipt/record/']);
@@ -52,6 +53,7 @@ export class RecordEditComponent implements OnInit {
     }
     this.materialService.editMaterial(this.receiveNoMain).subscribe(res => {
         this.materialEditModels = res;
+        console.log(this.materialEditModels);
         // Mảng materialEditModelsConst sẽ không thay đổi
         this.materialEditModelsConst = JSON.parse(JSON.stringify(res));
     });
@@ -69,11 +71,21 @@ export class RecordEditComponent implements OnInit {
     }
     // Giá trị lấy được khi nhập input.
     let valueInput = (<HTMLInputElement>document.getElementById(thisInput.toString())).value;
-    this.materialEditModels.forEach(element => {
-      if (element.order_Size.trim() === thisInput.trim()) {
-        element.received_Qty_Edit = parseFloat(valueInput.toString());
-      }
-    });
+    if(valueInput === '') {
+      this.altertifyService.error('Please enter number');
+    } else {
+      this.materialEditModels.forEach(element => {
+        if (element.order_Size.trim() === thisInput.trim()) {
+          element.received_Qty_Edit = parseFloat(valueInput.toString());
+          element.received_Qty = element.accumated_Qty + parseFloat(valueInput.toString());
+          if (element.received_Qty > element.purchase_Qty) {
+            element.received_Qty_Edit = element.delivery_Qty_Const;
+            element.delivery_Qty = element.delivery_Qty_Const;
+            (<HTMLInputElement>document.getElementById(thisInput.toString())).value = element.delivery_Qty_Const.toString();
+          }
+        }
+      });
+    }
   }
   backForm() {
     this.router.navigate(['receipt/record']);

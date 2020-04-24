@@ -51,8 +51,8 @@ export class RecordFormComponent implements OnInit {
     })
   }
   changeInput(e) {
-    debugger
     console.log(this.orderSizeByBatch);
+    console.log(this.materialMerging);
     let indexOf = this.listOrderSizeInputChange.indexOf(e.toString());
     if (indexOf!== -1) {
       this.listOrderSizeInputChange.splice(indexOf,1);
@@ -88,6 +88,7 @@ export class RecordFormComponent implements OnInit {
         break;
       }
     }
+    debugger
     // Mảng giá trị Purchase_Qty tương ứng với Order_Size đó.
     let listInput = [];
     this.orderSizeByBatch.forEach(element => {
@@ -95,6 +96,11 @@ export class RecordFormComponent implements OnInit {
     });
     // Giá trị lấy được khi nhập input.
     let valueInput = (<HTMLInputElement>document.getElementById(thisInput.toString())).value;
+    let materialMergingItem = this.materialMerging[columnInput];
+    if (parseFloat(valueInput) > materialMergingItem.purchase_Qty) {
+      (<HTMLInputElement>document.getElementById(thisInput.toString())).value = materialMergingItem.purchase_Qty.toString();
+      valueInput = materialMergingItem.purchase_Qty.toString();
+    }
     let n;
     for (let x = 0; x < listInput.length; x++) {
       debugger
