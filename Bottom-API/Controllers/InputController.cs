@@ -48,7 +48,7 @@ namespace Bottom_API.Controllers
             throw new Exception("Creating the rack location failed on save");
         }
 
-        [HttpPut("submit", Name = "SubmitInput")]
+        [HttpPost("submit", Name = "SubmitInput")]
         public async Task<IActionResult> SubmitInput(List<string> list)
         {
             if (await _service.SubmitInput(list))
