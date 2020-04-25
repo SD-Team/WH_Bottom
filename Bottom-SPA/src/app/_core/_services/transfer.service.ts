@@ -8,6 +8,7 @@ import { TransferHistoryParam } from '../_viewmodels/transfer-history-param';
 import { PaginatedResult } from '../_models/pagination';
 import { map } from 'rxjs/operators';
 import { TransferDetail } from '../_models/transfer-detail';
+import { FunctionUtility } from '../_utility/function-utility';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +17,11 @@ export class TransferService {
   baseUrl = environment.apiUrl;
   printTransfer = new BehaviorSubject<Array<TransferM>>([]);
   currentTransfer = this.printTransfer.asObservable();
+  paramSearchSource = new BehaviorSubject<any>({fromDate: this.functionUtility.getToDay(), toDate: this.functionUtility.getToDay(), status: '', currentPage: 1});
+  currentParamSearch = this.paramSearchSource.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    private functionUtility: FunctionUtility,) { }
 
   getMainByQrCodeId(qrCodeId: string) {
     return this.http.get<TransferM>(this.baseUrl + 'TransferLocation/' + qrCodeId, {});
@@ -29,6 +33,10 @@ export class TransferService {
 
   changePrintTransfer(transfer: Array<TransferM>) {
     this.printTransfer.next(transfer);
+  }
+
+  changeParamSearch(paramSearch: any) {
+    this.paramSearchSource.next(paramSearch);
   }
 
   search(pageNumber?, pageSize?, transferHistoryParam?: TransferHistoryParam) {

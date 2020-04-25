@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BsDatepickerConfig } from 'ngx-bootstrap';
 import { Router, RouterStateSnapshot } from '@angular/router';
 
@@ -14,7 +14,7 @@ import { Pagination } from '../../../_core/_models/pagination';
   templateUrl: './transfer-history.component.html',
   styleUrls: ['./transfer-history.component.scss'],
 })
-export class TransferHistoryComponent implements OnInit {
+export class TransferHistoryComponent implements OnInit, OnDestroy {
   bsConfig: Partial<BsDatepickerConfig>;
   fromDate: string;
   toDate: string;
@@ -33,7 +33,18 @@ export class TransferHistoryComponent implements OnInit {
     private router: Router,
     private alertify: AlertifyService,
     private functionUtility: FunctionUtility
-  ) {}
+  ) { }
+  ngOnDestroy(): void {
+    const t1 = this.functionUtility.getDateFormat(new Date(this.fromDate));
+    const t2 = this.functionUtility.getDateFormat(new Date(this.toDate));
+    const paramSearch = {
+      currentPage: this.pagination.currentPage,
+      fromDate: t1,
+      toDate: t2,
+      status: this.status
+    };
+    this.transferService.changeParamSearch(paramSearch);
+  }
 
   ngOnInit() {
     this.bsConfig = Object.assign(
@@ -44,9 +55,13 @@ export class TransferHistoryComponent implements OnInit {
         dateInputFormat: 'YYYY/MM/DD',
       }
     );
-    const timeNow = this.functionUtility.getToDay();
-    this.fromDate = timeNow;
-    this.toDate = timeNow;
+    this.transferService.currentParamSearch.subscribe(res => {
+      this.fromDate = res.fromDate;
+      this.toDate = res.toDate;
+      this.status = res.status;
+      this.pagination.currentPage = res.currentPage;
+    });
+    this.getData();
   }
 
   getData() {
@@ -61,12 +76,16 @@ export class TransferHistoryComponent implements OnInit {
       this.pagination = res.pagination;
     });
   }
+
   pageChanged(event: any): void {
     this.pagination.currentPage = event.page;
     this.getData();
   }
 
-
+  search() {
+    this.pagination.currentPage = 1;
+    this.getData();
+  }
 
   // Mấy đoạn ở dưới là để in mà giờ chưa dùng tới để khi nào xài thì nhớ là mấy hàm ở dưới
   checkEle(e) {
