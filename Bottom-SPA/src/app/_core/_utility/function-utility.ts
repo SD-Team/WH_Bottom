@@ -23,6 +23,16 @@ export class FunctionUtility {
     }
 
     /**
+     *Trả ra ngày với tham số truyền vào là ngày muốn format, chỉ lấy năm tháng ngày: yyyy/MM/dd
+     */
+    getDateFormat(day: Date) {
+        const dateFormat = day.getFullYear().toString() +
+            '/' + (day.getMonth() + 1).toString() +
+            '/' + day.getDate().toString();
+        return dateFormat;
+    }
+
+    /**
      *Trả ra transferNo mới theo yêu cầu: TB(ngày thực hiện yyyymmdd) 3 mã số random number. (VD: TB20200310001)
      */
     getTransferNo() {
