@@ -68,5 +68,4 @@ export class QrcodeAgainComponent implements OnInit {
     this.pagination.currentPage = event.page;
     this.search();
   }
-  back() {}
 }

@@ -305,7 +305,7 @@ namespace Bottom_API._Services.Services
 
         public async Task<PagedList<Transaction_Main_Dto>> FilterQrCodeAgain(PaginationParams param, FilterQrCodeAgainParam filterParam)
         {
-            var lists =  _repoTransactionMain.GetAll().Where(x => x.Missing_No != "")
+            var lists =  _repoTransactionMain.GetAll().Where(x => x.Missing_No != string.Empty && x.Missing_No != null)
                 .ProjectTo<Transaction_Main_Dto>(_configMapper);
             if (filterParam.MO_No != null && filterParam.MO_No != "") {
                 lists = lists.Where(x => x.MO_No.Trim() == filterParam.MO_No.Trim());
