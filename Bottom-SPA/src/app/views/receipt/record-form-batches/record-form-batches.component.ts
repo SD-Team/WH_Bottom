@@ -28,6 +28,9 @@ export class RecordFormBatchesComponent implements OnInit {
   ngOnInit() {
     this.materialService.currentMaterial.subscribe(res => this.materialModel = res);
     this.getDataLoadTable();
+    if(this.materialModel === undefined || this.materialModel === null) {
+      this.router.navigate(['/receipt/main']);
+    }
   }
   changeForm() {
     if (this.type === 'No Batch') {

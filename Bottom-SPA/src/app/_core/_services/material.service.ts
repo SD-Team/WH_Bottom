@@ -19,12 +19,15 @@ export class MaterialService {
   baseUrl = environment.apiUrl;
   materialModel: MaterialModel;
   receiveNoMainItem: ReceiveNoMain;
+  materialSearch: MaterialSearch;
   materialSource = new BehaviorSubject<MaterialModel>(this.materialModel);
   receiveNoMainSource = new BehaviorSubject<ReceiveNoMain>(this.receiveNoMainItem);
   receiveNoDetailSource = new BehaviorSubject<ReceiveNoDetail[]>([]);
+  materialSearchSource = new BehaviorSubject<MaterialSearch>(this.materialSearch);
   currentMaterial = this.materialSource.asObservable();
   currentReceiveNoDetail = this.receiveNoDetailSource.asObservable();
   currentReceiveNoMainItem = this.receiveNoMainSource.asObservable();
+  currentMaterialSearch = this.materialSearchSource.asObservable();
   constructor(private http: HttpClient) { }
   // search(page?, itemsPerPage?, materialSearch?: MaterialSearch): Observable<PaginatedResult<MaterialModel[]>> {
   //   const paginatedResult: PaginatedResult<MaterialModel[]> = new PaginatedResult<MaterialModel[]>();
@@ -56,6 +59,9 @@ export class MaterialService {
   }
   changeReceiveNoDetail(receiveNoDetails: ReceiveNoDetail[]) {
     this.receiveNoDetailSource.next(receiveNoDetails);
+  }
+  changeMaterialSearch(param: MaterialSearch) {
+    this.materialSearchSource.next(param);
   }
   searchByPurchase(model: MaterialModel) {
     return this.http.post<any>(this.baseUrl + 'receiving/searchTable/', model);

@@ -32,6 +32,9 @@ export class RecordFormComponent implements OnInit {
   ngOnInit() {
     this.materialService.currentMaterial.subscribe(res => this.materialModel = res);
     this.getDataLoadTable();
+    if (this.orderSizeByBatch.length === 0 && this.materialMerging.length === 0) {
+      this.router.navigate(['/receipt/main']);
+    }
   }
   changeForm() {
     if (this.type === 'Batches') {

@@ -4,7 +4,7 @@ import { InputService } from '../../../_core/_services/input.service';
 import { TransactionMain } from '../../../_core/_models/transaction-main';
 import { Pagination, PaginatedResult } from '../../../_core/_models/pagination';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
-import { AlertModule } from 'ngx-bootstrap/alert';
+import { FilterQrCodeAgainParam } from '../../../_core/_viewmodels/qrcode-again-search';
 @Component({
   selector: 'app-qrcode-again',
   templateUrl: './qrcode-again.component.html',
@@ -16,7 +16,8 @@ export class QrcodeAgainComponent implements OnInit {
   material_ID: string;
   material_Name: string;
   pagination: Pagination;
-  transactionMainList:  TransactionMain[];
+  qrCodeAgainParam: FilterQrCodeAgainParam;
+  transactionMainList:  TransactionMain[] = [];
   alerts: any = [
     {
       type: 'success',
@@ -41,14 +42,42 @@ export class QrcodeAgainComponent implements OnInit {
       totalItems: 0,
       totalPages: 0
     };
+    this.inputService.currentQrCodeAgainParam.subscribe(res => this.qrCodeAgainParam = res);
+    if(this.qrCodeAgainParam === undefined) {
+      this.getDataLoadPage();
+    } else {
+      this.mO_No = this.qrCodeAgainParam.mO_No;
+      this.rack_Location = this.qrCodeAgainParam.rack_Location;
+      this.material_ID = this.qrCodeAgainParam.material_ID;
+      this.findMaterialName();
+      this.search();
+    }
+  }
+  getDataLoadPage() {
+    this.qrCodeAgainParam = {
+      mO_No: '',
+      rack_Location: '',
+      material_ID: ''
+    }
+    this.inputService.qrCodeAgainFilter(this.pagination.currentPage , this.pagination.itemsPerPage,this.qrCodeAgainParam)
+    .subscribe((res: PaginatedResult<TransactionMain[]>) => {
+      this.transactionMainList = res.result;
+      this.pagination = res.pagination;
+      if(this.transactionMainList.length === 0) {
+        this.alertifyService.error('No Data!');
+      }
+    }, error => {
+      this.alertifyService.error(error);
+    });
   }
   search(){
-    let filterparam = {
+    this.qrCodeAgainParam = {
       mO_No: this.mO_No,
       rack_Location: this.rack_Location,
       material_ID: this.material_ID
     }
-    this.inputService.qrCodeAgainFilter(this.pagination.currentPage , this.pagination.itemsPerPage,filterparam)
+    this.inputService.changeCodeAgainParam(this.qrCodeAgainParam);
+    this.inputService.qrCodeAgainFilter(this.pagination.currentPage , this.pagination.itemsPerPage,this.qrCodeAgainParam)
     .subscribe((res: PaginatedResult<TransactionMain[]>) => {
       this.transactionMainList = res.result;
       this.pagination = res.pagination;

@@ -6,7 +6,7 @@ import { PackingListService } from '../../../_core/_services/packing-list.servic
 import { PackingList } from '../../../_core/_models/packingList';
 import { Pagination, PaginatedResult } from '../../../_core/_models/pagination';
 import { QrcodeMainService } from '../../../_core/_services/qrcode-main.service';
-import { AlertModule } from 'ngx-bootstrap/alert';
+import { PackingSearch } from '../../../_core/_viewmodels/packing-search';
 @Component({
   selector: 'app-qr-main',
   templateUrl: './qr-main.component.html',
@@ -20,6 +20,7 @@ export class QrMainComponent implements OnInit {
   fromDate = new Date();
   toDate = new Date();
   clickSearch: boolean = false;
+  packingSearchParam: PackingSearch;
   packingLists: PackingList[];
   supplier_ID: string;
   mO_No: string;
@@ -58,6 +59,7 @@ export class QrMainComponent implements OnInit {
     this.time_start = timeNow;
     this.time_end = timeNow;
     this.bsConfig = Object.assign({}, { containerClass: 'theme-blue' });
+    this.getDataLoadPage();
   }
   changeSupplier() {
     if (this.supplier_ID !== undefined && this.supplier_ID !== '') {
@@ -70,19 +72,39 @@ export class QrMainComponent implements OnInit {
       });
     }
   }
+  getDataLoadPage() {
+    let form_date = new Date(this.time_start).toLocaleDateString();
+    let to_date = new Date(this.time_end).toLocaleDateString();
+    this.packingSearchParam = {
+      supplier_ID: '',
+      mO_No: '',
+      from_Date: form_date,
+      to_Date: to_date
+    };
+    this.packingListService.search(this.pagination.currentPage , this.pagination.itemsPerPage, this.packingSearchParam)
+    .subscribe((res: PaginatedResult<PackingList[]>) => {
+      this.packingLists = res.result;
+      this.pagination = res.pagination;
+      if(this.packingLists.length === 0) {
+        this.alertifyService.error('No Data!');
+      }
+    }, error => {
+      this.alertifyService.error(error);
+    });
+  }
   search() {
     if (this.time_start === undefined || this.time_end === undefined) {
       this.alertifyService.error('Please option start and end time');
     } else {
       let form_date = new Date(this.time_start).toLocaleDateString();
       let to_date = new Date(this.time_end).toLocaleDateString();
-      let object = {
+      this.packingSearchParam = {
         supplier_ID: this.supplier_ID,
         mO_No: this.mO_No,
         from_Date: form_date,
         to_Date: to_date
       };
-      this.packingListService.search(this.pagination.currentPage , this.pagination.itemsPerPage, object)
+      this.packingListService.search(this.pagination.currentPage , this.pagination.itemsPerPage, this.packingSearchParam)
       .subscribe((res: PaginatedResult<PackingList[]>) => {
         this.packingLists = res.result;
         this.pagination = res.pagination;
