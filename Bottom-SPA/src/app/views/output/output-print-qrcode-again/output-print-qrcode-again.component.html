@@ -15,6 +15,12 @@
         <div class="card-body">
           <div class="container div-hidden print-all" id="wrap-print">
             <div>
+              <div class="row">
+                <div class="col text-center">
+                  <h1>Transaction Form</h1>
+                </div>
+              </div>
+              <hr>
               <div class="row text-center">
                 <div class="col-4">
                   <ngx-qrcode
@@ -85,12 +91,12 @@
                       {{ item.trans_Qty }}
                     </td>
                   </tr>
-                  <tr>
+                  <!-- <tr>
                     <td>Bal</td>
                     <td *ngFor="let item of trasnferDetail">
                       {{ item.untransac_Qty }}
                     </td>
-                  </tr>
+                  </tr> -->
                 </table>
               </div>
               <hr />

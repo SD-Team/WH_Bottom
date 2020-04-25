@@ -90,7 +90,7 @@ export class OutputProcessComponent implements OnInit {
         );
         this.result2 = results;
 
-        // chạy từng phần tử trong result1 và result2 để so sánh phần tử nào nhỏ hơn thì lấy phần tử đó gán vào result3: 
+        // chạy từng phần tử trong result1 và result2 để so sánh phần tử nào nhỏ hơn thì lấy phần tử đó gán vào result3:
         // result1 và result2 có cùng độ dài và result3 cũng bằng độ dài
         for (let i = 0; i < this.result1.length; i++) {
           this.result3.push({

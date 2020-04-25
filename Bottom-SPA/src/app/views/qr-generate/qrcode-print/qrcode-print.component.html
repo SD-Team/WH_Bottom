@@ -15,6 +15,12 @@
         <div class="card-body">
           <div class="container div-hidden print-all" id="wrap-print">
             <div>
+              <div class="row">
+                <div class="col text-center">
+                  <h1>Transaction Form</h1>
+                </div>
+              </div>
+              <hr>
               <div class="row text-center">
                 <div class="col-4">
                   <ngx-qrcode
@@ -85,12 +91,12 @@
                       {{ item.trans_Qty }}
                     </td>
                   </tr>
-                  <tr>
+                  <!-- <tr>
                     <td>Bal</td>
                     <td *ngFor="let item of trasnferDetail">
                       {{ item.untransac_Qty }}
                     </td>
-                  </tr>
+                  </tr> -->
                 </table>
               </div>
               <hr />
@@ -109,38 +115,16 @@
               <br />
               <div class="row text-center">
                 <div class="col-3">
-                  Suggested Location:
+                  Location:
                 </div>
                 <div class="col-3">
-                  A-01-02
+                  {{ location }}
                   <ngx-qrcode
                     id="qrCodeImage"
                     [qrc-element-type]="elementType"
                     qrc-class="qr-height"
                     qrc-version="7"
-                    qrc-value="A-01-02"
-                  >
-                  </ngx-qrcode>
-                </div>
-                <div class="col-3">
-                  A-02-02
-                  <ngx-qrcode
-                    id="qrCodeImage"
-                    [qrc-element-type]="elementType"
-                    qrc-class="qr-height"
-                    qrc-version="7"
-                    qrc-value="A-02-02"
-                  >
-                  </ngx-qrcode>
-                </div>
-                <div class="col-3">
-                  B-01-02
-                  <ngx-qrcode
-                    id="qrCodeImage"
-                    [qrc-element-type]="elementType"
-                    qrc-class="qr-height"
-                    qrc-version="7"
-                    qrc-value="B-01-02"
+                    [qrc-value]="location"
                   >
                   </ngx-qrcode>
                 </div>
