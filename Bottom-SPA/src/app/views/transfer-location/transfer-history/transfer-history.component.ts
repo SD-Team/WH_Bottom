@@ -47,6 +47,7 @@ export class TransferHistoryComponent implements OnInit {
     const timeNow = this.functionUtility.getToDay();
     this.fromDate = timeNow;
     this.toDate = timeNow;
+    this.getData();
   }
 
   getData() {

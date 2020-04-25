@@ -148,6 +148,15 @@
                   </td>
                 </tr>
               </tbody>
+              <tbody *ngIf="transfers!== undefined && transfers.length === 0">
+                <tr>
+                  <td colspan="9">
+                    <alert class="text-center" type='danger'>
+                      <strong>No Data matching!</strong> 
+                    </alert>
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </div>
           <div class="d-flex" *ngIf="pagination.totalPages > 1">

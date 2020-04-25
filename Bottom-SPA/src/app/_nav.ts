@@ -28,36 +28,36 @@ export const navItems: INavData[] = [
       {
         name: "Print",
         url: "/qr/body",
-        icon: "icon-arrow-right-circle",
+        icon: "icon-printer",
       },
     ]
   },
   {
-    name: "Input/Output",
+    name: "Input",
     url: "io",
     icon: "icon-loop",
     children: [
       {
-        name: "Input",
+        name: "Main",
         url: "/input/main",
-        icon: "icon-arrow-left-circle",
-      },
-      {
-        name: "Output",
-        url: "/output/main",
         icon: "icon-arrow-right-circle",
       },
       {
-        name: "QrCode Again",
+        name: "Print Again",
         url: "/input/qrcode-again",
-        icon: "icon-arrow-right-circle",
+        icon: "icon-printer",
       },
     ],
   },
   {
-    name: "In/Out History",
+    name: "Output",
+    url: "/output/main",
+    icon: "icon-loop",
+  },
+  {
+    name: "History",
     url: "/io-history",
-    icon: "icon-book-open",
+    icon: "icon-speech",
   },
   {
     name: "Rack Location",
@@ -72,12 +72,12 @@ export const navItems: INavData[] = [
       {
         name: "Main",
         url: "/transfer/main",
-        icon: "icon-arrow-left-circle",
+        icon: "icon-arrow-right-circle",
       },
       {
         name: "History",
         url: "/transfer/history",
-        icon: "icon-arrow-left-circle",
+        icon: "icon-speech",
       },
     ],
   },

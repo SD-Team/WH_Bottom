@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { NgxPrintModule } from 'ngx-print';
-import { BsDatepickerModule, PaginationModule } from 'ngx-bootstrap';
+import { BsDatepickerModule, PaginationModule, AlertModule } from 'ngx-bootstrap';
 
 import { TransferMainComponent } from './transfer-main/transfer-main.component';
 import { TransferRoutingModule } from './transfer-routing.module';
@@ -19,7 +19,8 @@ import { TransferDetailComponent } from './transfer-detail/transfer-detail.compo
     NgxQRCodeModule,
     NgxPrintModule,
     BsDatepickerModule,
-    PaginationModule.forRoot()
+    PaginationModule.forRoot(),
+    AlertModule.forRoot()
   ],
   declarations: [
     TransferMainComponent,
