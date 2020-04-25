@@ -57,7 +57,7 @@ namespace Bottom_API._Services.Services
             if (qrCodeModel != null)
             {
                 var packingListModel = await _repoPackingList.GetByReceiveNo(qrCodeModel.Receive_No);
-                var listQrCodeDetails = await _repoQRCodeDetail.GetByQRCodeID(qrCodeID);
+                var listQrCodeDetails = await _repoQRCodeDetail.GetByQRCodeIDAndVersion(qrCodeID, qrCodeModel.QRCode_Version);
                 decimal? num = 0;
                 foreach (var item in listQrCodeDetails)
                 {
@@ -86,7 +86,7 @@ namespace Bottom_API._Services.Services
             if (qrCodeModel != null && qrCodeModel.Valid_Status == "Y")
             {
                 var packingListModel = await _repoPackingList.GetByReceiveNo(qrCodeModel.Receive_No);
-                var listQrCodeDetails = await _repoQRCodeDetail.GetByQRCodeID(qrCodeID);
+                var listQrCodeDetails = await _repoQRCodeDetail.GetByQRCodeIDAndVersion(qrCodeID, qrCodeModel.QRCode_Version);
                 decimal? num = 0;
                 List<DetailSize> listDetail = new List<DetailSize>();
                 foreach (var item in listQrCodeDetails)
@@ -116,7 +116,7 @@ namespace Bottom_API._Services.Services
         {
             var qrCodeModel = await _repoQRCodeMain.GetByQRCodeID(model.QrCode_Id);
             if(qrCodeModel != null && qrCodeModel.Valid_Status == "Y") {
-                var listQrCodeDetails = await _repoQRCodeDetail.GetByQRCodeID(qrCodeModel.QRCode_ID);
+                var listQrCodeDetails = await _repoQRCodeDetail.GetByQRCodeIDAndVersion(qrCodeModel.QRCode_ID, qrCodeModel.QRCode_Version);
                 Random ran = new Random();
                 int num = ran.Next(100, 999);
                 var packingListModel = await _repoPackingList.GetByReceiveNo(qrCodeModel.Receive_No);

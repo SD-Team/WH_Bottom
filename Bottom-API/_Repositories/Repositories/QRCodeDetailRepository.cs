@@ -15,9 +15,9 @@ namespace Bottom_API._Repositories.Repositories
             _context = context;
         }
 
-        public async Task<List<WMSB_QRCode_Detail>> GetByQRCodeID(object qrCodeID)
+        public async Task<List<WMSB_QRCode_Detail>> GetByQRCodeIDAndVersion(object qrCodeID, int version)
         {
-            var lists = await _context.WMSB_QRCode_Detail.Where(x => x.QRCode_ID == qrCodeID.ToString()).ToListAsync();
+            var lists = await _context.WMSB_QRCode_Detail.Where(x => x.QRCode_ID == qrCodeID.ToString() && x.QRCode_Version == version).ToListAsync();
             return lists;
         }
     }
