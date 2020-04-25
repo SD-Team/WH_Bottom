@@ -23,7 +23,7 @@ export class OutputMainComponent implements OnInit {
     private functionUtility: FunctionUtility,
     private router: Router,
     private qrCodeMainService: QrcodeMainService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.outputService.currentListOutputM.subscribe((res) => {
@@ -54,8 +54,8 @@ export class OutputMainComponent implements OnInit {
 
               // Group by materialsheetsize theo tool_Size rồi gán vào listmaterialsheetsize trong output service để dùng chung
               const groups = new Set(
-                  res.materialSheetSizes.map((item) => item.tool_Size)
-                ),
+                res.materialSheetSizes.map((item) => item.tool_Size)
+              ),
                 results = [];
               groups.forEach((g) =>
                 results.push({
@@ -119,8 +119,29 @@ export class OutputMainComponent implements OnInit {
         this.alertify.error(error);
       }
     );
+
+    // gán lại mấy giá trị dùng chung trên service thành giá trị mặc định ban đầu để ouput đơn khác không bị nhớ ouput cũ
     this.outputService.changeListMaterialSheetSize([]);
     this.outputService.changeFlagFinish(false);
     this.outputService.changeQrCodeId('');
+    const  outputM: OutputM = {
+      transacNo: '',
+      qrCodeId: '',
+      planNo: '',
+      supplierNo: '',
+      supplierName: '',
+      batch: '',
+      matId: '',
+      matName: '',
+      wh: '',
+      building: '',
+      area: '',
+      rackLocation: '',
+      inStockQty: 0,
+      transOutQty: 0,
+      remainingQty: 0,
+      pickupNo: ''
+    };
+    this.outputService.changeOutputM(outputM);
   }
 }

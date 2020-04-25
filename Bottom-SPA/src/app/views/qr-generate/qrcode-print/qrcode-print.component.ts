@@ -16,6 +16,7 @@ export class QrcodePrintComponent implements OnInit {
   qrCodePrint: any = [];
   trasnferDetail: TransferDetail[] = [];
   totalQty = 0;
+  location: string = '';
 
   constructor(private router: Router, private qrcodeMainService: QrcodeMainService, private route: ActivatedRoute) { }
 
@@ -42,6 +43,7 @@ export class QrcodePrintComponent implements OnInit {
     this.qrcodeMainService.printQrCode(this.qrCodeId, this.qrCodeVersion).subscribe(res => {
       this.qrCodePrint = res.packingListByQrCodeId;
       this.trasnferDetail = res.transactionDetailByQrCodeId;
+      this.location = res.rackLocation;
 
       this.totalQty = this.trasnferDetail.reduce((qty, i) => {
         return qty += i.qty;

@@ -12,143 +12,146 @@
                 </button>
             </div>
             <div class="card-body" id="wrap-print">
-                <div *ngFor="let item of packingPrint" class="row print-all">
-                    <div class="col-1">
+                <div *ngFor="let item of packingPrint" class="print-all">
+                    <div class="row">
+                        <div class="col-10" style="text-align: center;">
+                            <h4>Transaction Form</h4>
+                        </div>
                     </div>
-                    <div class="col-10">
-                        <div class="row">
-                            <div class="col-4">
-                                <div style="display: flex;">
-                                    <ngx-qrcode id="qrCodeImage" [qrc-element-type]="elementType" [qrc-value] = "item.qrCodeMainItem.qrCode_ID">
-                                    </ngx-qrcode>
-                                </div>
-                                <div>
-                                    <span>{{item.qrCodeMainItem.qrCode_ID}}</span>
-                                </div>
-                            </div>
-                            <div class="col-4 div-top1">
-                                <div style="height: 80%;">
-                                </div>
-                                <div style ="height: 20%;">
-                                    <span>{{ item.qrCodeMainItem.receive_Date | date: "MM/dd/yyyy" }}</span>
-                                </div>
-                            </div>
-                            <div class="col-4 div-top1">
-                                <div style="height: 80%;">
-                                </div>
-                                <div style ="height: 20%;">
-                                    <span >{{item.qrCodeMainItem.supplier_ID}} - {{item.qrCodeMainItem.supplier_Name}}</span>
-                                </div>
-                            </div>
+                    <hr style="width: 900px;">
+                    <div class="row">
+                        <div class="col-1">
                         </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-4">
-                                <span>{{item.qrCodeMainItem.mO_No}}</span>
-                                <span style="margin-left: 30px;">{{item.qrCodeMainItem.mO_Seq}}</span>
-                            </div>
-                            <div class="col-8">
-                                
-                                <span *ngIf="item.object1.totalQty !== undefined" style="margin-left: 100px;">{{ item.object1.totalQty }}</span>
-                            </div>
-                            <div class="col-4">
-                                <span>{{item.qrCodeMainItem.model_No}}</span>
-                                <span>{{item.qrCodeMainItem.model_Name}}</span>
-                            </div>
-                            <div class="col-8">
-                                <span>{{item.qrCodeMainItem.article}}</span>
-                            </div>
-                            <div class="col-4">
-                                <span>{{item.qrCodeMainItem.material_ID}}</span>
-                            </div>
-                            <div class="col-8">
-                                <span>{{item.qrCodeMainItem.material_Name}}</span>
-                            </div>
-                            <div class="col-4">
-            
-                            </div>
-                            <div class="col-4">
-                                
-                            </div>
-                            <div class="col-4">
-            
-                            </div>
-                            <div class="col-10">
-                                <table>
-                                    <tr>
-                                        <td>TSize</td>
-                                        <td *ngFor="let item1 of item.object1.packingListDetailModel">{{ item1.tool_Size}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Size</td>
-                                        <td *ngFor="let item1 of item.object1.packingListDetailModel">{{ item1.order_Size }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>PQty</td>
-                                        <td *ngFor="let item1 of item.object1.packingListDetailModel">{{ item1.purchase_Qty }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>RQty</td>
-                                        <td *ngFor="let item1 of item.object1.packingListDetailModel">{{ item1.received_Qty }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Bal</td>
-                                        <td *ngFor="let item1 of item.object1.packingListDetailModel">{{ item1.bal }}</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class="col-2">
-                                
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-4">
-                                <span>{{item.qrCodeMainItem.subcon_ID}}</span>
-                                <div>
-                                
+                        <div class="col-10">
+                            <div class="row">
+                                <div class="col-4">
+                                    <div style="display: flex;">
+                                        <ngx-qrcode id="qrCodeImage" [qrc-element-type]="elementType" [qrc-value] = "item.qrCodeMainItem.qrCode_ID">
+                                        </ngx-qrcode>
+                                    </div>
+                                    <div>
+                                        <span>{{item.qrCodeMainItem.qrCode_ID}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-4 div-top1">
+                                    <div style="height: 80%;">
+                                    </div>
+                                    <div style ="height: 20%;">
+                                        <span>{{ item.qrCodeMainItem.receive_Date | date: "MM/dd/yyyy" }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-4 div-top1">
+                                    <div style="height: 80%;">
+                                    </div>
+                                    <div style ="height: 20%;">
+                                        <span >{{item.qrCodeMainItem.supplier_ID}} - {{item.qrCodeMainItem.supplier_Name}}</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-4">
-                                <span>{{item.qrCodeMainItem.subcon_Name}}</span>
-                                <div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-4">
+                                    <span>{{item.qrCodeMainItem.mO_No}}</span>
+                                    <span style="margin-left: 30px;">{{item.qrCodeMainItem.mO_Seq}}</span>
+                                </div>
+                                <div class="col-8">
+                                    
+                                    <span *ngIf="item.object1.totalQty !== undefined" style="margin-left: 100px;">{{ item.object1.totalQty }}</span>
+                                </div>
+                                <div class="col-4">
+                                    <span>{{item.qrCodeMainItem.model_No}}</span>
+                                    <span>{{item.qrCodeMainItem.model_Name}}</span>
+                                </div>
+                                <div class="col-8">
+                                    <span>{{item.qrCodeMainItem.article}}</span>
+                                </div>
+                                <div class="col-4">
+                                    <span>{{item.qrCodeMainItem.material_ID}}</span>
+                                </div>
+                                <div class="col-8">
+                                    <span>{{item.qrCodeMainItem.material_Name}}</span>
+                                </div>
+                                <div class="col-4">
+                
+                                </div>
+                                <div class="col-4">
+                                    
+                                </div>
+                                <div class="col-4">
+                
+                                </div>
+                                <div class="col-10">
+                                    <table>
+                                        <tr>
+                                            <td>TSize</td>
+                                            <td *ngFor="let item1 of item.object1.packingListDetailModel">{{ item1.tool_Size}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Size</td>
+                                            <td *ngFor="let item1 of item.object1.packingListDetailModel">{{ item1.order_Size }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>PQty</td>
+                                            <td *ngFor="let item1 of item.object1.packingListDetailModel">{{ item1.purchase_Qty }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>RQty</td>
+                                            <td *ngFor="let item1 of item.object1.packingListDetailModel">{{ item1.received_Qty }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Bal</td>
+                                            <td *ngFor="let item1 of item.object1.packingListDetailModel">{{ item1.bal }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-2">
                                     
                                 </div>
                             </div>
-                            <div class="col-4">
-                                <span>{{item.qrCodeMainItem.t3_Supplier}} - {{item.qrCodeMainItem.t3_Supplier_Name}}</span>
-                                <div>
-                                
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-3">
-                                <span>Suggested Location</span>
-                                <div>
-                                    <span class="text-red">Rack Location</span>
-                                </div>
-                            </div>
-                                <div 
-                                *ngFor="let suggesteditem of item.object1.suggestedReturn"
-                                class="col-3">
-                                    <span><i class="fa fa-square-o fa-lg"></i>{{suggesteditem.rack_Location}}( {{suggesteditem.instock_Qty}})</span>
+                            <hr>
+                            <div class="row">
+                                <div class="col-4">
+                                    <span>{{item.qrCodeMainItem.subcon_ID}}</span>
                                     <div>
-                                        <ngx-qrcode id="qrCodeImage" [qrc-element-type]="elementType" [qrc-value] = "suggesteditem.rack_Location">
-                                        </ngx-qrcode>
+                                    
                                     </div>
                                 </div>
+                                <div class="col-4">
+                                    <span>{{item.qrCodeMainItem.subcon_Name}}</span>
+                                    <div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <span>{{item.qrCodeMainItem.t3_Supplier}} - {{item.qrCodeMainItem.t3_Supplier_Name}}</span>
+                                    <div>
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-3">
+                                    <span>Suggested Location</span>
+                                    <div>
+                                        <span class="text-red">Rack Location</span>
+                                    </div>
+                                </div>
+                                    <div 
+                                    *ngFor="let suggesteditem of item.object1.suggestedReturn"
+                                    class="col-3">
+                                        <span><i class="fa fa-square-o fa-lg" style="margin-right: 2px;"></i>{{suggesteditem.rack_Location}}( {{suggesteditem.instock_Qty}})</span>
+                                        <div>
+                                            <ngx-qrcode id="qrCodeImage" [qrc-element-type]="elementType" [qrc-value] = "suggesteditem.rack_Location">
+                                            </ngx-qrcode>
+                                        </div>
+                                    </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-1">
+                        <div class="col-1">
+                        </div>
                     </div>
                 </div>
             </div>
-            <!-- <div class="card-footer">
-                <button type="button" class="btn btn-primary" [useExistingCss]="true"  printSectionId="wrap-print" ngxPrint>
-                <i class="fa fa-print"></i> Print
-                </button>
-            </div> -->
         </div>
     </div>
 </div>
