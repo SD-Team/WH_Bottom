@@ -197,7 +197,7 @@ namespace Bottom_API._Services.Services
         {
             var materialMissingModel = await _repoMaterialMissing.FindAll(x => x.Missing_No.Trim() == missingNo.Trim()).ProjectTo<Material_Dto>(_configMapper).FirstOrDefaultAsync();
             var transactionMainModel = _repoTransactionMain.FindSingle(x => x.Missing_No.Trim() == missingNo.Trim() && x.Transac_Type.Trim() == "I");
-            var transactionDetailByMissingNo = await _repoTransactionDetail.FindAll(x => x.Transac_No.Trim() == transactionMainModel.Transac_No.Trim()).ProjectTo<TransferLocationDetail_Dto>(_configMapper).ToListAsync();
+            var transactionDetailByMissingNo = await _repoTransactionDetail.FindAll(x => x.Transac_No.Trim() == transactionMainModel.Transac_No.Trim()).ProjectTo<TransferLocationDetail_Dto>(_configMapper).OrderBy(x => x.Tool_Size).ToListAsync();
 
             // Lấy ra những thuộc tính cần in
             MissingPrint_Dto result = new MissingPrint_Dto();
