@@ -93,9 +93,6 @@ export class QrBodyComponent implements OnInit {
     .subscribe((res: PaginatedResult<QRCodeMainModel[]>) => {
       this.listQrCodeMainModel = res.result;
       this.pagination = res.pagination;
-      if(this.listQrCodeMainModel.length === 0) {
-        this.alertifyService.error('No Data!');
-      }
     }, error => {
       this.alertifyService.error(error);
     });

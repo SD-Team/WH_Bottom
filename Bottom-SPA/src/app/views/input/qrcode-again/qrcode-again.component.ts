@@ -63,9 +63,6 @@ export class QrcodeAgainComponent implements OnInit {
     .subscribe((res: PaginatedResult<TransactionMain[]>) => {
       this.transactionMainList = res.result;
       this.pagination = res.pagination;
-      if(this.transactionMainList.length === 0) {
-        this.alertifyService.error('No Data!');
-      }
     }, error => {
       this.alertifyService.error(error);
     });
