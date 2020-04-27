@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { PackingSearch } from '../_viewmodels/packing-search';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { PackingList } from '../_models/packingList';
 import { PaginatedResult } from '../_models/pagination';
 import { map } from 'rxjs/operators';
@@ -12,7 +12,7 @@ import { map } from 'rxjs/operators';
 })
 export class PackingListService {
     baseUrl = environment.apiUrl + 'PackingList/';
-  constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) { }
     search(page?, itemsPerPage?, packingSearch?: PackingSearch): Observable<PaginatedResult<PackingList[]>> {
       const paginatedResult: PaginatedResult<PackingList[]> = new PaginatedResult<PackingList[]>();
       let params = new HttpParams();
@@ -31,8 +31,8 @@ export class PackingListService {
           return paginatedResult;
         })
       );
-  }
+    }
     findBySupplier(supplier: any): Observable<PackingList> {
-      return this.http.get<any>(this.baseUrl + 'findBySupplier/' + supplier, {});
+        return this.http.get<any>(this.baseUrl + 'findBySupplier/' + supplier, {});
     }
   }

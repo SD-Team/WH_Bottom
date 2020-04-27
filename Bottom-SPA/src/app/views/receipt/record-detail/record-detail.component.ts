@@ -15,6 +15,9 @@ export class RecordDetailComponent implements OnInit {
 
   ngOnInit() {
     this.materialService.currentReceiveNoDetail.subscribe(res => this.receiveDetail = res );
+    if (this.receiveDetail.length === 0) {
+      this.router.navigate(['/receipt/main']);
+    }
   }
   backForm() {
     this.router.navigate(['receipt/record/']);

@@ -78,7 +78,16 @@
                         <th>QRCode</th>
                     </tr>
                     </thead>
-                    <tbody >
+                    <tbody *ngIf="listQrCodeMainModel.length === 0">
+                        <tr>
+                          <td colspan="8">
+                            <alert class="text-center" type="danger">
+                              <strong>No Data Matching!</strong>
+                            </alert>
+                          </td>
+                        </tr>
+                      </tbody>
+                    <tbody *ngIf="listQrCodeMainModel.length > 0">
                         <ng-container *ngFor="let item of listQrCodeMainModel; let i = index">
                         <tr>
                             <td class="text-center">
@@ -103,7 +112,7 @@
                             </th>
                         </tr>
                     </ng-container>
-                </tbody>
+                    </tbody>
                 </table>
                 <div *ngIf="listQrCodeMainModel.length > 0" class="d-flex">
                     <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [(ngModel)]="pagination.currentPage"

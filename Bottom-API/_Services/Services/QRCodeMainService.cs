@@ -118,7 +118,7 @@ namespace Bottom_API._Services.Services
                                         MO_Seq = y.MO_Seq,
                                         Material_ID = y.Material_ID,
                                         Material_Name = y.Material_Name
-                                                    }).OrderByDescending(x => x.Receive_Date);
+                                                    }).Distinct().OrderByDescending(x => x.Receive_Date);
             // var listQrCodeModel = listQrCodeMain
             //     .Join(listPackingList, x => x.Receive_No.Trim(), y=> y.Receive_No.Trim(), (x,y) => new QRCodeMainViewModel
             //     {

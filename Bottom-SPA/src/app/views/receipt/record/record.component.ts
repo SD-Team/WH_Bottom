@@ -22,7 +22,6 @@ export class RecordComponent implements OnInit {
 
   ngOnInit() {
     this.materialService.currentMaterial.subscribe(materialModel => this.materialModel = materialModel);
-    // console.log(this.materialModel);
     if (this.materialModel !== undefined) {
       this.materialService.statusPurchase(this.materialModel).subscribe(res => {
         if(res.status === 'no') {
@@ -34,6 +33,9 @@ export class RecordComponent implements OnInit {
       })
     }
     this.getLoadTable();
+    if (this.materialModel === undefined || this.materialModel === null) {
+      this.router.navigate(['/receipt/main']);
+    }
   }
   getLoadTable() {
     this.materialService.receiveNoMain(this.materialModel).subscribe(res => {

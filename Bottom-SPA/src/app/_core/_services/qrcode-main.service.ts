@@ -16,6 +16,9 @@ export class QrcodeMainService {
 constructor(private http: HttpClient) { }
   qrCodeMainListSource = new BehaviorSubject<QRCodeMainModel[]>([]);
   currentQrCodeMain = this.qrCodeMainListSource.asObservable();
+  qrCodeMainSearch: QRCodeMainSearch;
+  qrCodeMainSearchSource = new BehaviorSubject<QRCodeMainSearch>(this.qrCodeMainSearch);
+  currentQrCodeMainSearch = this.qrCodeMainSearchSource.asObservable();
   baseUrl = environment.apiUrl;
   generateQrCode(listData: string[]) {
     return this.http.post<any>(this.baseUrl + 'qRCodeMain/', listData);
@@ -43,7 +46,9 @@ constructor(private http: HttpClient) { }
   changeQrCodeMainList(qrCodeMainList: QRCodeMainModel[]) {
     this.qrCodeMainListSource.next(qrCodeMainList);
   }
-
+  changeQrCodeMainSearch(param: QRCodeMainSearch) {
+    this.qrCodeMainSearchSource.next(param);
+  }
   printQrCode(qrCodeId: string, qrCodeVersion: number) {
     return this.http.get<QrcodePrint>(this.baseUrl + 'QRCodeMain/printqrcode/' + qrCodeId + '/version/' + qrCodeVersion, {});
   }

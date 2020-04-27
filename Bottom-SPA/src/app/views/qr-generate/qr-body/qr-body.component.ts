@@ -10,6 +10,7 @@ import { PackingListDetailModel } from '../../../_core/_viewmodels/packing-list-
 import { PackingPrintAll } from '../../../_core/_viewmodels/packing-print-all';
 declare var $: any;
 import * as _ from 'lodash';
+import { QRCodeMainSearch } from '../../../_core/_viewmodels/qrcode-main-search';
 @Component({
   selector: 'app-qr-body',
   templateUrl: './qr-body.component.html',
@@ -27,9 +28,24 @@ export class QrBodyComponent implements OnInit {
   mO_No: string;
   qrCodeMainItem: QRCodeMainModel;
   totalQty: number;
+  qrCodeMainSearch: QRCodeMainSearch;
   totalQtyList: number[] = [];
   checkArray: any[] = [];
   packingPrintAll: PackingPrintAll[] = [];
+  alerts: any = [
+    {
+      type: 'success',
+      msg: `You successfully read this important alert message.`
+    },
+    {
+      type: 'info',
+      msg: `This alert needs your attention, but it's not super important.`
+    },
+    {
+      type: 'danger',
+      msg: `Better check yourself, you're not looking too good.`
+    }
+  ];
   constructor(private router: Router,
               private qrCodeMainService: QrcodeMainService,
               private packingListDetailService: PackingListDetailService,
@@ -44,6 +60,15 @@ export class QrBodyComponent implements OnInit {
       };
       this.getTimeNow();
       this.bsConfig = Object.assign({}, { containerClass: 'theme-blue' });
+      this.qrCodeMainService.currentQrCodeMainSearch.subscribe(res => this.qrCodeMainSearch = res);
+      if (this.qrCodeMainSearch === undefined) {
+        this.getDataLoadPage();
+      } else {
+        this.mO_No = this.qrCodeMainSearch.mO_No;
+        this.time_start = this.convertStringDate(this.qrCodeMainSearch.from_Date);
+        this.time_end = this.convertStringDate(this.qrCodeMainSearch.to_Date);
+        this.search();
+      }
   }
   getTimeNow() {
      // Lấy ngày hiện tại
@@ -52,6 +77,28 @@ export class QrBodyComponent implements OnInit {
       '/' + new Date().getDate().toString();
       this.time_start = timeNow;
       this.time_end = timeNow;
+  }
+  getDataLoadPage() {
+    let form_date = new Date(this.time_start).toLocaleDateString();
+    let to_date = new Date(this.time_end).toLocaleDateString();
+    if (this.mO_No === undefined) {
+      this.mO_No = null;
+    }
+    this.qrCodeMainSearch = {
+      mO_No: '',
+      from_Date: form_date,
+      to_Date: to_date
+    };
+    this.qrCodeMainService.search(this.pagination.currentPage , this.pagination.itemsPerPage, this.qrCodeMainSearch)
+    .subscribe((res: PaginatedResult<QRCodeMainModel[]>) => {
+      this.listQrCodeMainModel = res.result;
+      this.pagination = res.pagination;
+      if(this.listQrCodeMainModel.length === 0) {
+        this.alertifyService.error('No Data!');
+      }
+    }, error => {
+      this.alertifyService.error(error);
+    });
   }
   search() {
       if (this.time_start === undefined || this.time_end === undefined) {
@@ -62,15 +109,19 @@ export class QrBodyComponent implements OnInit {
         if (this.mO_No === undefined) {
           this.mO_No = null;
         }
-        let object = {
+        this.qrCodeMainSearch = {
           mO_No: this.mO_No,
           from_Date: form_date,
           to_Date: to_date
         };
-        this.qrCodeMainService.search(this.pagination.currentPage , this.pagination.itemsPerPage, object)
+        this.qrCodeMainService.changeQrCodeMainSearch(this.qrCodeMainSearch);
+        this.qrCodeMainService.search(this.pagination.currentPage , this.pagination.itemsPerPage, this.qrCodeMainSearch)
         .subscribe((res: PaginatedResult<QRCodeMainModel[]>) => {
           this.listQrCodeMainModel = res.result;
           this.pagination = res.pagination;
+          if(this.listQrCodeMainModel.length === 0) {
+            this.alertifyService.error('No Data!');
+          }
         }, error => {
           this.alertifyService.error(error);
         });
@@ -134,6 +185,11 @@ export class QrBodyComponent implements OnInit {
     } else {
       this.alertifyService.error('Please check in checkbox!');
     }
+  }
+  convertStringDate(dateString: string) {
+    let arrayDate = dateString.split('/');
+    let dateReturn = arrayDate[2] + '/' + arrayDate[0] + '/' + arrayDate[1]
+    return dateReturn;
   }
   cancel() {
     this.getTimeNow();

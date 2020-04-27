@@ -21,6 +21,9 @@ export class InputService {
   currentInputDetail = this.inputDetailSource.asObservable();
   flagSource = new BehaviorSubject<string>("");
   currentFlag = this.flagSource.asObservable();
+  qrCodeAgainParamStart: FilterQrCodeAgainParam;
+  qrCodeAgainParamSource = new BehaviorSubject<FilterQrCodeAgainParam>(this.qrCodeAgainParamStart);
+  currentQrCodeAgainParam = this.qrCodeAgainParamSource.asObservable();
   constructor(private http: HttpClient) { }
 
   getMainByQrCodeID(qrCodeID: string) {
@@ -50,7 +53,9 @@ export class InputService {
   changeFlag(flag: string) {
     this.flagSource.next(flag);
   }
-
+  changeCodeAgainParam(param: FilterQrCodeAgainParam) {
+    this.qrCodeAgainParamSource.next(param);
+  }
   printMissing(missingNo: string) {
     return this.http.get<MissingPrint>(this.baseUrl + 'input/printmissing/' + missingNo, {});
   }
@@ -77,4 +82,5 @@ export class InputService {
   findMaterialName(materialID: string) {
     return this.http.get<any>(this.baseUrl + 'input/findMaterialName/' + materialID, {});
   }
+
 }
