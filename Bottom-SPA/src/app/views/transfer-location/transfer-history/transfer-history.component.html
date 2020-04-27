@@ -104,8 +104,7 @@
                   <th>Plan No</th>
                   <th>Status</th>
                   <th>Qty</th>
-                  <th>From Location</th>
-                  <th>To Location</th>
+                  <th>Location</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -139,7 +138,6 @@
                     }}
                   </td>
                   <td>{{ item.qty }}</td>
-                  <td>{{ item.fromLocation }}</td>
                   <td>{{ item.toLocation }}</td>
                   <td>
                     <button class="btn btn-warning mr-2" [routerLink]="['/transfer/detail/',item.transacType, item.transferNo]"  target="_blank">
