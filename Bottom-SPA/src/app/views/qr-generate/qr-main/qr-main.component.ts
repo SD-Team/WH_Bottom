@@ -85,9 +85,6 @@ export class QrMainComponent implements OnInit {
     .subscribe((res: PaginatedResult<PackingList[]>) => {
       this.packingLists = res.result;
       this.pagination = res.pagination;
-      if(this.packingLists.length === 0) {
-        this.alertifyService.error('No Data!');
-      }
     }, error => {
       this.alertifyService.error(error);
     });

@@ -79,7 +79,7 @@ export class ReceiptMainComponent implements OnInit {
     }
   }
   changeSupplier() {
-    if (this.supplier_ID !== undefined) {
+    if (this.supplier_ID !== undefined && this.supplier_ID !== null) {
       this.packingListService.findBySupplier(this.supplier_ID).subscribe(res => {
         this.supplier_Name = res.supplierName;
       });
