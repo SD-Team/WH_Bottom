@@ -14,4 +14,7 @@ export interface PackingList {
     generated_QRCode: string;
     update_Time: Date;
     update_By: string;
+    model_No: string;
+    model_Name: string;
+    article: string;
 }

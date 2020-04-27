@@ -144,7 +144,7 @@ namespace Bottom_API._Services.Services
             }
             if (transactionMain.Transac_Type == "R" && outputParam.output.RemainingQty == 0)
             {
-                transactionMain.Can_Move = "N"; // nếu type == R và output ra hết update transaction main cũ: Can_Move thành N
+                transactionMain.Can_Move = "N"; // nếu type == R và output ra hết update : Can_Move thành N
                 _repoTransactionMain.Update(transactionMain);
             }
 
