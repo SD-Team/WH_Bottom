@@ -30,6 +30,10 @@ namespace Bottom_API.Controllers
         public async Task<IActionResult> CreateBrand(RackLocation_Main_Dto rackDto)
         {
             rackDto.Updated_By = "Emma";
+            if (_service.CheckExistRackLocation(rackDto))
+            {
+                return  BadRequest("RackLocation already exists!");
+            }
             if (await _service.Add(rackDto))
             {
                 return CreatedAtRoute("Filter", new { });

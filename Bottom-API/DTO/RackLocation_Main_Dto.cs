@@ -20,6 +20,9 @@ namespace Bottom_API.DTO
         public DateTime? Rack_Invalid_date { get; set; }
         public DateTime? Updated_Time { get; set; }
         public string Updated_By { get; set; }
+        public string BuildingName { get; set; }
+        public string FloorName { get; set; }
+        public string AreaName { get; set; }
 
         public RackLocation_Main_Dto()
         {

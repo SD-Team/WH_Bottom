@@ -15,4 +15,7 @@ export interface RackLocation {
     rack_Invalid_date: Date;
     updated_Time: Date;
     updated_By: string;
+    buildingName: string;
+    areaName: string;
+    floorName: string;
 }

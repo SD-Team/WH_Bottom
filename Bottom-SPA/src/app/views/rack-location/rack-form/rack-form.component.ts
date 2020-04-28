@@ -10,7 +10,7 @@ import { RackService } from '../../../_core/_services/rack.service';
   templateUrl: './rack-form.component.html',
   styleUrls: ['./rack-form.component.scss']
 })
-export class RackFormComponent implements OnInit {
+export class RackFormComponent implements OnInit, OnDestroy {
   rack: any = {};
   flag = "0";
   factories: WmsCode[];
@@ -23,14 +23,41 @@ export class RackFormComponent implements OnInit {
     private alertify: AlertifyService,
     private router: Router) { }
 
+  ngOnDestroy(): void {
+    // khi component kết thúc thì gán rack trên service thành giá trị mặc định ban đầu là rỗng,
+    // để khi mình edit xong mà thêm mới lại ko bị lỗi
+    const rack: RackLocation = {
+      id: 0,
+      rack_Location: '',
+      factory_ID: '',
+      wH_ID: '',
+      build_ID: '',
+      floor_ID: '',
+      area_ID: '',
+      rack_Code: '',
+      rack_Level: '',
+      rack_Bin: '',
+      cBM: 0,
+      max_per: 0,
+      memo: '',
+      rack_Invalid_date: new Date(),
+      updated_Time: new Date(),
+      updated_By: '',
+      buildingName: '',
+      areaName: '',
+      floorName: '',
+    };
+    this.rackServcie.changeRack(rack);
+  }
+
   ngOnInit() {
     this.loadDatas();
-    this.rackServcie.currentRack.subscribe(rack => this.rack = rack)
-    this.rackServcie.currentFlag.subscribe(flag => this.flag = flag)
+    this.rackServcie.currentRack.subscribe(rack => this.rack = rack);
+    this.rackServcie.currentFlag.subscribe(flag => this.flag = flag);
     if (this.flag === "0") {
-      this.rack.factory_ID = "";
+      this.rack.factory_ID = "C";
       this.rack.area_ID = "";
-      this.rack.wH_ID = "";
+      this.rack.wH_ID = "C4";
       this.rack.floor_ID = "";
       this.rack.build_ID = "";
     }
@@ -44,8 +71,7 @@ export class RackFormComponent implements OnInit {
       this.rackServcie.create(this.rack).subscribe(
         () => {
           this.alertify.success("Add succeed");
-          // this.brand = {};
-          this.router.navigate(["/rack/main"])
+          this.router.navigate(["/rack/main"]);
         },
         error => {
           this.alertify.error(error);
@@ -58,7 +84,7 @@ export class RackFormComponent implements OnInit {
     this.rackServcie.update(this.rack).subscribe(
       () => {
         this.alertify.success("Updated succeed");
-        this.router.navigate(["/rack/main"])
+        this.router.navigate(["/rack/main"]);
       },
       error => {
         this.alertify.error(error)
@@ -100,7 +126,7 @@ export class RackFormComponent implements OnInit {
       });
   }
   backList() {
-    this.router.navigate(["/rack/main"])
+    this.router.navigate(["/rack/main"]);
   }
 
 }
