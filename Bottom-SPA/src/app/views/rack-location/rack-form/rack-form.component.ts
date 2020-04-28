@@ -68,6 +68,10 @@ export class RackFormComponent implements OnInit, OnDestroy {
       this.rack.floor_ID === "" || this.rack.build_ID === "" || this.rack.rack_Location === "") {
       this.alertify.error("Please enter full information!");
     } else {
+      delete this.rack.updated_Time;
+      delete this.rack.rack_Invalid_date;
+      delete this.rack.cBM;
+      delete this.rack.max_per;
       this.rackServcie.create(this.rack).subscribe(
         () => {
           this.alertify.success("Add succeed");
