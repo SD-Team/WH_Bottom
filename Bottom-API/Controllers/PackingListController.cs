@@ -31,7 +31,7 @@ namespace Bottom_API.Controllers
         [HttpGet("findBySupplier/{supplier_ID}")]
         public async Task<IActionResult> FindBySupplier(string supplier_ID) {
             var data = await _service.FindBySupplier(supplier_ID);
-            return Ok(data);
+            return Ok(new {supplierName = data});
         }
     }
 }

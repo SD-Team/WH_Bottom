@@ -41,6 +41,7 @@ export class TransferMainComponent implements OnInit {
       if (flag) {
         this.transferService.getMainByQrCodeId(this.qrCodeId).subscribe(
           (res) => {
+            debugger
             if (res != null) {
               res.transferNo = this.transferNo;
               res.toLocation = this.toLocation;

@@ -17,12 +17,15 @@ namespace Bottom_API._Services.Services
     public class PackingListService : IPackingListService
     {
         private readonly IPackingListRepository _repo;
+        private readonly IMaterialViewRepository _repoMaterialView;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
         public PackingListService(  IPackingListRepository repo,
+                                    IMaterialViewRepository repoMaterialView,
                                     IMapper mapper,
                                     MapperConfiguration configMapper) {
             _repo = repo;
+            _repoMaterialView = repoMaterialView;
             _mapper = mapper;
             _configMapper = configMapper;
         }
@@ -46,13 +49,16 @@ namespace Bottom_API._Services.Services
             throw new System.NotImplementedException();
         }
 
-        public async Task<Packing_List_Dto> FindBySupplier(string supplier_ID)
+        public async Task<string> FindBySupplier(string supplier_ID)
         {
-            var data =  await _repo.GetAll()
-                        .Where(x => x.Supplier_ID.Trim() == supplier_ID.Trim())
+            var data =  await _repoMaterialView.GetAll()
+                        .Where(x => x.Supplier_No.Trim() == supplier_ID.Trim())
                         .FirstOrDefaultAsync();
-            var model = _mapper.Map<Packing_List_Dto>(data);
-            return model;
+            if (data != null) {
+                return data.Supplier_Name;
+            } else {
+                return "";
+            }
         }
 
         public async Task<PagedList<Packing_List_Dto>> SearchViewModel(PaginationParams param,FilterPackingListParam filterParam)
