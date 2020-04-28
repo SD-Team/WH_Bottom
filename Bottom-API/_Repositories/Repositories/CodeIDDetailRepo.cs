@@ -45,5 +45,21 @@ namespace Bottom_API._Repositories.Repositories
             var list = await _context.WMS_Code.Where(x => x.Code_Type == 2).ToListAsync();
             return list;
         }
+
+        public string GetBuildingName(string buildingId)
+        {
+            var data = _context.WMS_Code.Where(x => x.Code_Type == 3 && x.Code_ID == buildingId).FirstOrDefault();
+            return data.Code_Ename;
+        }
+        public string GetAreaName(string areaId)
+        {
+            var data = _context.WMS_Code.Where(x => x.Code_Type == 5 && x.Code_ID == areaId).FirstOrDefault();
+            return data.Code_Ename;
+        }
+        public string GetFloorName(string floorId)
+        {
+            var data = _context.WMS_Code.Where(x => x.Code_Type == 4 && x.Code_ID == floorId).FirstOrDefault();
+            return data.Code_Ename;
+        }
     }
 }

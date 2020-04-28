@@ -22,8 +22,8 @@ export class RackMainComponent implements OnInit {
   areas: WmsCode[];
   rackLocations: RackLocation[];
   params: any = {
-    factory: "",
-    wh: "",
+    factory: "C",
+    wh: "C4",
     building: "",
     floor: "",
     area: ""
