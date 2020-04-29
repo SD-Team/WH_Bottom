@@ -1,18 +1,18 @@
-import { Injectable } from "@angular/core";
-import { AlertifyService } from "../_services/alertify.service";
-import { AuthService } from "../_services/auth.service";
-import { CanActivate, Router } from "@angular/router";
+import { Injectable } from '@angular/core';
+import { AuthService } from '../_services/auth.service';
+import { CanActivate, Router } from '@angular/router';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class AuthGuard  {
-  // constructor(private authService: AuthService, private router: Router) {}
-  // canActivate(): boolean {
-  //   if (this.authService.loggedIn()) {
-  //     return true;
-  //   }
-  //   this.router.navigate(["/login"]);
-  //   return false;
-  // }
+  constructor(private authService: AuthService, private router: Router) {}
+  canActivate(): boolean {
+    if (this.authService.loggedIn()) {
+      return true;
+    }
+    else {
+      window.location.href = 'http://10.1.0.18/LeaveIntegration/Public/AutoLoginHandler.ashx';
+    }
+  }
 }
