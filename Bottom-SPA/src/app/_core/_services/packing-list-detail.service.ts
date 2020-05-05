@@ -12,11 +12,16 @@ export class PackingListDetailService {
   baseUrl = environment.apiUrl;
   packingPrintSourse = new BehaviorSubject<PackingPrintAll[]>([]);
   currentPackingPrint = this.packingPrintSourse.asObservable();
+  printQrCodeAgainSource = new BehaviorSubject<string>('0');
+  currentPrintQrCodeAgain = this.printQrCodeAgainSource.asObservable();
   constructor(private http: HttpClient) { }
   findByQrCodeIdList(receives: string[]): Observable<PackingPrintAll[]> {
     return this.http.post<any>(this.baseUrl + 'packingListDetail/findPrint/', receives);
   }
   changePackingPrint(packingPrintAll: PackingPrintAll[]) {
     this.packingPrintSourse.next(packingPrintAll);
+  }
+  changePrintQrCodeAgain(option: string) {
+    this.printQrCodeAgainSource.next(option);
   }
 }

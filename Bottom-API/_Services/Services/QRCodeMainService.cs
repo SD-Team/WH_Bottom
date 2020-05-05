@@ -119,27 +119,6 @@ namespace Bottom_API._Services.Services
                                         Material_ID = y.Material_ID,
                                         Material_Name = y.Material_Name
                                                     }).Distinct().OrderByDescending(x => x.Receive_Date);
-            // var listQrCodeModel = listQrCodeMain
-            //     .Join(listPackingList, x => x.Receive_No.Trim(), y=> y.Receive_No.Trim(), (x,y) => new QRCodeMainViewModel
-            //     {
-            //         QRCode_ID = x.QRCode_ID,
-            //         MO_No = y.MO_No,
-            //         Receive_No = x.Receive_No,
-            //         Receive_Date = y.Receive_Date,
-            //         Supplier_ID = y.Supplier_ID,
-            //         Supplier_Name = y.Supplier_Name,
-            //         T3_Supplier = y.T3_Supplier,
-            //         T3_Supplier_Name = y.T3_Supplier_Name,
-            //         Subcon_ID = y.Subcon_ID,
-            //         Subcon_Name = y.Subcon_Name,
-            //         Model_Name = y.Model_Name,
-            //         Model_No = y.Model_No,
-            //         Article = y.Article,
-            //         MO_Seq = y.MO_Seq,
-            //         Material_ID = y.Material_ID,
-            //         Material_Name = y.Material_Name
-            //     });
-
             return await PagedList<QRCodeMainViewModel>.CreateAsync(listQrCodeModel, param.PageNumber, param.PageSize);
         }
         public Task<bool> Delete(object id)

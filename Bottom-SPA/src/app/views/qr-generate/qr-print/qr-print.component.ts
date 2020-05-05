@@ -11,11 +11,19 @@ import { Router } from '@angular/router';
 export class QrPrintComponent implements OnInit {
   elementType: 'url' | 'canvas' | 'img' = 'url';
   packingPrint: PackingPrintAll[] = [];
+  printQrCodeAgain: string;
+  titleForm: string;
   constructor(private packingListDetailService: PackingListDetailService,
               private router: Router) { }
 
   ngOnInit() {
     this.packingListDetailService.currentPackingPrint.subscribe(res => this.packingPrint = res);
+    this.packingListDetailService.currentPrintQrCodeAgain.subscribe(res => this.printQrCodeAgain = res);
+    if (this.printQrCodeAgain === '0' || this.printQrCodeAgain === '1') {
+      this.titleForm = 'Material Form';
+    } else {
+      this.titleForm = 'Sorting Form';
+    }
     this.checkPackingPrint();
   }
   checkPackingPrint() {
@@ -24,6 +32,14 @@ export class QrPrintComponent implements OnInit {
     }
   }
   back() {
-    this.router.navigate(['/qr/body']);
+    if (this.printQrCodeAgain === '0') {
+      this.router.navigate(['/qr/body']);
+    } else if(this.printQrCodeAgain === '1') {
+      this.router.navigate(['/input/qrcode-again']);
+    } else if(this.printQrCodeAgain === '2') {
+      this.router.navigate(['/output/main']);
+    } else {
+
+    }
   }
 }

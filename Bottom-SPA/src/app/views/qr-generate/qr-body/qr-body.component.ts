@@ -131,6 +131,7 @@ export class QrBodyComponent implements OnInit {
       this.packingListDetailService.findByQrCodeIdList(qrCodeId).subscribe(res => {
         this.packingPrintAll = res;
         this.packingListDetailService.changePackingPrint(this.packingPrintAll);
+        this.packingListDetailService.changePrintQrCodeAgain('0');
         this.router.navigate(['/qr/print']);
       })
   }
@@ -172,11 +173,11 @@ export class QrBodyComponent implements OnInit {
   printAll() {
     this.totalQtyList.length = 0;
     this.packingListDetailAll.length = 0;
-    console.log(this.checkArray);
     if (this.checkArray.length > 0) {
       this.packingListDetailService.findByQrCodeIdList(this.checkArray).subscribe(res => {
         this.packingPrintAll = res;
         this.packingListDetailService.changePackingPrint(this.packingPrintAll);
+        this.packingListDetailService.changePrintQrCodeAgain('0');
         this.router.navigate(['/qr/print']);
       });
     } else {
