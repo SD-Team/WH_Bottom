@@ -12,11 +12,11 @@ import { InputDetail } from '../../../_core/_models/input-detail';
 })
 export class InputMainComponent implements OnInit {
   result: any = [];
-  listInputAfterSave: InputDetail[];
   resultDetail: InputDetail;
   listInputNo: any = [];
   qrCodeID = "";
   rackLocation = "";
+  err = true;
   constructor(private inputService: InputService,
     private alertify: AlertifyService,
     private route: ActivatedRoute,
@@ -84,18 +84,19 @@ export class InputMainComponent implements OnInit {
   }
 
   submitInput() {
-    let err = true;
     this.result.forEach((e, i) => {
       if (e.input_No == null)
-        err = false;
+        this.err = false;
       else
         this.listInputNo.push(e.input_No);
     });
     console.log("Lists qr: ", this.listInputNo);
-    if( err)
+    if( this.err)
       this.inputService.submitInputMain(this.listInputNo).subscribe(
         () => {
+          this.result = [];
           this.alertify.success("Submit succeed");
+          this.err = false;
         },
         error => {
           this.alertify.error(error);
