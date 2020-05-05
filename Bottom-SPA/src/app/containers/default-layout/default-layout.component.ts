@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 export class DefaultLayoutComponent {
   public sidebarMinimized = false;
   public navItems = navItems;
+  user: any = JSON.parse(localStorage.getItem('user'));
 
   /**
    *
@@ -29,6 +30,6 @@ export class DefaultLayoutComponent {
     this.authService.decodedToken = null;
     this.authService.currentUser = null;
     this.alertify.message("Logged out");
-    this.router.navigate(["/login"]);
+    window.location.href = 'http://10.1.0.18/LeaveIntegration/Public/AutoLoginHandler.ashx';
   }
 }

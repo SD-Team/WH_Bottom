@@ -5,6 +5,8 @@ import { AlertifyService } from '../../../_core/_services/alertify.service';
 import { FunctionUtility } from '../../../_core/_utility/function-utility';
 import { Router } from '@angular/router';
 import { QrcodeMainService } from '../../../_core/_services/qrcode-main.service';
+import { PackingListDetailService } from '../../../_core/_services/packing-list-detail.service';
+import { PackingPrintAll } from '../../../_core/_viewmodels/packing-print-all';
 
 @Component({
   selector: 'app-output-main',
@@ -16,12 +18,13 @@ export class OutputMainComponent implements OnInit {
   qrCodeId = '';
   output: any = [];
   flagFinish: boolean = false;
-
+  packingPrintAll: PackingPrintAll[] = [];
   constructor(
     private outputService: OutputService,
     private alertify: AlertifyService,
     private functionUtility: FunctionUtility,
     private router: Router,
+    private packingListDetailService: PackingListDetailService,
     private qrCodeMainService: QrcodeMainService
   ) { }
 
@@ -92,15 +95,14 @@ export class OutputMainComponent implements OnInit {
   }
 
   print(qrCodeId: string) {
-    let qrCodeVerison = 0;
-    this.qrCodeMainService
-      .getQrCodeVersionLastest(qrCodeId)
-      .subscribe((res) => {
-        qrCodeVerison = res;
-        this.router.navigate([
-          '/output/print-qrcode-again/' + qrCodeId + '/version/' + qrCodeVerison,
-        ]);
-      });
+    this.packingListDetailService.changePrintQrCodeAgain('2');
+    let qrCodeIdList = [];
+    qrCodeIdList.push(qrCodeId);
+    this.packingListDetailService.findByQrCodeIdList(qrCodeIdList).subscribe(res => {
+      this.packingPrintAll = res;
+      this.packingListDetailService.changePackingPrint(this.packingPrintAll);
+      this.router.navigate(['/qr/print']);
+    })
   }
 
   submit() {

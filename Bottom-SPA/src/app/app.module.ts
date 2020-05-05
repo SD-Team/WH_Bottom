@@ -54,6 +54,7 @@ import { PaginationModule, BsDatepickerModule } from 'ngx-bootstrap';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { NgxPrintModule } from "ngx-print";
 import { RackListResolver } from './_core/_resolvers/rack-list.resolver';
+import { CheckLoginComponent } from './views/check-login/check-login.component';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -96,7 +97,8 @@ export function tokenGetter() {
     P404Component,
     P500Component,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    CheckLoginComponent
   ],
   providers: [
     AuthService,

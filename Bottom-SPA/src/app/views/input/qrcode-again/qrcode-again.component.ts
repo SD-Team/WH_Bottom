@@ -5,6 +5,8 @@ import { TransactionMain } from '../../../_core/_models/transaction-main';
 import { Pagination, PaginatedResult } from '../../../_core/_models/pagination';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
 import { FilterQrCodeAgainParam } from '../../../_core/_viewmodels/qrcode-again-search';
+import { PackingListDetailService } from '../../../_core/_services/packing-list-detail.service';
+import { PackingPrintAll } from '../../../_core/_viewmodels/packing-print-all';
 @Component({
   selector: 'app-qrcode-again',
   templateUrl: './qrcode-again.component.html',
@@ -18,6 +20,7 @@ export class QrcodeAgainComponent implements OnInit {
   pagination: Pagination;
   qrCodeAgainParam: FilterQrCodeAgainParam;
   transactionMainList:  TransactionMain[] = [];
+  packingPrintAll: PackingPrintAll[] = [];
   alerts: any = [
     {
       type: 'success',
@@ -33,6 +36,8 @@ export class QrcodeAgainComponent implements OnInit {
     }
   ];
   constructor(private inputService: InputService,
+              private router: Router,
+              private packingListDetailService: PackingListDetailService,
               private alertifyService: AlertifyService) { }
 
   ngOnInit() {
@@ -89,6 +94,16 @@ export class QrcodeAgainComponent implements OnInit {
     this.inputService.findMaterialName(this.material_ID).subscribe(res => {
       this.material_Name = res.materialName;
     });
+  }
+  printQrCodeAgain(qrCodeID: string) {
+    this.packingListDetailService.changePrintQrCodeAgain('1');
+    let qrCodeId = [];
+    qrCodeId.push(qrCodeID);
+    this.packingListDetailService.findByQrCodeIdList(qrCodeId).subscribe(res => {
+      this.packingPrintAll = res;
+      this.packingListDetailService.changePackingPrint(this.packingPrintAll);
+      this.router.navigate(['/qr/print']);
+    })
   }
   pageChanged(event: any): void {
     this.pagination.currentPage = event.page;

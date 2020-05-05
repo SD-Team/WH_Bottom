@@ -1,14 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Bottom_API._Repositories.Interfaces;
+using Bottom_API._Repositories.Interfaces.DbUser;
 using Bottom_API._Repositories.Repositories;
+using Bottom_API._Repositories.Repositories.DbUser;
 using Bottom_API._Services.Interfaces;
 using Bottom_API._Services.Services;
 using Bottom_API.Data;
 using Bottom_API.Helpers.AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -18,6 +22,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Bottom_API
 {
@@ -36,6 +41,7 @@ namespace Bottom_API
             services.AddCors();
             services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<HPDataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("HPConnection")));
+            services.AddDbContext<UserContext>(options => options.UseSqlServer(Configuration.GetConnectionString("UserConnection")));
             services.AddControllers();
             //Auto Mapper
             services.AddAutoMapper(typeof(Startup));
@@ -44,6 +50,20 @@ namespace Bottom_API
                 return new Mapper(AutoMapperConfig.RegisterMappings());
             });
             services.AddSingleton(AutoMapperConfig.RegisterMappings());
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+               .AddJwtBearer(options =>
+               {
+                   options.RequireHttpsMetadata = false;
+                   options.SaveToken = true;
+                   options.TokenValidationParameters = new TokenValidationParameters
+                   {
+                       ValidateIssuerSigningKey = true,
+                       IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII
+                           .GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+                       ValidateIssuer = false,
+                       ValidateAudience = false
+                   };
+               });
             // Repository
             services.AddScoped<IPackingListRepository, PackingListRepository>();
             services.AddScoped<ICodeIDDetailRepo, CodeIDDetailRepo>();
@@ -60,6 +80,7 @@ namespace Bottom_API
             services.AddScoped<ITransactionMainRepo, TransactionMainRepo>();
             services.AddScoped<ITransactionDetailRepo, TransactionDetailRepo>();
             services.AddScoped<IMaterialSheetSizeRepository, MaterialSheetSizeRepository>();
+            services.AddScoped<IUsersRepository, UsersRepository>();
 
             // Service
             services.AddScoped<IPackingListService, PackingListService>();
@@ -75,6 +96,7 @@ namespace Bottom_API
             services.AddScoped<IInputService, InputService>();
             services.AddScoped<ITransferLocationService, TransferLocationService>();
             services.AddScoped<IOutputService, OutputService>();
+            services.AddScoped<IAuthService, AuthService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -87,7 +109,10 @@ namespace Bottom_API
             app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
             app.UseHttpsRedirection();
             app.UseRouting();
+
+            app.UseAuthentication();
             app.UseAuthorization();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

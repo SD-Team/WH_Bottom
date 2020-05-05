@@ -325,7 +325,7 @@ namespace Bottom_API._Services.Services
             if (filterParam.Material_ID != null && filterParam.Material_ID != "") {
                 lists = lists.Where(x => x.Material_ID.Trim() == filterParam.Material_ID.Trim());
             }
-            lists = lists.OrderByDescending(x => x.Updated_Time);
+            lists = lists.Distinct().OrderByDescending(x => x.Updated_Time);
             return await PagedList<Transaction_Main_Dto>.CreateAsync(lists, param.PageNumber, param.PageSize);
         }
 
