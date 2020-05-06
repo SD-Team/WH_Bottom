@@ -1,7 +1,11 @@
 import { PackingListDetailModel } from './packing-list-detail-model';
-import { SuggestedLocation } from './Suggested-location';
 export interface PackingDetailResult {
-    packingListDetailModel: PackingListDetailModel[];
-    totalQty: number;
-    suggestedReturn: SuggestedLocation[];
+    packingListDetailModel1: PackingListDetailModel[];
+    packingListDetailModel2: PackingListDetailModel[];
+    packingListDetailModel3: PackingListDetailModel[];
+    totalRQty: number;
+    totalPQty: number;
+    totalAct: number;
+    suggestedReturn1: string[];
+    suggestedReturn2: string[];
 }

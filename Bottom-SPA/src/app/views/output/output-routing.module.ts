@@ -1,7 +1,6 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { OutputMainComponent } from './output-main/output-main.component';
-import { OutputPrintComponent } from './output-print/output-print.component';
 import { OutputDetailComponent } from './output-detail/output-detail.component';
 import { OutputProcessComponent } from './output-process/output-process.component';
 import { OutputPrintQrcodeAgainComponent } from './output-print-qrcode-again/output-print-qrcode-again.component';
@@ -23,13 +22,6 @@ const routes: Routes = [
                     title: 'Scan'
                 }
 
-            },
-            {
-                path: 'print',
-                component: OutputPrintComponent,
-                data: {
-                    title: 'Output Print'
-                }
             },
             {
                 path: 'detail/:transacNo',

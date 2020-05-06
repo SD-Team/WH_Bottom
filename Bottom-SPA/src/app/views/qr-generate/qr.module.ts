@@ -13,7 +13,6 @@ import { QrMainComponent } from './qr-main/qr-main.component';
 import { QrPrintComponent } from './qr-print/qr-print.component';
 import { QrBodyComponent } from './qr-body/qr-body.component';
 import { NgxPrintModule } from 'ngx-print';
-import { QrcodePrintComponent } from './qrcode-print/qrcode-print.component';
 
 @NgModule({
     imports: [
@@ -33,7 +32,6 @@ import { QrcodePrintComponent } from './qrcode-print/qrcode-print.component';
         QrMainComponent,
         QrPrintComponent,
         QrBodyComponent,
-        QrcodePrintComponent
     ]
 })
 

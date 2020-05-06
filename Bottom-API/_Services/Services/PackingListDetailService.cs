@@ -17,6 +17,7 @@ namespace Bottom_API._Services.Services
     {
         private readonly IPackingListRepository _repoPackingList;
         private readonly IPackingListDetailRepository _repoPackingListDetail;
+        private readonly IMaterialPurchaseRepository _repoMaterialPurchase;
         private readonly IQRCodeMainRepository _repoQrcode;
         private readonly ITransactionMainRepo _repoTransactionMain;
         private readonly ITransactionDetailRepo _repoTransactionDetail;
@@ -25,12 +26,14 @@ namespace Bottom_API._Services.Services
         public PackingListDetailService(    IPackingListDetailRepository repoPackingListDetail,
                                             IPackingListRepository repoPackingList,
                                             IQRCodeMainRepository repoQrcode,
+                                            IMaterialPurchaseRepository repoMaterialPurchase,
                                             ITransactionMainRepo repoTransactionMain,
                                             ITransactionDetailRepo repoTransactionDetail,
                                             IMapper mapper,
                                             MapperConfiguration configMapper) {
             _repoPackingListDetail = repoPackingListDetail;
             _repoPackingList = repoPackingList;
+            _repoMaterialPurchase = repoMaterialPurchase;
             _repoQrcode = repoQrcode;
             _repoTransactionMain = repoTransactionMain;
             _repoTransactionDetail = repoTransactionDetail;
@@ -55,8 +58,23 @@ namespace Bottom_API._Services.Services
                     .Where(x => x.QRCode_ID.Trim() == qrCodeID.Trim()).FirstOrDefaultAsync();
             var lists = await _repoPackingListDetail.GetAll()
             .Where(x => x.Receive_No.Trim() == qrCodeMan.Receive_No.Trim()).ToListAsync();
+            var transactionMainList = await _repoTransactionMain.GetAll()
+                .Where(x => x.Can_Move == "Y" && x.QRCode_ID.Trim() == qrCodeMan.QRCode_ID).ToListAsync();
+            var transactionDetailList = _repoTransactionDetail.GetAll();
+            var totalAct = (from a in transactionMainList join b in transactionDetailList
+                on a.Transac_No.Trim() equals b.Transac_No.Trim() select new {
+                    QrCode_ID = qrCodeMan.QRCode_ID,
+                    Trans_Qty = b.Trans_Qty
+                }).GroupBy(x => x.QrCode_ID).Select(y => new {
+                    totalAct = y.Sum(cl => cl.Trans_Qty)
+                }).FirstOrDefault();
+            
             var packingListDetailModel = new List<PackingListDetailViewModel>();
-            decimal totalQty = 0;
+            var packingListDetailModel1 = new List<PackingListDetailViewModel>();
+            var packingListDetailModel2 = new List<PackingListDetailViewModel>();
+            var packingListDetailModel3 = new List<PackingListDetailViewModel>();
+            decimal? totalPQty = 0;
+            decimal? totalRQty = 0;
             foreach (var item in lists)
             {
                 var packingItem = new PackingListDetailViewModel();
@@ -69,42 +87,88 @@ namespace Bottom_API._Services.Services
                 packingItem.Purchase_Qty = item.Purchase_Qty;
                 packingItem.Received_Qty = item.Received_Qty;
                 packingItem.Bal = item.Purchase_Qty - item.Received_Qty;
-                totalQty = totalQty + item.Purchase_Qty;
+                totalPQty = totalPQty + item.Purchase_Qty;
+                totalRQty = totalRQty + item.Received_Qty;
                 packingListDetailModel.Add(packingItem);
             }
 
-            // Lấy dữ liệu show phần Suggested Location 
-            var transactionMain = await _repoTransactionMain.GetAll()
-                    .Where(x => x.QRCode_ID.Trim() == qrCodeID.Trim() &&
+            var count= packingListDetailModel.Count();
+            if(count > 0 && count <=8) {
+                packingListDetailModel1 = packingListDetailModel;
+            } else if (count > 8 && count <= 16) {
+                for (int i = 0; i < 8; i++)
+                {
+                    packingListDetailModel1.Add(packingListDetailModel[i]);
+                }
+                for (int i = 8; i < count; i++)
+                {
+                    packingListDetailModel2.Add(packingListDetailModel[i]);
+                }
+            } else if(count > 16) {
+                for (int i = 0; i < 8; i++)
+                {
+                    packingListDetailModel1.Add(packingListDetailModel[i]);
+                }
+                for (int i = 8; i < 16; i++)
+                {
+                    packingListDetailModel2.Add(packingListDetailModel[i]);
+                }
+                for (int i = 16; i < count; i++)
+                {
+                    packingListDetailModel3.Add(packingListDetailModel[i]);
+                }
+            }
+            // Lấy dữ liệu show phần Suggested Location Material Form
+            var transactionMain = await _repoTransactionMain.GetAll().ToListAsync();
+            var transactionMain1 = transactionMain.Where(x => x.QRCode_ID.Trim() == qrCodeID.Trim() &&
                     (x.Transac_Type == "I" || x.Transac_Type == "M" || x.Transac_Type == "R") &&
-                    x.Can_Move.Trim() == "Y").ToListAsync() ;
-            var transactionDetail = await _repoTransactionDetail.GetAll().ToListAsync();
-            var suggestedData = (from a in transactionMain join b in transactionDetail
-                                on a.Transac_No.Trim() equals b.Transac_No.Trim()
-                                select new {
-                                    Transac_No = a.Transac_No,
-                                    Rack_Location = a.Rack_Location,
-                                    Instock_Qty = b.Instock_Qty
-                                }).ToList();
-            var suggestedReturn = suggestedData.GroupBy(x => x.Transac_No).Select(x => new {
-                Rack_Location = x.First().Rack_Location,
-                Instock_Qty = x.Sum(cl => cl.Instock_Qty)
-            }).ToList();
-            var result = new {
-                totalQty,
-                packingListDetailModel,
-                suggestedReturn
-            };
-            return result;
+                    x.Can_Move.Trim() == "Y");
+                    var suggestedReturn1 = transactionMain1.Select(x => new {
+                        rack_Location = x.Rack_Location
+                    }).Distinct().ToList();
+             // Lấy dữ liệu show phần Suggested Location Sorting Form
+            var transactionMain2 = transactionMain
+                    .Where(x => x.QRCode_ID.Trim() == qrCodeID.Trim() &&
+                    x.Transac_Type == "I" &&
+                    x.Can_Move.Trim() == "Y");
+            var suggestedReturn2 = transactionMain2.Select(x => new {
+                        rack_Location = x.Rack_Location
+                    }).Distinct().ToList();
+            if (totalAct != null) {
+                    var result = new {
+                    totalPQty,
+                    totalRQty,
+                    totalAct.totalAct,
+                    packingListDetailModel1, 
+                    packingListDetailModel2,
+                    packingListDetailModel3,
+                    suggestedReturn1,
+                    suggestedReturn2,
+                };
+                return result;
+            } else {
+                 var result = new {
+                    totalPQty,
+                    totalRQty,
+                    totalAct,
+                    packingListDetailModel1, 
+                    packingListDetailModel2,
+                    packingListDetailModel3,
+                    suggestedReturn1,
+                    suggestedReturn2,
+                };
+                return result;
+            }
         }
 
         public async Task<List<object>> PrintByQRCodeIDList(List<string> data)
         {
-            var listPackingList =  _repoPackingList.GetAll();
+            var packingList =  _repoPackingList.GetAll();
             var listQrCodeMain = _repoQrcode.GetAll();
-            var listQrCodeModel = listQrCodeMain
-                .Join(listPackingList, x => x.Receive_No.Trim(), y=> y.Receive_No.Trim(), (x,y) => new QRCodeMainViewModel
-                {
+            var materialPurchaseList = _repoMaterialPurchase.GetAll();
+            var listQrCodeModel = from x in listQrCodeMain join y in packingList
+                on x.Receive_No.Trim() equals y.Receive_No.Trim()
+                select new QRCodeMainViewModel() {
                     QRCode_ID = x.QRCode_ID,
                     MO_No = y.MO_No,
                     Receive_No = x.Receive_No,
@@ -121,7 +185,7 @@ namespace Bottom_API._Services.Services
                     MO_Seq = y.MO_Seq,
                     Material_ID = y.Material_ID,
                     Material_Name = y.Material_Name
-                });
+                };
             var objectResult = new List<object>();
             foreach (var item in data)
             {  

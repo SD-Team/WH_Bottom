@@ -16,7 +16,7 @@ namespace Bottom_API._Repositories.Repositories
 
         public async Task<WMSB_QRCode_Main> GetByQRCodeID(object qrCodeID)
         {
-            var model = await _context.WMSB_QRCode_Main.FirstOrDefaultAsync(x => x.QRCode_ID.Trim() == qrCodeID.ToString().Trim());
+            var model = await _context.WMSB_QRCode_Main.Where(x => x.QRCode_ID.Trim() == qrCodeID.ToString().Trim()).OrderByDescending(o => o.QRCode_Version).FirstOrDefaultAsync();
             return model;
         }
         public WMSB_QRCode_Main GetByQRCodeIDAndVersion(object qrCodeID, object version)

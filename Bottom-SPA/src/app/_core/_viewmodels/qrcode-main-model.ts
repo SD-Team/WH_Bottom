@@ -3,8 +3,6 @@ export interface QRCodeMainModel {
     mO_No: string;
     receive_No: string;
     receive_Date: Date;
-    supplier_ID: string;
-    supplier_Name: string;
     t3_Supplier: string;
     t3_Supplier_Name: string;
     subcon_ID: string;

@@ -8,6 +8,7 @@ export interface QRCodeMain {
         invalid_Date: Date;
         created_Time: Date;
         created_By: string;
+        is_Scanned: string;
         updated_Time: Date;
         updated_By: string;
 }
