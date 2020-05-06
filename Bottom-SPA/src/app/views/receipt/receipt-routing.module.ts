@@ -6,10 +6,12 @@ import { RecordFormComponent } from './record-form/record-form.component';
 import { RecordFormBatchesComponent } from './record-form-batches/record-form-batches.component';
 import { RecordDetailComponent } from './record-detail/record-detail.component';
 import { RecordEditComponent } from './record-edit/record-edit.component';
+import { ReceivingMaterialNavGuard } from '../../_core/_guards/receiving-material-nav.guard';
 
 const routes: Routes = [
     {
         path: '',
+        canActivate: [ReceivingMaterialNavGuard],
         data: {
             title: 'Receipt'
         },
@@ -17,11 +19,10 @@ const routes: Routes = [
             {
                 path: 'main',
                 component: ReceiptMainComponent,
-                //resolve: { brands: BrandListResolver },
+                // resolve: { brands: BrandListResolver },
                 data: {
                     title: 'Receipt'
                 }
-                
             },
             {
                 path: 'record',

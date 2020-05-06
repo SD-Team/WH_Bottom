@@ -4,12 +4,14 @@ import { RackMainComponent } from './rack-main/rack-main.component';
 import { RackListResolver } from '../../_core/_resolvers/rack-list.resolver';
 import { RackFormComponent } from './rack-form/rack-form.component';
 import { RackPrintComponent } from './rack-print/rack-print.component';
+import { RackLocationNavNavGuard } from '../../_core/_guards/rack-location-nav.guard';
 
 
 
 const routes: Routes = [
     {
         path: '',
+        canActivate: [RackLocationNavNavGuard],
         data: {
             title: 'rack'
         },

@@ -47,7 +47,7 @@ export const routes: Routes = [
     }
   },
   {
-    path: 'checkLogin',
+    path: 'CheckLogin',
     component: CheckLoginComponent,
   },
   {
@@ -110,13 +110,6 @@ export const routes: Routes = [
         loadChildren: () =>
           import("./views/output/output.module").then(
             m => m.OutputModule
-          )
-      },
-      {
-        path: "io-history",
-        loadChildren: () =>
-          import("./views/io-history/history.module").then(
-            m => m.HistoryModule
           )
       },
       {

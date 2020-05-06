@@ -5,6 +5,7 @@ import { TransferMainComponent } from './transfer-main/transfer-main.component';
 import { TransferPrintComponent } from './transfer-print/transfer-print.component';
 import { TransferHistoryComponent } from './transfer-history/transfer-history.component';
 import { TransferDetailComponent } from './transfer-detail/transfer-detail.component';
+import { TransferLocationNavGuard } from '../../_core/_guards/transfer-loaction-nav.guard';
 
 const routes: Routes = [
     {
@@ -15,6 +16,7 @@ const routes: Routes = [
         children: [
             {
                 path: 'main',
+                canActivate: [TransferLocationNavGuard],
                 component: TransferMainComponent,
                 data: {
                     title: 'Transfer Main'
@@ -24,6 +26,7 @@ const routes: Routes = [
             {
                 path: 'print',
                 component: TransferPrintComponent,
+                canActivate: [TransferLocationNavGuard],
                 data: {
                     title: 'Transfer Print'
                 }
@@ -39,6 +42,7 @@ const routes: Routes = [
             },
             {
                 path: 'detail/:transferType/:transferNo',
+                canActivate: [TransferLocationNavGuard],
                 component: TransferDetailComponent,
                 data: {
                     title: 'Transfer Detail'

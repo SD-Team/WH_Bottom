@@ -5,11 +5,13 @@ import { OutputPrintComponent } from './output-print/output-print.component';
 import { OutputDetailComponent } from './output-detail/output-detail.component';
 import { OutputProcessComponent } from './output-process/output-process.component';
 import { OutputPrintQrcodeAgainComponent } from './output-print-qrcode-again/output-print-qrcode-again.component';
+import { OutputNavGuard } from '../../_core/_guards/output-nav.guard';
 
 
 const routes: Routes = [
     {
         path: '',
+        canActivate: [OutputNavGuard],
         data: {
             title: 'Output'
         },
