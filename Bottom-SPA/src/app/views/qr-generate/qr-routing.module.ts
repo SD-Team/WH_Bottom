@@ -3,10 +3,12 @@ import { NgModule } from '@angular/core';
 import { QrMainComponent } from './qr-main/qr-main.component';
 import { QrPrintComponent } from './qr-print/qr-print.component';
 import { QrBodyComponent } from './qr-body/qr-body.component';
+import { QrGenerateNavGuard } from '../../_core/_guards/qr-generate-nav.guard';
 
 const routes: Routes = [
     {
         path: '',
+        canActivate: [QrGenerateNavGuard],
         data: {
             title: 'QR Generate'
         },

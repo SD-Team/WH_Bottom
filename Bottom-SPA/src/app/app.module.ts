@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { LocationStrategy, HashLocationStrategy, CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
@@ -46,15 +46,21 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { AuthService } from '../app/_core/_services/auth.service';
 import { ErrorInterceptorProvider } from './_core/_services/error.interceptor';
 import { AlertifyService } from './_core/_services/alertify.service';
-import { AuthGuard } from './_core/_guards/auth.guard';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { JwtModule } from '@auth0/angular-jwt';
 import { PaginationModule, BsDatepickerModule } from 'ngx-bootstrap';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { NgxPrintModule } from "ngx-print";
+import { NgxPrintModule } from 'ngx-print';
 import { RackListResolver } from './_core/_resolvers/rack-list.resolver';
 import { CheckLoginComponent } from './views/check-login/check-login.component';
+import { AuthGuard } from './_core/_guards/auth.guard';
+import { InputNavGuard } from './_core/_guards/input-nav.guard';
+import { OutputNavGuard } from './_core/_guards/output-nav.guard';
+import { QrGenerateNavGuard } from './_core/_guards/qr-generate-nav.guard';
+import { RackLocationNavNavGuard } from './_core/_guards/rack-location-nav.guard';
+import { ReceivingMaterialNavGuard } from './_core/_guards/receiving-material-nav.guard';
+import { TransferLocationNavGuard } from './_core/_guards/transfer-loaction-nav.guard';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -86,7 +92,7 @@ export function tokenGetter() {
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        whitelistedDomains: ['httpp://10.4.0.48:9000'],
+        whitelistedDomains: ['http://10.4.0.48:9000'],
         blacklistedRoutes: ['http://10.4.0.48:9000/api/auth']
       }
     })
@@ -105,6 +111,12 @@ export function tokenGetter() {
     ErrorInterceptorProvider,
     AlertifyService,
     AuthGuard,
+    InputNavGuard,
+    OutputNavGuard,
+    QrGenerateNavGuard,
+    RackLocationNavNavGuard,
+    ReceivingMaterialNavGuard,
+    TransferLocationNavGuard,
     RackListResolver,
     {
       provide: LocationStrategy,

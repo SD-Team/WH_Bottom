@@ -17,6 +17,10 @@ namespace Bottom_API.Models
         [StringLength(50)]
         public string RoleUnique { get; set; }
         public DateTime UpdateAt { get; set; }
+        [StringLength(1)]
+        public string WH_Type { get; set; }
+        [StringLength(100)]
+        public string Remark { get; set; }
 
         [InverseProperty("Role")]
         public virtual ICollection<RoleUser> RoleUser { get; set; }

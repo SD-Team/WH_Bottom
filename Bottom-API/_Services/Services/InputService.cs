@@ -57,7 +57,7 @@ namespace Bottom_API._Services.Services
             if (qrCodeModel != null)
             {
                 var packingListModel = await _repoPackingList.GetByReceiveNo(qrCodeModel.Receive_No);
-                var listQrCodeDetails = await _repoQRCodeDetail.GetByQRCodeID(qrCodeID);
+                var listQrCodeDetails = await _repoQRCodeDetail.GetByQRCodeIDAndVersion(qrCodeID, qrCodeModel.QRCode_Version);
                 decimal? num = 0;
                 foreach (var item in listQrCodeDetails)
                 {
@@ -86,7 +86,7 @@ namespace Bottom_API._Services.Services
             if (qrCodeModel != null && qrCodeModel.Valid_Status == "Y")
             {
                 var packingListModel = await _repoPackingList.GetByReceiveNo(qrCodeModel.Receive_No);
-                var listQrCodeDetails = await _repoQRCodeDetail.GetByQRCodeID(qrCodeID);
+                var listQrCodeDetails = await _repoQRCodeDetail.GetByQRCodeIDAndVersion(qrCodeID, qrCodeModel.QRCode_Version);
                 decimal? num = 0;
                 List<DetailSize> listDetail = new List<DetailSize>();
                 foreach (var item in listQrCodeDetails)
@@ -116,7 +116,7 @@ namespace Bottom_API._Services.Services
         {
             var qrCodeModel = await _repoQRCodeMain.GetByQRCodeID(model.QrCode_Id);
             if(qrCodeModel != null && qrCodeModel.Valid_Status == "Y") {
-                var listQrCodeDetails = await _repoQRCodeDetail.GetByQRCodeID(qrCodeModel.QRCode_ID);
+                var listQrCodeDetails = await _repoQRCodeDetail.GetByQRCodeIDAndVersion(qrCodeModel.QRCode_ID, qrCodeModel.QRCode_Version);
                 Random ran = new Random();
                 int num = ran.Next(100, 999);
                 var packingListModel = await _repoPackingList.GetByReceiveNo(qrCodeModel.Receive_No);
@@ -184,6 +184,13 @@ namespace Bottom_API._Services.Services
 
                         //Update QrCode Version cho bảng Transaction_Main
                         model.QRCode_Version += 1;
+
+                        // Tạo mới record trong bảng Missing
+                        CreateMissing(model.Purchase_No, model.MO_No, model.MO_Seq, model.Material_ID, model.Transac_No, model.Missing_No);
+                    }else {
+                        WMSB_QRCode_Main qrModel = await _repoQRCodeMain.GetByQRCodeID(model.QRCode_ID);
+                        qrModel.Is_Scanned = "Y";
+                        _repoQRCodeMain.Update(qrModel);
                     }
                     
                     _repoTransactionMain.Update(model);
@@ -269,6 +276,7 @@ namespace Bottom_API._Services.Services
             //Update dòng QRCodeMain cũ
             var qrCodeMain = _repoQRCodeMain.GetByQRCodeIDAndVersion(qrCodeID, qrCodeVersion);
             qrCodeMain.Valid_Status = "N";
+            qrCodeMain.Is_Scanned = "Y";
             qrCodeMain.Invalid_Date = DateTime.Now;
             _repoQRCodeMain.Update(qrCodeMain);
 
@@ -279,6 +287,7 @@ namespace Bottom_API._Services.Services
             model.QRCode_Type = qrCodeMain.QRCode_Type;
             model.Receive_No = qrCodeMain.Receive_No;
             model.Valid_Status = "Y";
+            model.Is_Scanned = "Y";
             model.Updated_By = "Nam";
             model.Updated_Time = DateTime.Now;
             _repoQRCodeMain.Add(model);

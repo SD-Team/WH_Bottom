@@ -4,10 +4,12 @@ import { InputMainComponent } from './input-main/input-main.component';
 import { InputPrintComponent } from './input-print/input-print.component';
 import { MissingPrintComponent } from './missing-print/missing-print.component';
 import { QrcodeAgainComponent } from './qrcode-again/qrcode-again.component';
+import { InputNavGuard } from '../../_core/_guards/input-nav.guard';
 
 const routes: Routes = [
   {
     path: '',
+    canActivate: [InputNavGuard],
     data: {
       title: 'Input'
     },

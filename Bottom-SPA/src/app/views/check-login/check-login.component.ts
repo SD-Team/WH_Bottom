@@ -19,19 +19,18 @@ export class CheckLoginComponent implements OnInit {
   async ngOnInit() {
     this.spinner.show();
     const returnUrl = this.router.url;
-    if (returnUrl.includes('?Account=')) {
+    if (returnUrl.includes('?account=')) {
       let username = '';
-      debugger
-      username = returnUrl.substring(returnUrl.lastIndexOf('?Account=') + 9);
+      username = returnUrl.substring(returnUrl.lastIndexOf('?account=') + 9);
       await this.authService.checkLogin(username).catch(err => {
-        window.location.href = 'http://10.1.0.18/LeaveIntegration/Public/AutoLoginHandler.ashx';
+        window.location.href = 'https://10.4.0.48:8001/';
       });
     }
     if (this.authService.loggedIn()) {
       this.router.navigate(['/dashboard']);
     }
     else {
-      window.location.href = 'http://10.1.0.18/LeaveIntegration/Public/AutoLoginHandler.ashx';
+      window.location.href = 'https://10.4.0.48:8001/';
     }
   }
 }
