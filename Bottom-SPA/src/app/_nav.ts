@@ -72,17 +72,18 @@ export const navItems: INavData[] = [
   providedIn: 'root'  // <- ADD THIS
 })
 export class NavItem {
-  navItems: INavData[] = [
-    {
-      name: 'Dashboard',
-      url: '/dashboard',
-      icon: 'icon-speedometer',
-    },
-  ];
+  navItems: INavData[] = [];
 
   constructor() { }
 
   getNav() {
+    this.navItems = [
+      {
+        name: 'Dashboard',
+        url: '/dashboard',
+        icon: 'icon-speedometer',
+      },
+    ];
     const user: any = JSON.parse(localStorage.getItem('user'));
     user.role.forEach((element) => {
       if (element === 'wmsb.ReceivingMaterial') {
