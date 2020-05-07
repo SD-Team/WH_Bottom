@@ -135,7 +135,7 @@ namespace Bottom_API._Services.Services
                         rack_Location = x.Rack_Location
                     }).Distinct().ToList();
             if (totalAct != null) {
-                    var result = new {
+                var result = new {
                     totalPQty,
                     totalRQty,
                     totalAct.totalAct,
@@ -147,7 +147,7 @@ namespace Bottom_API._Services.Services
                 };
                 return result;
             } else {
-                 var result = new {
+                var result = new {
                     totalPQty,
                     totalRQty,
                     totalAct,
@@ -188,11 +188,10 @@ namespace Bottom_API._Services.Services
                 };
             var objectResult = new List<object>();
             foreach (var item in data)
-            {  
-                var object1 = await this.FindByQrCodeID(item);
+            {   
                 var qrCodeMainItem = await listQrCodeModel
                     .Where(x => x.QRCode_ID.Trim() == item.Trim()).FirstOrDefaultAsync();
-                
+                var object1 = await this.FindByQrCodeID(item);
                 var objectItem = new {
                     object1,
                     qrCodeMainItem

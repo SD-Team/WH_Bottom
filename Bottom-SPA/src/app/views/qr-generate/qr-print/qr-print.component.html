@@ -174,14 +174,16 @@
                                         <div class="col-4">
                                             <span> Location</span>
                                         </div>
-                                        <div 
-                                            *ngFor="let suggesteditem of item.object1.suggestedReturn2"
-                                            class="col-4">
-                                                <span><i class="fa fa-square-o fa-lg" style="margin-right: 2px;"></i>{{suggesteditem.rack_Location}}</span>
-                                                <div>
-                                                    <ngx-qrcode id="qrCodeImage" [qrc-element-type]="elementType" [qrc-value] = "suggesteditem.rack_Location">
-                                                    </ngx-qrcode>
+                                        <div class="col-8">
+                                            <div class="row">
+                                                <div *ngFor="let suggesteditem of item.object1.suggestedReturn2" class="col-6">
+                                                    <span><i class="fa fa-square-o fa-lg" style="margin-right: 2px;"></i>{{suggesteditem.rack_Location}}</span>
+                                                    <div>
+                                                        <ngx-qrcode id="qrCodeImage" [qrc-element-type]="elementType" [qrc-value] = "suggesteditem.rack_Location">
+                                                        </ngx-qrcode>
+                                                    </div>
                                                 </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </ng-template>
