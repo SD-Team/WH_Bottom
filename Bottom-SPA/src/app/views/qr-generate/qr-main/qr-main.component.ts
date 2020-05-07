@@ -46,7 +46,7 @@ export class QrMainComponent implements OnInit {
               private alertifyService: AlertifyService) { }
 
   ngOnInit() {
-    this.pagination = {
+    this.pagination = {                                                                              
       currentPage: 1,
       itemsPerPage: 3,
       totalItems: 0,

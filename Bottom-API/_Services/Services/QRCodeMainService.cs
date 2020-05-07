@@ -61,6 +61,7 @@ namespace Bottom_API._Services.Services
                 qrCodeDto.Receive_No = packing.Receive_No.Trim();
                 qrCodeDto.QRCode_Version = 1;
                 qrCodeDto.Valid_Status = "Y";
+                qrCodeDto.Is_Scanned = "N";
                 qrCodeDto.QRCode_Type = packing.Sheet_Type.Trim();
                 await _repoPacking.SaveAll();
                 var qrCodeMain = _mapper.Map<WMSB_QRCode_Main>(qrCodeDto);

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bottom_API._Repositories.Interfaces;
@@ -22,6 +23,13 @@ namespace Bottom_API._Repositories.Repositories
         public WMSB_QRCode_Main GetByQRCodeIDAndVersion(object qrCodeID, object version)
         {
             var model = _context.WMSB_QRCode_Main.FirstOrDefault(x => x.QRCode_ID.Trim() == qrCodeID.ToString().Trim() && x.QRCode_Version.ToString() == version.ToString());
+            return model;
+        }
+
+        public async Task<List<WMSB_QRCode_Main>> CheckQrCodeID(object qrCodeID)
+        {
+            var model = await _context.WMSB_QRCode_Main
+            .Where(x => x.QRCode_ID.Trim() == qrCodeID.ToString().Trim()).ToListAsync();
             return model;
         }
     }

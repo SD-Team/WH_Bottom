@@ -1,7 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { InputM } from '../../../_core/_models/inputM';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { InputService } from '../../../_core/_services/input.service';
 import { InputDetail } from '../../../_core/_models/input-detail';
 
@@ -10,16 +9,16 @@ import { InputDetail } from '../../../_core/_models/input-detail';
   templateUrl: './input-main.component.html',
   styleUrls: ['./input-main.component.scss']
 })
-export class InputMainComponent implements OnInit {
+export class InputMainComponent implements OnInit, OnDestroy {
   result: any = [];
   resultDetail: InputDetail;
   listInputNo: any = [];
   qrCodeID = "";
   rackLocation = "";
   err = true;
+  checkSubmit = false;
   constructor(private inputService: InputService,
     private alertify: AlertifyService,
-    private route: ActivatedRoute,
     private router: Router) { }
 
   ngOnInit() {
@@ -27,7 +26,11 @@ export class InputMainComponent implements OnInit {
     this.inputService.currentListInputMain.subscribe(listInputMain => this.result = listInputMain);
   }
 
-
+  ngOnDestroy() {
+    this.rackLocation = '';
+    this.qrCodeID = '';
+    this.inputService.changeListInputMain([]);
+  }
   getInputMain(e) {
     console.log(e.length);
     if (e.length === 14) {
@@ -39,10 +42,17 @@ export class InputMainComponent implements OnInit {
       if (flag) {
         this.inputService.getMainByQrCodeID(this.qrCodeID)
           .subscribe((res) => {
-            if (res != null) {
-              this.result.push(res);
-              console.log("result: ", this.result);
-              
+            console.log(res);
+            if(res === null) {
+              this.alertify.error('Does not exist QRCodeID!!!');
+            } else if(res.is_Scanned === 'Y') {
+              this.alertify.error('This qrCode has been scanned!!!');
+            } else {
+              if (res != null) {
+                this.result.push(res);
+                console.log("result: ", this.result);
+                
+              }
             }
           }, error => {
             this.alertify.error(error);
@@ -51,7 +61,6 @@ export class InputMainComponent implements OnInit {
         this.alertify.error("This QRCode scanded!");
       this.qrCodeID = ""
     }
-    
   }
 
   
@@ -91,18 +100,28 @@ export class InputMainComponent implements OnInit {
         this.listInputNo.push(e.input_No);
     });
     console.log("Lists qr: ", this.listInputNo);
-    if( this.err)
+    if( this.err) {
+      this.result.forEach(element => {
+        this.inputService.saveInput(element).subscribe(res => {
+          // Add succeed!
+        }, error => {
+          this.alertify.error("error");
+        });
+      });
       this.inputService.submitInputMain(this.listInputNo).subscribe(
         () => {
-          this.result = [];
+          this.rackLocation = '';
+          // this.result = [];
           this.alertify.success("Submit succeed");
           this.err = false;
+          this.checkSubmit = true;
         },
         error => {
           this.alertify.error(error);
         }
       )
-    else this.alertify.error("error");
+    } else {
+      this.alertify.error("error");
+    }
   }
-
 }

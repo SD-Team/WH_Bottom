@@ -16,6 +16,7 @@ namespace Bottom_API.DTO
         public string Mat_Id { get; set; }
         public string Mat_Name { get; set; }
         public string Rack_Location { get; set; }
+        public string Is_Scanned {get;set;}
         public List<DetailSize> Detail_Size { get; set; }
     }
 }
