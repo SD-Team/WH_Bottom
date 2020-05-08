@@ -57,6 +57,8 @@ export class QrcodeAgainComponent implements OnInit {
       this.findMaterialName();
       this.search();
     }
+    this.inputService.changeListInputMain([]);
+    this.inputService.changeFlag('');
   }
   getDataLoadPage() {
     this.qrCodeAgainParam = {

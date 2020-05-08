@@ -79,9 +79,7 @@
                     <td>{{item.inStock_Qty}}</td>
                     <td rowspan="2" class="text-center vertical-middle">
                       <button class="btn btn-warning mr-2" (click)="getDetailByQRCode(item)"><i class="fa fa-search-plus"></i>  Detail</button>
-                      <button class="btn btn-danger" *ngIf="item.input_No === null && checkSubmit === false" (click)="remove(item.qrCode_Id)"><i class="fa fa-trash" ></i> Delete</button>
-                      <button *ngIf="checkSubmit === true">QrCode</button>
-                      <button *ngIf="checkSubmit === true">Missing</button>
+                      <button class="btn btn-danger" *ngIf="item.input_No === null" (click)="remove(item.qrCode_Id)"><i class="fa fa-trash" ></i> Delete</button>
                     </td>
                   </tr>
                   <tr>

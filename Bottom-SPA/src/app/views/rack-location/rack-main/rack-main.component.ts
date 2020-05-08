@@ -7,6 +7,7 @@ import { Pagination, PaginatedResult } from '../../../_core/_models/pagination';
 import { Route } from '@angular/compiler/src/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RackLocation } from '../../../_core/_models/rack-location';
+import { InputService } from '../../../_core/_services/input.service';
 
 @Component({
   selector: 'app-rack-main',
@@ -32,6 +33,7 @@ export class RackMainComponent implements OnInit {
   constructor(
     private rackServcie: RackService,
     private alertify: AlertifyService,
+    private inputService: InputService,
     private route: ActivatedRoute,
     private router: Router) {}
 
@@ -41,6 +43,8 @@ export class RackMainComponent implements OnInit {
       this.rackLocations = data['racks'].result;
       this.pagination = data['racks'].pagination;
     });
+    this.inputService.changeListInputMain([]);
+    this.inputService.changeFlag('');
   }
   
   loadDatas() {

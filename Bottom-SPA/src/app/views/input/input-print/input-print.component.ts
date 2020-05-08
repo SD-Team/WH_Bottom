@@ -69,8 +69,8 @@ export class InputPrintComponent implements OnInit {
     this.listInputMain.forEach((e, i) => {
       if (e.qrCode_Id === params.qrCode_Id)
         this.listInputMain[i] = params;
-        this.alertify.success("Save succeed");
       });
+      this.alertify.success("Save succeed");
       this.inputService.changeListInputMain(this.listInputMain);
       this.router.navigate(["/input/main"])
     localStorage.setItem("inputMain", JSON.stringify(params));

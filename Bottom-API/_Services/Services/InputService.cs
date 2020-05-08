@@ -10,6 +10,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper.QueryableExtensions;
 using System.Linq;
+using Bottom_API.ViewModel;
 
 namespace Bottom_API._Services.Services
 {
@@ -171,8 +172,14 @@ namespace Bottom_API._Services.Services
             return false;
         }
 
-        public async Task<bool> SubmitInput(List<string> lists)
+        public async Task<bool> SubmitInput(InputSubmitModel data)
         {
+            foreach (var item in data.TransactionList)
+            {
+                await CreateInput(item);
+            }
+
+            var lists = data.InputNoList;
             Random ran = new Random();
             if(lists.Count > 0) {
                 int num = ran.Next(100, 999);

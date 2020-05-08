@@ -11,6 +11,7 @@ import { PackingPrintAll } from '../../../_core/_viewmodels/packing-print-all';
 declare var $: any;
 import * as _ from 'lodash';
 import { QRCodeMainSearch } from '../../../_core/_viewmodels/qrcode-main-search';
+import { InputService } from '../../../_core/_services/input.service';
 @Component({
   selector: 'app-qr-body',
   templateUrl: './qr-body.component.html',
@@ -49,6 +50,7 @@ export class QrBodyComponent implements OnInit {
   constructor(private router: Router,
               private qrCodeMainService: QrcodeMainService,
               private packingListDetailService: PackingListDetailService,
+              private inputService: InputService,
               private alertifyService: AlertifyService) { }
 
   ngOnInit() {
@@ -69,6 +71,8 @@ export class QrBodyComponent implements OnInit {
         this.time_end = this.convertStringDate(this.qrCodeMainSearch.to_Date);
         this.search();
       }
+      this.inputService.changeListInputMain([]);
+      this.inputService.changeFlag('');
   }
   getTimeNow() {
      // Lấy ngày hiện tại

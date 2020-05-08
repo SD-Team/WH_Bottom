@@ -9,6 +9,7 @@ import { map } from 'rxjs/operators';
 import { TransactionMain } from '../_models/transaction-main';
 import { FilterQrCodeAgainParam } from '../_viewmodels/qrcode-again-search';
 import { PaginatedResult } from '../_models/pagination';
+import { InputSubmitModel } from '../_viewmodels/input-submit-model';
 
 @Injectable({
   providedIn: 'root'
@@ -38,8 +39,8 @@ export class InputService {
     return this.http.post(this.baseUrl + 'input/create', params);
   }
 
-  submitInputMain(listInput: string[]) {
-    return this.http.post(this.baseUrl + 'input/submit', listInput);
+  submitInputMain(inputModel: any) {
+    return this.http.post(this.baseUrl + 'input/submit/', inputModel);
   }
 
   changeListInputMain(listInputDetail: InputDetail[]) {
@@ -83,4 +84,7 @@ export class InputService {
     return this.http.get<any>(this.baseUrl + 'input/findMaterialName/' + materialID, {});
   }
 
+  test(inputModel: any) {
+    return this.http.post<any>(this.baseUrl + 'input/test/', inputModel);
+  }
 }

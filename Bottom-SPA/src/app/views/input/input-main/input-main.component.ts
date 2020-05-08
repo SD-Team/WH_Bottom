@@ -27,9 +27,7 @@ export class InputMainComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.rackLocation = '';
-    this.qrCodeID = '';
-    this.inputService.changeListInputMain([]);
+    
   }
   getInputMain(e) {
     console.log(e.length);
@@ -101,14 +99,21 @@ export class InputMainComponent implements OnInit, OnDestroy {
     });
     console.log("Lists qr: ", this.listInputNo);
     if( this.err) {
-      this.result.forEach(element => {
-        this.inputService.saveInput(element).subscribe(res => {
-          // Add succeed!
-        }, error => {
-          this.alertify.error("error");
-        });
-      });
-      this.inputService.submitInputMain(this.listInputNo).subscribe(
+      // Create Input
+      // this.result.forEach(element => {
+      //   this.inputService.saveInput(element).subscribe(res => {
+      //     // Add succeed!
+      //   }, error => {
+      //     this.alertify.error("error");
+      //   });
+      // });
+
+      // Submit Input
+      let inputModel = {
+        transactionList: this.result,
+        inputNoList: this.listInputNo
+      }
+      this.inputService.submitInputMain(inputModel).subscribe(
         () => {
           this.rackLocation = '';
           // this.result = [];

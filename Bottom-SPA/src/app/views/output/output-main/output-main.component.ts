@@ -2,11 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { OutputM } from '../../../_core/_models/outputM';
 import { OutputService } from '../../../_core/_services/output.service';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
-import { FunctionUtility } from '../../../_core/_utility/function-utility';
 import { Router } from '@angular/router';
-import { QrcodeMainService } from '../../../_core/_services/qrcode-main.service';
 import { PackingListDetailService } from '../../../_core/_services/packing-list-detail.service';
 import { PackingPrintAll } from '../../../_core/_viewmodels/packing-print-all';
+import { InputService } from '../../../_core/_services/input.service';
 
 @Component({
   selector: 'app-output-main',
@@ -22,10 +21,9 @@ export class OutputMainComponent implements OnInit {
   constructor(
     private outputService: OutputService,
     private alertify: AlertifyService,
-    private functionUtility: FunctionUtility,
+    private inputService: InputService,
     private router: Router,
     private packingListDetailService: PackingListDetailService,
-    private qrCodeMainService: QrcodeMainService
   ) { }
 
   ngOnInit() {
@@ -38,6 +36,8 @@ export class OutputMainComponent implements OnInit {
     this.outputService.currentFlagFinish.subscribe((res) => {
       this.flagFinish = res;
     });
+    this.inputService.changeListInputMain([]);
+    this.inputService.changeFlag('');
   }
 
   getOutputMain(e) {

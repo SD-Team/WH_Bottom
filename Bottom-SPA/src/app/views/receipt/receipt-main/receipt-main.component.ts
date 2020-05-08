@@ -11,6 +11,7 @@ import { ReceiveNoMain } from '../../../_core/_viewmodels/receive_no_main';
 import { AlertConfig } from 'ngx-bootstrap/alert';
 import * as _ from 'lodash'; 
 import { MaterialSearch } from '../../../_core/_viewmodels/material-search';
+import { InputService } from '../../../_core/_services/input.service';
 @Component({
   selector: 'app-receipt-main',
   templateUrl: './receipt-main.component.html',
@@ -47,6 +48,7 @@ export class ReceiptMainComponent implements OnInit {
 
   constructor(private materialService: MaterialService,
               private packingListService: PackingListService,
+              private inputService: InputService,
               private router: Router,
               private alertifyService: AlertifyService) { }
 
@@ -77,6 +79,8 @@ export class ReceiptMainComponent implements OnInit {
       this.time_end = this.convertStringDate(this.materialSearch.to_Date);
       this.search();
     }
+    this.inputService.changeListInputMain([]);
+    this.inputService.changeFlag('');
   }
   changeSupplier() {
     if (this.supplier_ID !== undefined && this.supplier_ID !== null) {
