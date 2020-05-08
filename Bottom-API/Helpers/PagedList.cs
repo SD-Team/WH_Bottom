@@ -30,7 +30,7 @@ namespace Bottom_API.Helpers
             return new PagedList<T>(items, count, pageNumber, pageSize);
         }
 
-        public static async Task<PagedList<T>> Create(List<T> source, 
+        public static PagedList<T> Create(List<T> source, 
             int pageNumber, int pageSize)
         {
             var count =  source.Count();

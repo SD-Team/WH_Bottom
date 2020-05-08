@@ -15,6 +15,7 @@ import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { NgxPrintModule } from 'ngx-print';
 import { QrcodeAgainComponent } from './qrcode-again/qrcode-again.component';
 import { AlertModule } from 'ngx-bootstrap/alert';
+import { MissingAgainComponent } from './missing-again/missing-again.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -33,7 +34,8 @@ import { AlertModule } from 'ngx-bootstrap/alert';
         InputMainComponent,
         InputPrintComponent,
         MissingPrintComponent,
-        QrcodeAgainComponent
+        QrcodeAgainComponent,
+        MissingAgainComponent
     ]
 })
 

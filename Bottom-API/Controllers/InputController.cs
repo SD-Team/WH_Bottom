@@ -76,6 +76,13 @@ namespace Bottom_API.Controllers
             Response.AddPagination(data.CurrentPage, data.PageSize, data.TotalCount, data.TotalPages);
             return Ok(data);
         }
+        
+        [HttpPost("filterMissingPrint")]
+        public async Task<IActionResult> FilterMissingPrint([FromQuery]PaginationParams param, FilterMissingParam filterParam) {
+            var data = await _service.FilterMissingPrint(param,filterParam);
+            Response.AddPagination(data.CurrentPage, data.PageSize, data.TotalCount, data.TotalPages);
+            return Ok(data);
+        }
 
         [HttpGet("findMaterialName/{materialID}")]
         public async Task<IActionResult> FindMaterialName (string materialID) 

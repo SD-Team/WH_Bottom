@@ -14,6 +14,7 @@ namespace Bottom_API._Services.Interfaces
         Task<bool> SubmitInput(InputSubmitModel data);
         Task<MissingPrint_Dto> GetMaterialPrint(string missingNo);
         Task<PagedList<Transaction_Main_Dto>> FilterQrCodeAgain(PaginationParams param, FilterQrCodeAgainParam filterParam);
+        Task<PagedList<Transaction_Main_Dto>> FilterMissingPrint(PaginationParams param, FilterMissingParam filterParam);
         Task<string> FindMaterialName(string materialID);
         
     }

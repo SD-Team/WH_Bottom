@@ -352,7 +352,7 @@ namespace Bottom_API._Services.Services
                 lists = lists.Where(x => x.Material_ID.Trim() == filterParam.Material_ID.Trim()).ToList();
             }
             lists = lists.Distinct().OrderByDescending(x => x.Updated_Time).ToList();
-            return await PagedList<Transaction_Main_Dto>.Create(lists, param.PageNumber, param.PageSize);
+            return PagedList<Transaction_Main_Dto>.Create(lists, param.PageNumber, param.PageSize);
         }
 
         public async Task<string> FindMaterialName(string materialID)
@@ -364,6 +364,21 @@ namespace Bottom_API._Services.Services
             } else {
                 return "";
             }
+        }
+
+        public async Task<PagedList<Transaction_Main_Dto>> FilterMissingPrint(PaginationParams param, FilterMissingParam filterParam)
+        {
+            var lists = _repoTransactionMain.GetAll()
+                .ProjectTo<Transaction_Main_Dto>(_configMapper)
+                .Where(x => x.Missing_No != string.Empty);
+            if (filterParam.MO_No != null && filterParam.MO_No != "") {
+                lists = lists.Where(x => x.MO_No.Trim() == filterParam.MO_No.Trim());
+            }
+            if (filterParam.Material_ID != null && filterParam.Material_ID != "") {
+                lists = lists.Where(x => x.Material_ID.Trim() == filterParam.Material_ID.Trim());
+            }
+            lists = lists.Distinct().OrderByDescending(x => x.Updated_Time);
+            return await PagedList<Transaction_Main_Dto>.CreateAsync(lists, param.PageNumber, param.PageSize);
         }
     }
 }
