@@ -350,7 +350,11 @@ namespace Bottom_API._Services.Services
                     // Tiến hành thêm vào bảng Packing_List và Packing_List_Detail
                 if (checkAdd == true) {
                     var packing_List = new Packing_List_Dto();
-                    packing_List.Sheet_Type = "R";
+                    if (item.Missing_No == string.Empty) {
+                        packing_List.Sheet_Type = "R";
+                    } else {
+                        packing_List.Sheet_Type = "M";
+                    }
                     packing_List.Missing_No = item.Missing_No;
                     packing_List.Supplier_ID = item.Supplier_ID;
                     packing_List.Supplier_Name = item.Supplier_Name;

@@ -330,19 +330,29 @@ namespace Bottom_API._Services.Services
 
         public async Task<PagedList<Transaction_Main_Dto>> FilterQrCodeAgain(PaginationParams param, FilterQrCodeAgainParam filterParam)
         {
-            var lists =  _repoTransactionMain.GetAll().Where(x => x.Missing_No != string.Empty && x.Missing_No != null)
-                .ProjectTo<Transaction_Main_Dto>(_configMapper);
+            var lists = new List<Transaction_Main_Dto>();
+            var listQrCodeId = await _repoTransactionMain.GetAll()
+                .Select(x => x.QRCode_ID).Distinct().ToListAsync();
+            var listTransactionMain = await _repoTransactionMain.GetAll().ProjectTo<Transaction_Main_Dto>(_configMapper).ToListAsync();
+            foreach (var item in listQrCodeId)
+            {
+                var transactionItem = listTransactionMain.Where(x => x.QRCode_ID.Trim() == item.Trim())
+                    .OrderByDescending(x => x.QRCode_Version).FirstOrDefault();
+                if(transactionItem != null) {
+                    lists.Add(transactionItem);
+                }
+            }
             if (filterParam.MO_No != null && filterParam.MO_No != "") {
-                lists = lists.Where(x => x.MO_No.Trim() == filterParam.MO_No.Trim());
+                lists = lists.Where(x => x.MO_No.Trim() == filterParam.MO_No.Trim()).ToList();
             }
             if (filterParam.Rack_Location != null && filterParam.Rack_Location != "") {
-                lists = lists.Where(x => x.Rack_Location.Trim() == filterParam.Rack_Location.Trim());
+                lists = lists.Where(x => x.Rack_Location.Trim() == filterParam.Rack_Location.Trim()).ToList();
             }
             if (filterParam.Material_ID != null && filterParam.Material_ID != "") {
-                lists = lists.Where(x => x.Material_ID.Trim() == filterParam.Material_ID.Trim());
+                lists = lists.Where(x => x.Material_ID.Trim() == filterParam.Material_ID.Trim()).ToList();
             }
-            lists = lists.Distinct().OrderByDescending(x => x.Updated_Time);
-            return await PagedList<Transaction_Main_Dto>.CreateAsync(lists, param.PageNumber, param.PageSize);
+            lists = lists.Distinct().OrderByDescending(x => x.Updated_Time).ToList();
+            return await PagedList<Transaction_Main_Dto>.Create(lists, param.PageNumber, param.PageSize);
         }
 
         public async Task<string> FindMaterialName(string materialID)
