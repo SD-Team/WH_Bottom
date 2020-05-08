@@ -164,7 +164,7 @@ namespace Bottom_API._Services.Services
             };
             return result;
         }
-        public async Task<List<MaterialMainViewModel>> SearchByModel(FilterMaterialParam filterParam)
+        public async Task<PagedList<MaterialMainViewModel>> SearchByModel(PaginationParams param, FilterMaterialParam filterParam)
         {
             var listMaterialView = await _repoMaterialView.FindAll().ToListAsync();
             var materialPurchaseList = await _repoPurchase.FindAll()
@@ -231,12 +231,6 @@ namespace Bottom_API._Services.Services
                                     T3_Supplier = b.T3_Supplier,
                                     T3_Supplier_Name = b.T3_Supplier_Name
                                 }).ToList();
-            // var lists = new List<MaterialMainViewModel>();
-            // lists.AddRange(materialPurchaseList);
-            // lists.AddRange(materialMissingList);
-            // var list2 =  Queryable.Union(test1.AsQueryable(), test2.AsQueryable());
-            // var list4 = list2.AsQueryable();
-            // var list3 = Queryable.Concat(materialPurchaseList.AsQueryable(),materialMissingList.AsQueryable());
             if(filterParam.MO_No != null && filterParam.MO_No != string.Empty) {
                 listMaterial = listMaterial.Where(x => x.MO_No.Trim() == filterParam.MO_No.Trim()).ToList();
             }
@@ -246,7 +240,7 @@ namespace Bottom_API._Services.Services
             if (filterParam.Status != "all") {
                 listMaterial = listMaterial.Where(x => x.Status.Trim() == filterParam.Status.Trim()).ToList();
             }
-            return listMaterial;
+            return PagedList<MaterialMainViewModel>.Create(listMaterial, param.PageNumber, param.PageSize);
         }
         public Task<bool> Delete(object id)
         {

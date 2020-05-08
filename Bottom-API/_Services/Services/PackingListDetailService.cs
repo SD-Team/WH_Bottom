@@ -165,7 +165,6 @@ namespace Bottom_API._Services.Services
         {
             var packingList =  _repoPackingList.GetAll();
             var listQrCodeMain = _repoQrcode.GetAll();
-            var materialPurchaseList = _repoMaterialPurchase.GetAll();
             var listQrCodeModel = from x in listQrCodeMain join y in packingList
                 on x.Receive_No.Trim() equals y.Receive_No.Trim()
                 select new QRCodeMainViewModel() {

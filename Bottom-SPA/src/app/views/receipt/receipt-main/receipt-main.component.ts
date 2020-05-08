@@ -4,7 +4,7 @@ import { BsDatepickerConfig } from 'ngx-bootstrap';
 import { MaterialService } from '../../../_core/_services/material.service';
 import { Router } from '@angular/router';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
-import { Pagination } from '../../../_core/_models/pagination';
+import { Pagination, PaginatedResult } from '../../../_core/_models/pagination';
 import { PackingListService } from '../../../_core/_services/packing-list.service';
 import { MaterialModel } from '../../../_core/_viewmodels/material-model';
 import { ReceiveNoMain } from '../../../_core/_viewmodels/receive_no_main';
@@ -89,28 +89,6 @@ export class ReceiptMainComponent implements OnInit {
       });
     }
   }
-  // search() {
-  //   if (this.time_start === undefined || this.time_end === undefined) {
-  //     this.alertifyService.error('Please option start and end time');
-  //   } else {
-  //     let form_date = new Date(this.time_start).toLocaleDateString();
-  //     let to_date = new Date(this.time_end).toLocaleDateString();
-  //     let object = {
-  //       supplier_ID: this.supplier_ID,
-  //       purchase_No: this.purchase_No,
-  //       from_Date: form_date,
-  //       to_Date: to_date,
-  //       status: this.status
-  //     };
-  //     this.materialService.search(this.pagination.currentPage , this.pagination.itemsPerPage, object)
-  //     .subscribe((res: PaginatedResult<MaterialModel[]>) => {
-  //       this.materialLists = res.result;
-  //       this.pagination = res.pagination;
-  //     }, error => {
-  //       this.alertifyService.error(error);
-  //     });
-  //   }
-  // }
   getDataLoadPage() {
     let form_date = new Date(this.time_start).toLocaleDateString();
     let to_date = new Date(this.time_end).toLocaleDateString();
@@ -121,11 +99,15 @@ export class ReceiptMainComponent implements OnInit {
       to_Date: to_date,
       status: 'all'
     };
-    this.materialService.search(this.materialSearch)
-    .subscribe(res => {
-      this.materialLists = res;
-    }, error => {
-      this.alertifyService.error(error);
+    this.materialService.search(this.pagination.currentPage , this.pagination.itemsPerPage, this.materialSearch)
+        .subscribe((res: PaginatedResult<MaterialModel[]>) => {
+          this.materialLists = res.result;
+          this.pagination = res.pagination;
+          if(this.materialLists.length === 0) {
+            this.alertifyService.error('No Data!');
+          }
+        }, error => {
+        this.alertifyService.error(error);
     });
   }
   search() {
@@ -142,14 +124,15 @@ export class ReceiptMainComponent implements OnInit {
         status: this.status
       };
       this.materialService.changeMaterialSearch(this.materialSearch);
-      this.materialService.search(this.materialSearch)
-      .subscribe(res => {
-        this.materialLists = res;
-        if(this.materialLists.length === 0) {
-          this.alertifyService.error('No Data!');
-        }
-      }, error => {
-        this.alertifyService.error(error);
+      this.materialService.search(this.pagination.currentPage , this.pagination.itemsPerPage, this.materialSearch)
+        .subscribe((res: PaginatedResult<MaterialModel[]>) => {
+          this.materialLists = res.result;
+          this.pagination = res.pagination;
+          if(this.materialLists.length === 0) {
+            this.alertifyService.error('No Data!');
+          }
+        }, error => {
+          this.alertifyService.error(error);
       });
     }
   }

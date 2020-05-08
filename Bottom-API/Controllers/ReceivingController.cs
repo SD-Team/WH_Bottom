@@ -18,9 +18,12 @@ namespace Bottom_API.Controllers
         }
         
         [HttpPost("search")]
-        public async Task<IActionResult> SearchByModel([FromBody]FilterMaterialParam filterParam) {
-            var lists = await _service.SearchByModel(filterParam);
-            return Ok(lists);
+        public async Task<IActionResult> SearchByModel([FromQuery]PaginationParams param,FilterMaterialParam filterParam) {
+            // var lists = await _service.SearchByModel(filterParam);
+            // return Ok(lists);
+            var result = await _service.SearchByModel(param, filterParam);
+            Response.AddPagination(result.CurrentPage, result.PageSize, result.TotalCount, result.TotalPages);
+            return Ok(result);
         }
 
         [HttpPost("searchTable")]
