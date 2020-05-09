@@ -6,6 +6,7 @@ namespace Bottom_API.ViewModel
     {
         public string QRCode_ID {get;set;}
         public string MO_No {get;set;}
+        public int QRCode_Version {get;set;}
         public string Receive_No {get;set;}
         public DateTime? Receive_Date {get;set;} 
         public string Supplier_ID {get;set;}

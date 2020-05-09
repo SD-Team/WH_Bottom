@@ -36,7 +36,7 @@ export class MissingPrintComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/input/qrcode-again']);
+    this.router.navigate(['/input/missing-again']);
   }
 
   getMissingPrint() {

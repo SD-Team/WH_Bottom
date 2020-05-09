@@ -10,6 +10,7 @@ namespace Bottom_API.ViewModel
         public decimal? MO_Qty {get;set;}
         public decimal? Purchase_Qty { get; set;}
         public decimal? Received_Qty {get;set;}
+        public decimal? Act {get;set;}
         public decimal? Bal {get;set;}
     }
 }

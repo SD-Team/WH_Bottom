@@ -7,5 +7,6 @@ export interface PackingListDetailModel{
     mO_Qty: number;
     purchase_Qty: number; 
     received_Qty: number;
+    act: number;
     bal: number;
 }

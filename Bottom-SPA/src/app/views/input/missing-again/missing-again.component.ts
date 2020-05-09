@@ -34,8 +34,6 @@ export class MissingAgainComponent implements OnInit {
     }
   ];
   constructor(private inputService: InputService,
-              private router: Router,
-              private packingListDetailService: PackingListDetailService,
               private alertifyService: AlertifyService) { }
 
   ngOnInit() {
@@ -46,12 +44,15 @@ export class MissingAgainComponent implements OnInit {
       totalPages: 0
     };
     this.inputService.currentMissingParam.subscribe(res => this.missingParam = res);
+    console.log(this.missingParam);
     if (this.missingParam === undefined) {
       this.getDataLoadPage();
     } else {
       this.mO_No = this.missingParam.mO_No;
       this.material_ID = this.missingParam.material_ID;
-      this.findMaterialName();
+      if(this.material_ID !== undefined) {
+        this.findMaterialName();
+      }
       this.search();
     }
     this.inputService.changeListInputMain([]);

@@ -7,7 +7,9 @@ namespace Bottom_API._Services.Interfaces
 {
     public interface IPackingListDetailService : IBottomService<Packing_List_Detail_Dto>
     {
-        Task<object> FindByQrCodeID(string qrCodeID);
-        Task<List<object>> PrintByQRCodeIDList(List<string> data);
+        Task<object> FindByQrCodeID(QrCodeIDVersion data);
+        Task<object> FindByQrCodeIDAgain(QrCodeIDVersion data);
+        Task<List<object>> PrintByQRCodeIDList(List<QrCodeIDVersion> data);
+        Task<List<object>> PrintByQRCodeIDListAgain(List<QrCodeIDVersion> data);
     }
 }
