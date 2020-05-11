@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Bottom_API._Services.Interfaces;
+using Bottom_API.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bottom_API.Controllers
@@ -20,15 +21,15 @@ namespace Bottom_API.Controllers
             return Ok(lists);
         }
 
-        [HttpGet("findByReceive/{receive_No}")]
-        public async Task<IActionResult> FindByReceiveNo(string receive_No) {
-            var data = await _service.FindByQrCodeID(receive_No);
-            return Ok(data);
+        [HttpPost("findPrint")]
+        public async Task<IActionResult> FindByQRCodeIDList([FromBody]List<QrCodeIDVersion> data) {
+            var result = await _service.PrintByQRCodeIDList(data);
+            return Ok(result);
         }
 
-        [HttpPost("findPrint")]
-        public async Task<IActionResult> FindByQRCodeIDList([FromBody]List<string> data) {
-            var result = await _service.PrintByQRCodeIDList(data);
+        [HttpPost("findPrintAgain")]
+        public async Task<IActionResult> FindByQRCodeIDListAgain([FromBody]List<QrCodeIDVersion> data) {
+            var result = await _service.PrintByQRCodeIDListAgain(data);
             return Ok(result);
         }
     }

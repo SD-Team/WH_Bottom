@@ -1,6 +1,7 @@
 export interface QRCodeMainModel {
     qrCode_ID: string;
     mO_No: string;
+    qrCode_Version: number;
     receive_No: string;
     receive_Date: Date;
     t3_Supplier: string;

@@ -29,28 +29,30 @@ export class MaterialService {
   currentReceiveNoMainItem = this.receiveNoMainSource.asObservable();
   currentMaterialSearch = this.materialSearchSource.asObservable();
   constructor(private http: HttpClient) { }
-  // search(page?, itemsPerPage?, materialSearch?: MaterialSearch): Observable<PaginatedResult<MaterialModel[]>> {
-  //   const paginatedResult: PaginatedResult<MaterialModel[]> = new PaginatedResult<MaterialModel[]>();
-  //   let params = new HttpParams();
-  //   if (page != null && itemsPerPage != null) {
-  //     params = params.append('pageNumber', page);
-  //     params = params.append('pageSize', itemsPerPage);
-  //   }
-  //   let url = this.baseUrl + 'materialPurchase/search/';
-  //   return this.http.post<any>(url, materialSearch, {observe: 'response', params})
-  //   .pipe(
-  //     map(response => {
-  //       paginatedResult.result = response.body;
-  //       if (response.headers.get('Pagination') != null) {
-  //         paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
-  //       }
-  //       return paginatedResult;
-  //     })
-  //   );
-  // }
-  search(materialSearch: MaterialSearch): Observable<MaterialModel[]> {
-    return this.http.post<any>(this.baseUrl + 'receiving/search/', materialSearch);
+  search(page?, itemsPerPage?, text?: MaterialSearch): Observable<PaginatedResult<MaterialModel[]>> {
+    const paginatedResult: PaginatedResult<MaterialModel[]> = new PaginatedResult<MaterialModel[]>();
+
+    let params = new HttpParams();
+
+    if (page != null && itemsPerPage != null) {
+      params = params.append('pageNumber', page);
+      params = params.append('pageSize', itemsPerPage);
+    }
+    return this.http.post<any>(this.baseUrl + 'receiving/search/', text, { observe: 'response', params })
+      .pipe(
+        map(response => {
+          paginatedResult.result = response.body;
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+          }
+          return paginatedResult;
+        }),
+      );
   }
+
+  // search(materialSearch: MaterialSearch): Observable<MaterialModel[]> {
+  //   return this.http.post<any>(this.baseUrl + 'receiving/search/', materialSearch);
+  // }
   changeMaterialModel(materialModel: MaterialModel) {
     this.materialSource.next(materialModel);
   }

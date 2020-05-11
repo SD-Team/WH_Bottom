@@ -7,6 +7,7 @@ import { AlertifyService } from '../../../_core/_services/alertify.service';
 import { FilterQrCodeAgainParam } from '../../../_core/_viewmodels/qrcode-again-search';
 import { PackingListDetailService } from '../../../_core/_services/packing-list-detail.service';
 import { PackingPrintAll } from '../../../_core/_viewmodels/packing-print-all';
+import { ModalBackdropComponent } from 'ngx-bootstrap';
 @Component({
   selector: 'app-qrcode-again',
   templateUrl: './qrcode-again.component.html',
@@ -57,6 +58,8 @@ export class QrcodeAgainComponent implements OnInit {
       this.findMaterialName();
       this.search();
     }
+    this.inputService.changeListInputMain([]);
+    this.inputService.changeFlag('');
   }
   getDataLoadPage() {
     this.qrCodeAgainParam = {
@@ -95,11 +98,15 @@ export class QrcodeAgainComponent implements OnInit {
       this.material_Name = res.materialName;
     });
   }
-  printQrCodeAgain(qrCodeID: string) {
+  printQrCodeAgain(model: TransactionMain) {
     this.packingListDetailService.changePrintQrCodeAgain('1');
-    let qrCodeId = [];
-    qrCodeId.push(qrCodeID);
-    this.packingListDetailService.findByQrCodeIdList(qrCodeId).subscribe(res => {
+    let qrCodeIdVersion = [];
+    let item = {
+      qrCode_ID: model.qrCode_ID,
+      qrCode_Version: model.qrCode_Version
+    };
+    qrCodeIdVersion.push(item);
+    this.packingListDetailService.findByQrCodeIdListAgain(qrCodeIdVersion).subscribe(res => {
       this.packingPrintAll = res;
       this.packingListDetailService.changePackingPrint(this.packingPrintAll);
       this.router.navigate(['/qr/print']);

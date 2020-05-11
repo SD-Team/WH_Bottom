@@ -4,6 +4,7 @@ import { AlertifyService } from '../../../_core/_services/alertify.service';
 import { TransferService } from '../../../_core/_services/transfer.service';
 import { TransferM } from '../../../_core/_models/transferM';
 import { FunctionUtility } from '../../../_core/_utility/function-utility';
+import { InputService } from '../../../_core/_services/input.service';
 
 @Component({
   selector: 'app-transfer-main',
@@ -21,6 +22,7 @@ export class TransferMainComponent implements OnInit {
     private transferService: TransferService,
     private alertify: AlertifyService,
     private route: ActivatedRoute,
+    private inputService: InputService,
     private router: Router,
     private functionUtility: FunctionUtility
   ) {}
@@ -28,6 +30,8 @@ export class TransferMainComponent implements OnInit {
   ngOnInit() {
     // lấy ra transferNo mới theo yêu cầu: TB(ngày thực hiện yyyymmdd) 3 mã số random number. (VD: TB20200310001)
     this.transferNo = this.functionUtility.getTransferNo();
+    this.inputService.changeListInputMain([]);
+    this.inputService.changeFlag('');
   }
 
   getTransferMain(e) {

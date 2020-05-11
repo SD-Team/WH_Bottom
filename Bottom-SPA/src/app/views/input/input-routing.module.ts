@@ -5,6 +5,7 @@ import { InputPrintComponent } from './input-print/input-print.component';
 import { MissingPrintComponent } from './missing-print/missing-print.component';
 import { QrcodeAgainComponent } from './qrcode-again/qrcode-again.component';
 import { InputNavGuard } from '../../_core/_guards/input-nav.guard';
+import { MissingAgainComponent } from './missing-again/missing-again.component';
 
 const routes: Routes = [
   {
@@ -42,7 +43,14 @@ const routes: Routes = [
         path: 'qrcode-again',
         component: QrcodeAgainComponent,
         data: {
-          title: 'QrCode Again'
+          title: 'QrCode Print'
+        }
+      },
+      {
+        path: 'missing-again',
+        component: MissingAgainComponent,
+        data: {
+          title: 'Missing Print'
         }
       },
     ]

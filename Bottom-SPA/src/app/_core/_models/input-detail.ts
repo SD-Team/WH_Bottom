@@ -13,5 +13,6 @@ export class InputDetail {
     inStock_Qty: number;
     mat_Id: string;
     mat_Name: string;
+    is_Scanned: string;
     detail_Size: DetailSize[];
 }

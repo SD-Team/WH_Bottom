@@ -10,6 +10,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper.QueryableExtensions;
 using System.Linq;
+using Bottom_API.ViewModel;
 
 namespace Bottom_API._Services.Services
 {
@@ -82,34 +83,43 @@ namespace Bottom_API._Services.Services
         public async Task<Transaction_Detail_Dto> GetDetailByQRCodeID(object qrCodeID)
         {
             Transaction_Detail_Dto model = new Transaction_Detail_Dto();
-            var qrCodeModel = await _repoQRCodeMain.GetByQRCodeID(qrCodeID);
-            if (qrCodeModel != null && qrCodeModel.Valid_Status == "Y")
-            {
-                var packingListModel = await _repoPackingList.GetByReceiveNo(qrCodeModel.Receive_No);
-                var listQrCodeDetails = await _repoQRCodeDetail.GetByQRCodeIDAndVersion(qrCodeID, qrCodeModel.QRCode_Version);
-                decimal? num = 0;
-                List<DetailSize> listDetail = new List<DetailSize>();
-                foreach (var item in listQrCodeDetails)
+            var qrCodeMainList = await _repoQRCodeMain.CheckQrCodeID(qrCodeID);
+            if (qrCodeMainList.Count == 0) {
+                return null;
+            } else {
+                var qrCodeModel = qrCodeMainList.Where(x => x.Is_Scanned == "N").FirstOrDefault();
+                if (qrCodeModel != null)
                 {
-                    DetailSize detail = new DetailSize();
-                    num += item.Qty;
-                    detail.Size = item.Order_Size;
-                    detail.Qty = item.Qty;
-                    listDetail.Add(detail);
+                    var packingListModel = await _repoPackingList.GetByReceiveNo(qrCodeModel.Receive_No);
+                    var listQrCodeDetails = await _repoQRCodeDetail.GetByQRCodeIDAndVersion(qrCodeID, qrCodeModel.QRCode_Version);
+                    decimal? num = 0;
+                    List<DetailSize> listDetail = new List<DetailSize>();
+                    foreach (var item in listQrCodeDetails)
+                    {
+                        DetailSize detail = new DetailSize();
+                        num += item.Qty;
+                        detail.Size = item.Order_Size;
+                        detail.Qty = item.Qty;
+                        listDetail.Add(detail);
+                    }
+                    model.Suplier_No = packingListModel.Supplier_ID;
+                    model.Suplier_Name = packingListModel.Supplier_Name;
+                    model.Detail_Size = listDetail;
+                    model.QrCode_Id = qrCodeModel.QRCode_ID.Trim();
+                    model.Plan_No = packingListModel.MO_No.Trim();
+                    model.Batch = packingListModel.MO_Seq;
+                    model.Mat_Id = packingListModel.Material_ID.Trim();
+                    model.Mat_Name = packingListModel.Material_Name.Trim();
+                    model.Accumated_Qty = num;
+                    model.Trans_In_Qty = 0;
+                    model.InStock_Qty = 0;
+                    model.Is_Scanned = qrCodeModel.Is_Scanned;
+                    return model;
+                } else {
+                    model.Is_Scanned = "Y";
+                    return model;
                 }
-                model.Suplier_No = packingListModel.Supplier_ID;
-                model.Suplier_Name = packingListModel.Supplier_Name;
-                model.Detail_Size = listDetail;
-                model.QrCode_Id = qrCodeModel.QRCode_ID.Trim();
-                model.Plan_No = packingListModel.MO_No.Trim();
-                model.Batch = packingListModel.MO_Seq;
-                model.Mat_Id = packingListModel.Material_ID.Trim();
-                model.Mat_Name = packingListModel.Material_Name.Trim();
-                model.Accumated_Qty = num;
-                model.Trans_In_Qty = 0;
-                model.InStock_Qty = 0;
             }
-            return model;
         }
 
         public async Task<bool> CreateInput(Transaction_Detail_Dto model)
@@ -162,8 +172,14 @@ namespace Bottom_API._Services.Services
             return false;
         }
 
-        public async Task<bool> SubmitInput(List<string> lists)
+        public async Task<bool> SubmitInput(InputSubmitModel data)
         {
+            foreach (var item in data.TransactionList)
+            {
+                await CreateInput(item);
+            }
+
+            var lists = data.InputNoList;
             Random ran = new Random();
             if(lists.Count > 0) {
                 int num = ran.Next(100, 999);
@@ -314,19 +330,29 @@ namespace Bottom_API._Services.Services
 
         public async Task<PagedList<Transaction_Main_Dto>> FilterQrCodeAgain(PaginationParams param, FilterQrCodeAgainParam filterParam)
         {
-            var lists =  _repoTransactionMain.GetAll().Where(x => x.Missing_No != string.Empty && x.Missing_No != null)
-                .ProjectTo<Transaction_Main_Dto>(_configMapper);
+            var lists = new List<Transaction_Main_Dto>();
+            var listQrCodeId = await _repoTransactionMain.GetAll()
+                .Select(x => x.QRCode_ID).Distinct().ToListAsync();
+            var listTransactionMain = await _repoTransactionMain.GetAll().ProjectTo<Transaction_Main_Dto>(_configMapper).ToListAsync();
+            foreach (var item in listQrCodeId)
+            {
+                var transactionItem = listTransactionMain.Where(x => x.QRCode_ID.Trim() == item.Trim())
+                    .OrderByDescending(x => x.QRCode_Version).FirstOrDefault();
+                if(transactionItem != null) {
+                    lists.Add(transactionItem);
+                }
+            }
             if (filterParam.MO_No != null && filterParam.MO_No != "") {
-                lists = lists.Where(x => x.MO_No.Trim() == filterParam.MO_No.Trim());
+                lists = lists.Where(x => x.MO_No.Trim() == filterParam.MO_No.Trim()).ToList();
             }
             if (filterParam.Rack_Location != null && filterParam.Rack_Location != "") {
-                lists = lists.Where(x => x.Rack_Location.Trim() == filterParam.Rack_Location.Trim());
+                lists = lists.Where(x => x.Rack_Location.Trim() == filterParam.Rack_Location.Trim()).ToList();
             }
             if (filterParam.Material_ID != null && filterParam.Material_ID != "") {
-                lists = lists.Where(x => x.Material_ID.Trim() == filterParam.Material_ID.Trim());
+                lists = lists.Where(x => x.Material_ID.Trim() == filterParam.Material_ID.Trim()).ToList();
             }
-            lists = lists.Distinct().OrderByDescending(x => x.Updated_Time);
-            return await PagedList<Transaction_Main_Dto>.CreateAsync(lists, param.PageNumber, param.PageSize);
+            lists = lists.Distinct().OrderByDescending(x => x.Updated_Time).ToList();
+            return PagedList<Transaction_Main_Dto>.Create(lists, param.PageNumber, param.PageSize);
         }
 
         public async Task<string> FindMaterialName(string materialID)
@@ -338,6 +364,21 @@ namespace Bottom_API._Services.Services
             } else {
                 return "";
             }
+        }
+
+        public async Task<PagedList<Transaction_Main_Dto>> FilterMissingPrint(PaginationParams param, FilterMissingParam filterParam)
+        {
+            var lists = _repoTransactionMain.GetAll()
+                .ProjectTo<Transaction_Main_Dto>(_configMapper)
+                .Where(x => x.Missing_No != string.Empty);
+            if (filterParam.MO_No != null && filterParam.MO_No != "") {
+                lists = lists.Where(x => x.MO_No.Trim() == filterParam.MO_No.Trim());
+            }
+            if (filterParam.Material_ID != null && filterParam.Material_ID != "") {
+                lists = lists.Where(x => x.Material_ID.Trim() == filterParam.Material_ID.Trim());
+            }
+            lists = lists.Distinct().OrderByDescending(x => x.Updated_Time);
+            return await PagedList<Transaction_Main_Dto>.CreateAsync(lists, param.PageNumber, param.PageSize);
         }
     }
 }

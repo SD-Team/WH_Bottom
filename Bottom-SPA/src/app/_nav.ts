@@ -126,10 +126,15 @@ export class NavItem {
               icon: 'icon-arrow-right-circle',
             },
             {
-              name: 'Print Again',
+              name: 'QrCode Print',
               url: '/input/qrcode-again',
               icon: 'icon-printer',
             },
+            {
+              name: 'Missing Print',
+              url: '/input/missing-again',
+              icon: 'icon-printer',
+            }
           ],
         };
         this.navItems.push(navItem);

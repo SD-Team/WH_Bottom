@@ -11,6 +11,7 @@ import { PackingPrintAll } from '../../../_core/_viewmodels/packing-print-all';
 declare var $: any;
 import * as _ from 'lodash';
 import { QRCodeMainSearch } from '../../../_core/_viewmodels/qrcode-main-search';
+import { InputService } from '../../../_core/_services/input.service';
 @Component({
   selector: 'app-qr-body',
   templateUrl: './qr-body.component.html',
@@ -49,6 +50,7 @@ export class QrBodyComponent implements OnInit {
   constructor(private router: Router,
               private qrCodeMainService: QrcodeMainService,
               private packingListDetailService: PackingListDetailService,
+              private inputService: InputService,
               private alertifyService: AlertifyService) { }
 
   ngOnInit() {
@@ -69,6 +71,8 @@ export class QrBodyComponent implements OnInit {
         this.time_end = this.convertStringDate(this.qrCodeMainSearch.to_Date);
         this.search();
       }
+      this.inputService.changeListInputMain([]);
+      this.inputService.changeFlag('');
   }
   getTimeNow() {
      // Lấy ngày hiện tại
@@ -127,7 +131,11 @@ export class QrBodyComponent implements OnInit {
   print(qrCodeMain) {
       this.qrCodeMainItem =  qrCodeMain;
       let qrCodeId = [];
-      qrCodeId.push(this.qrCodeMainItem.qrCode_ID);
+      let qrCodeIDItem = {
+        qrCode_ID: qrCodeMain.qrCode_ID,
+        qrCode_Version: qrCodeMain.qrCode_Version
+      };
+      qrCodeId.push(qrCodeIDItem);
       this.packingListDetailService.findByQrCodeIdList(qrCodeId).subscribe(res => {
         this.packingPrintAll = res;
         this.packingListDetailService.changePackingPrint(this.packingPrintAll);
@@ -173,8 +181,20 @@ export class QrBodyComponent implements OnInit {
   printAll() {
     this.totalQtyList.length = 0;
     this.packingListDetailAll.length = 0;
+    let qrCodeVersionList = [];
     if (this.checkArray.length > 0) {
-      this.packingListDetailService.findByQrCodeIdList(this.checkArray).subscribe(res => {
+      this.checkArray.forEach(element => {
+        this.listQrCodeMainModel.forEach(element1 => {
+          if (element1.qrCode_ID === element) {
+            let item = {
+              qrCode_ID: element1.qrCode_ID,
+              qrCode_Version: element1.qrCode_Version
+            }
+            qrCodeVersionList.push(item);
+          }
+        });
+      });
+      this.packingListDetailService.findByQrCodeIdList(qrCodeVersionList).subscribe(res => {
         this.packingPrintAll = res;
         this.packingListDetailService.changePackingPrint(this.packingPrintAll);
         this.packingListDetailService.changePrintQrCodeAgain('0');

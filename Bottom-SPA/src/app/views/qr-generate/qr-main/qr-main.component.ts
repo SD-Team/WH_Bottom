@@ -7,6 +7,7 @@ import { PackingList } from '../../../_core/_models/packingList';
 import { Pagination, PaginatedResult } from '../../../_core/_models/pagination';
 import { QrcodeMainService } from '../../../_core/_services/qrcode-main.service';
 import { PackingSearch } from '../../../_core/_viewmodels/packing-search';
+import { InputService } from '../../../_core/_services/input.service';
 @Component({
   selector: 'app-qr-main',
   templateUrl: './qr-main.component.html',
@@ -42,11 +43,12 @@ export class QrMainComponent implements OnInit {
   ];
   constructor(private router: Router,
               private packingListService: PackingListService,
+              private inputService: InputService,
               private qrcodeService: QrcodeMainService,
               private alertifyService: AlertifyService) { }
 
   ngOnInit() {
-    this.pagination = {
+    this.pagination = {                                                                              
       currentPage: 1,
       itemsPerPage: 3,
       totalItems: 0,
@@ -60,6 +62,8 @@ export class QrMainComponent implements OnInit {
     this.time_end = timeNow;
     this.bsConfig = Object.assign({}, { containerClass: 'theme-blue' });
     this.getDataLoadPage();
+    this.inputService.changeListInputMain([]);
+    this.inputService.changeFlag('');
   }
   changeSupplier() {
     if (this.supplier_ID !== undefined && this.supplier_ID !== '') {

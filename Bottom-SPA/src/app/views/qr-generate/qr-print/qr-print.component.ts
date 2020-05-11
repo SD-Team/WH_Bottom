@@ -19,7 +19,7 @@ export class QrPrintComponent implements OnInit {
   ngOnInit() {
     this.packingListDetailService.currentPackingPrint.subscribe(res => this.packingPrint = res);
     this.packingListDetailService.currentPrintQrCodeAgain.subscribe(res => this.printQrCodeAgain = res);
-    if (this.printQrCodeAgain === '0' || this.printQrCodeAgain === '1') {
+    if (this.printQrCodeAgain === '0') {
       this.titleForm = 'Material Form';
     } else {
       this.titleForm = 'Sorting Form';

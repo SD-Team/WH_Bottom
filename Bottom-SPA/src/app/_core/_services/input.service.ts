@@ -9,6 +9,8 @@ import { map } from 'rxjs/operators';
 import { TransactionMain } from '../_models/transaction-main';
 import { FilterQrCodeAgainParam } from '../_viewmodels/qrcode-again-search';
 import { PaginatedResult } from '../_models/pagination';
+import { InputSubmitModel } from '../_viewmodels/input-submit-model';
+import { FilterMissingParam } from '../_viewmodels/missing-print-search';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +26,9 @@ export class InputService {
   qrCodeAgainParamStart: FilterQrCodeAgainParam;
   qrCodeAgainParamSource = new BehaviorSubject<FilterQrCodeAgainParam>(this.qrCodeAgainParamStart);
   currentQrCodeAgainParam = this.qrCodeAgainParamSource.asObservable();
+  missingPrintStart: FilterMissingParam;
+  missingPrintParamSource = new BehaviorSubject<FilterMissingParam>(this.missingPrintStart);
+  currentMissingParam = this.missingPrintParamSource.asObservable();
   constructor(private http: HttpClient) { }
 
   getMainByQrCodeID(qrCodeID: string) {
@@ -38,8 +43,8 @@ export class InputService {
     return this.http.post(this.baseUrl + 'input/create', params);
   }
 
-  submitInputMain(listInput: string[]) {
-    return this.http.post(this.baseUrl + 'input/submit', listInput);
+  submitInputMain(inputModel: any) {
+    return this.http.post(this.baseUrl + 'input/submit/', inputModel);
   }
 
   changeListInputMain(listInputDetail: InputDetail[]) {
@@ -55,6 +60,9 @@ export class InputService {
   }
   changeCodeAgainParam(param: FilterQrCodeAgainParam) {
     this.qrCodeAgainParamSource.next(param);
+  }
+  changeMissingParam(param: FilterMissingParam) {
+    this.missingPrintParamSource.next(param);
   }
   printMissing(missingNo: string) {
     return this.http.get<MissingPrint>(this.baseUrl + 'input/printmissing/' + missingNo, {});
@@ -79,6 +87,28 @@ export class InputService {
         }),
       );
   }
+
+  missingPrintFilter(page?, itemsPerPage?, text?: FilterMissingParam): Observable<PaginatedResult<TransactionMain[]>> {
+    const paginatedResult: PaginatedResult<TransactionMain[]> = new PaginatedResult<TransactionMain[]>();
+
+    let params = new HttpParams();
+
+    if (page != null && itemsPerPage != null) {
+      params = params.append('pageNumber', page);
+      params = params.append('pageSize', itemsPerPage);
+    }
+    return this.http.post<any>(this.baseUrl + 'input/filterMissingPrint/', text, { observe: 'response', params })
+      .pipe(
+        map(response => {
+          paginatedResult.result = response.body;
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+          }
+          return paginatedResult;
+        }),
+      );
+  }
+
   findMaterialName(materialID: string) {
     return this.http.get<any>(this.baseUrl + 'input/findMaterialName/' + materialID, {});
   }

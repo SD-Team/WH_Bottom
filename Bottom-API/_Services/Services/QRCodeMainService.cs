@@ -61,6 +61,7 @@ namespace Bottom_API._Services.Services
                 qrCodeDto.Receive_No = packing.Receive_No.Trim();
                 qrCodeDto.QRCode_Version = 1;
                 qrCodeDto.Valid_Status = "Y";
+                qrCodeDto.Is_Scanned = "N";
                 qrCodeDto.QRCode_Type = packing.Sheet_Type.Trim();
                 await _repoPacking.SaveAll();
                 var qrCodeMain = _mapper.Map<WMSB_QRCode_Main>(qrCodeDto);
@@ -95,7 +96,7 @@ namespace Bottom_API._Services.Services
             var listPackingList =  _repoPacking.GetAll()
                 .Where( x => x.Receive_Date >= Convert.ToDateTime(filterParam.From_Date + " 00:00:00.000") &&
                         x.Receive_Date <= Convert.ToDateTime(filterParam.To_Date + " 23:59:59.997"));
-            var listQrCodeMain = _repoQrcode.GetAll().Where(x => x.Valid_Status.Trim() == "Y");
+            var listQrCodeMain = _repoQrcode.GetAll().Where(x => x.Is_Scanned.Trim() == "N");
             if (filterParam.MO_No != null && filterParam.MO_No != string.Empty) {
                 listPackingList = listPackingList.Where(x => x.MO_No.Trim() == filterParam.MO_No.Trim());
             }
@@ -104,6 +105,7 @@ namespace Bottom_API._Services.Services
                                     select new QRCodeMainViewModel() {
                                         QRCode_ID = x.QRCode_ID,
                                         MO_No = y.MO_No,
+                                        QRCode_Version = x.QRCode_Version,
                                         Receive_No = x.Receive_No,
                                         Receive_Date = y.Receive_Date,
                                         Supplier_ID = y.Supplier_ID,

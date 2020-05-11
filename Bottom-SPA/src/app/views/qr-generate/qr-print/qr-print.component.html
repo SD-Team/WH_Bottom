@@ -50,10 +50,10 @@
                                         <span class="text-margin1">{{item.qrCodeMainItem.mO_No}}</span>
                                         <span class="text-margin1">{{item.qrCodeMainItem.mO_Seq}}</span>
                                         <span class="text-margin1"
-                                         *ngIf="printQrCodeAgain === '0' || printQrCodeAgain === '1'">
+                                         *ngIf="printQrCodeAgain === '0'">
                                             {{ item.object1.totalRQty }}</span>
                                             <span class="text-margin1"
-                                            *ngIf="printQrCodeAgain === '2'">
+                                            *ngIf="printQrCodeAgain === '2' || printQrCodeAgain === '1'">
                                                {{ item.object1.totalAct }}</span>
                                         <span class="text-margin1" *ngIf="item.object1.totalPQty !== undefined">
                                             {{ item.object1.totalPQty }}</span>
@@ -99,7 +99,7 @@
                                             </tr>
                                             <tr>
                                                 <td>Act</td>
-                                                <td *ngFor="let item1 of item.object1.packingListDetailModel1">0</td>
+                                                <td *ngFor="let item1 of item.object1.packingListDetailModel1">{{ item1.act }}</td>
                                             </tr>
                                             <tr>
                                                 <td>Bal</td>
@@ -125,7 +125,7 @@
                                             </tr>
                                             <tr>
                                                 <td>Act</td>
-                                                <td *ngFor="let item1 of item.object1.packingListDetailModel2">0</td>
+                                                <td *ngFor="let item1 of item.object1.packingListDetailModel2">{{ item1.act }}</td>
                                             </tr>
                                             <tr>
                                                 <td>Bal</td>
@@ -155,7 +155,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div *ngIf="printQrCodeAgain === '0' || printQrCodeAgain === '1'; else suggestedElse " class="row mt-2">
+                                <div *ngIf="printQrCodeAgain === '0'; else suggestedElse " class="row mt-2">
                                     <div class="col-4">
                                         <span>Suggested Location</span>
                                     </div>
@@ -174,14 +174,16 @@
                                         <div class="col-4">
                                             <span> Location</span>
                                         </div>
-                                        <div 
-                                            *ngFor="let suggesteditem of item.object1.suggestedReturn2"
-                                            class="col-4">
-                                                <span><i class="fa fa-square-o fa-lg" style="margin-right: 2px;"></i>{{suggesteditem.rack_Location}}</span>
-                                                <div>
-                                                    <ngx-qrcode id="qrCodeImage" [qrc-element-type]="elementType" [qrc-value] = "suggesteditem.rack_Location">
-                                                    </ngx-qrcode>
+                                        <div class="col-8">
+                                            <div class="row">
+                                                <div *ngFor="let suggesteditem of item.object1.suggestedReturn2" class="col-6">
+                                                    <span><i class="fa fa-square-o fa-lg" style="margin-right: 2px;"></i>{{suggesteditem.rack_Location}}</span>
+                                                    <div>
+                                                        <ngx-qrcode id="qrCodeImage" [qrc-element-type]="elementType" [qrc-value] = "suggesteditem.rack_Location">
+                                                        </ngx-qrcode>
+                                                    </div>
                                                 </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </ng-template>
@@ -227,10 +229,10 @@
                                         <span class="text-margin1">{{item.qrCodeMainItem.mO_No}}</span>
                                         <span class="text-margin1">{{item.qrCodeMainItem.mO_Seq}}</span>
                                         <span class="text-margin1"
-                                         *ngIf="printQrCodeAgain === '0' || printQrCodeAgain === '1'">
+                                         *ngIf="printQrCodeAgain === '0' ">
                                             {{ item.object1.totalRQty }}</span>
                                             <span class="text-margin1"
-                                            *ngIf="printQrCodeAgain === '2'">
+                                            *ngIf="printQrCodeAgain === '2' || printQrCodeAgain === '1'">
                                                {{ item.object1.totalAct }}</span>
                                         <span class="text-margin1" *ngIf="item.object1.totalPQty !== undefined">
                                             {{ item.object1.totalPQty }}</span>
@@ -276,7 +278,7 @@
                                             </tr>
                                             <tr>
                                                 <td>Act</td>
-                                                <td *ngFor="let item1 of item.object1.packingListDetailModel3">0</td>
+                                                <td *ngFor="let item1 of item.object1.packingListDetailModel3">{{ item1.act }}</td>
                                             </tr>
                                             <tr>
                                                 <td>Bal</td>
@@ -306,7 +308,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row mt-2" *ngIf="printQrCodeAgain === '0' || printQrCodeAgain === '1'; else suggestedElse1 ">
+                                <div class="row mt-2" *ngIf="printQrCodeAgain === '0'; else suggestedElse1 ">
                                     <div class="col-4">
                                         <span>Suggested Location</span>
                                     </div>

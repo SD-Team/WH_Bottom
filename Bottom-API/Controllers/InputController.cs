@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Bottom_API._Services.Interfaces;
 using Bottom_API.DTO;
 using Bottom_API.Helpers;
+using Bottom_API.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bottom_API.Controllers
@@ -49,9 +50,9 @@ namespace Bottom_API.Controllers
         }
 
         [HttpPost("submit", Name = "SubmitInput")]
-        public async Task<IActionResult> SubmitInput(List<string> list)
+        public async Task<IActionResult> SubmitInput([FromBody]InputSubmitModel data)
         {
-            if (await _service.SubmitInput(list))
+            if (await _service.SubmitInput(data))
             {
                 return Ok();
             }
@@ -72,6 +73,13 @@ namespace Bottom_API.Controllers
         public async Task<IActionResult> FilterQrCodeAgain([FromQuery]PaginationParams param, FilterQrCodeAgainParam filterParam) 
         {
             var data = await _service.FilterQrCodeAgain(param,filterParam);
+            Response.AddPagination(data.CurrentPage, data.PageSize, data.TotalCount, data.TotalPages);
+            return Ok(data);
+        }
+        
+        [HttpPost("filterMissingPrint")]
+        public async Task<IActionResult> FilterMissingPrint([FromQuery]PaginationParams param, FilterMissingParam filterParam) {
+            var data = await _service.FilterMissingPrint(param,filterParam);
             Response.AddPagination(data.CurrentPage, data.PageSize, data.TotalCount, data.TotalPages);
             return Ok(data);
         }

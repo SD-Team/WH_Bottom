@@ -51,21 +51,28 @@ export class InputPrintComponent implements OnInit {
     });
     params.inStock_Qty = params.trans_In_Qty;
     params.input_No = "BI" + params.plan_No + (Math.floor(Math.random() * (999 - 100)) + 100);
-    this.inputService.saveInput(params).subscribe(
-      () => {
-        this.alertify.success("Save succeed");
-        this.listInputMain.forEach((e, i) => {
-          if (e.qrCode_Id === params.qrCode_Id)
-            this.listInputMain[i] = params;
-        });
-        this.inputService.changeListInputMain(this.listInputMain);
-        console.log("new List: ", this.listInputMain);
-        this.router.navigate(["/input/main"])
-      },
-      error => {
-        this.alertify.error(error);
-      }
-    )
+    // this.inputService.saveInput(params).subscribe(
+    //   () => {
+    //     this.alertify.success("Save succeed");
+    //     this.listInputMain.forEach((e, i) => {
+    //       if (e.qrCode_Id === params.qrCode_Id)
+    //         this.listInputMain[i] = params;
+    //     });
+    //     this.inputService.changeListInputMain(this.listInputMain);
+    //     console.log("new List: ", this.listInputMain);
+    //     this.router.navigate(["/input/main"])
+    //   },
+    //   error => {
+    //     this.alertify.error(error);
+    //   }
+    // )
+    this.listInputMain.forEach((e, i) => {
+      if (e.qrCode_Id === params.qrCode_Id)
+        this.listInputMain[i] = params;
+      });
+      this.alertify.success("Save succeed");
+      this.inputService.changeListInputMain(this.listInputMain);
+      this.router.navigate(["/input/main"])
     localStorage.setItem("inputMain", JSON.stringify(params));
     
     console.log(params)

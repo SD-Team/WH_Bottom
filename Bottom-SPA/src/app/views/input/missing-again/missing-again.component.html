@@ -3,8 +3,7 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
-          <strong>Qr Generate</strong>
-          Qr Body
+          <strong>Missing Print</strong>
         </div>
         <form class="form-horizontal">
           <div class="card-body">
@@ -13,11 +12,7 @@
               <div class="col-md-2">
                 <input type="text" [(ngModel)]="mO_No" placeholder="Enter Plan No" name="mO_No" class="form-control">
               </div>
-              <label class="col-md-2 offset-md-1 col-form-label" for="Rack Location "><strong class="float-right">Rack Location </strong></label>
-              <div class="col-md-2">
-                <input type="text" [(ngModel)]="rack_Location" placeholder="Enter Rack Location" name="rack_location" class="form-control">
-              </div>
-              <div class="col-md-5">
+              <div class="col-md-9">
 
               </div>
           </div>
@@ -52,6 +47,7 @@
                 <th>Material</th>
                 <th>Rack Location</th>
                 <th>QRCode ID</th>
+                <th>Missing No</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -73,9 +69,9 @@
                   <td>{{item.material_ID}}</td>
                   <td>{{item.rack_Location}}</td>
                   <td>{{item.qrCode_ID}}</td>
+                  <td>{{item.missing_No}}</td>
                   <td>
-                    <button (click)="printQrCodeAgain(item)"  class="btn btn-primary">QrCode</button>
-                    <!-- <button [routerLink]="['/input/missing-print/', item.missing_No]" style="margin-left: 5px;" class="btn btn-warning">Missing</button> -->
+                    <button [routerLink]="['/input/missing-print/', item.missing_No]" style="margin-left: 5px;" class="btn btn-warning">Missing</button>
                   </td>
                 </tr>
               </ng-container>

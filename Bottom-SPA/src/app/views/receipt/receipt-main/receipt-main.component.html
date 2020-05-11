@@ -129,15 +129,13 @@
               </ng-container>
             </tbody>
           </table>
-          <div class="d-flex float-right">
+          <div class="d-flex">
+            <pagination *ngIf="materialLists.length > 0" [boundaryLinks]="true" [totalItems]="pagination.totalItems" [(ngModel)]="pagination.currentPage"
+            [itemsPerPage]="pagination.itemsPerPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;"
+            nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [maxSize]=5>
+            </pagination>
           </div>
         </div>
-        <!-- <div class="d-flex">
-          <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [(ngModel)]="pagination.currentPage"
-          [itemsPerPage]="pagination.itemsPerPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;"
-          nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [maxSize]=5>
-          </pagination>
-        </div> -->
       </div>
     </div>
     <!--/.col-->
