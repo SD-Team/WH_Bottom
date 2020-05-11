@@ -251,7 +251,8 @@ namespace Bottom_API._Services.Services
                 modelQrCodeMain.QRCode_ID = qrCodeMain.QRCode_ID;
                 modelQrCodeMain.QRCode_Type = qrCodeMain.QRCode_Type;
                 modelQrCodeMain.Receive_No = qrCodeMain.Receive_No;
-                modelQrCodeMain.Valid_Status = qrCodeMain.Valid_Status;
+                modelQrCodeMain.Valid_Status = "Y";
+                modelQrCodeMain.Is_Scanned = "Y";
                 modelQrCodeMain.Invalid_Date = qrCodeMain.Invalid_Date;
                 modelQrCodeMain.QRCode_Version = qrCodeMain.QRCode_Version + 1;
                 modelQrCodeMain.Updated_Time = timeNow;
