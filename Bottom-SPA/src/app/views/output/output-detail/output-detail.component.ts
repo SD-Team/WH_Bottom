@@ -36,6 +36,7 @@ export class OutputDetailComponent implements OnInit {
   }
   getData() {
     this.outputService.getOutputDetail(this.transacNo).subscribe(res => {
+      debugger
       this.outputDetail = res;
 
       // Group by theo tool_Size

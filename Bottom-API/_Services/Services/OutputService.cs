@@ -258,6 +258,11 @@ namespace Bottom_API._Services.Services
                 modelQrCodeMain.Updated_By = "Emma";
                 _repoQRCodeMain.Add(modelQrCodeMain);
 
+                // Update cho QRCode cũ, Valid_Status =N, Invalid_Date = Ngày mà tạo ra version mới
+                qrCodeMain.Valid_Status = "N";
+                qrCodeMain.Invalid_Date = timeNow;
+                _repoQRCodeMain.Update(qrCodeMain);
+
                 // thêm qrcodedetail của qrcode mới: thêm qrcode main cũng phải thêm qrcode detail
                 var qrCodeDetails = await _repoQRCodeDetail.FindAll(x => x.QRCode_ID.Trim() == qrCodeMain.QRCode_ID.Trim() && x.QRCode_Version == qrCodeMain.QRCode_Version).ToListAsync();
                 foreach (var itemQrCodeDetail in qrCodeDetails)
