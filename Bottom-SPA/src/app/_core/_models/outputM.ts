@@ -1,6 +1,7 @@
 export interface OutputM {
     transacNo: string;
     qrCodeId: string;
+    qrCodeVersion: number;
     planNo: string;
     supplierNo: string;
     supplierName: string;

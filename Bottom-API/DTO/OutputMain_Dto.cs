@@ -7,6 +7,7 @@ namespace Bottom_API.DTO
         public long Id { get; set; }
         public string TransacNo { get; set; }
         public string QrCodeId { get; set; }
+        public int QrCodeVersion { get; set; }
         public string PlanNo { get; set; }
         public string SupplierNo { get; set; }
         public string SupplierName { get; set; }

@@ -77,6 +77,7 @@ namespace Bottom_API._Services.Services
                     output.Id = item.ID;
                     output.TransacNo = item.Transac_No;
                     output.QrCodeId = item.QRCode_ID.Trim();
+                    output.QrCodeVersion = item.QRCode_Version;
                     output.PlanNo = item.MO_No.Trim();
                     output.Batch = item.MO_Seq;
                     output.MatId = item.Material_ID.Trim();

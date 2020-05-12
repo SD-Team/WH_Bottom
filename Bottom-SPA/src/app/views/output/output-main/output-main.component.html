@@ -92,7 +92,7 @@
                       <button
                         class="btn btn-primary"
                         *ngIf="item.transOutQty != 0 && item.remainingQty != 0"
-                        (click)="print(item.qrCodeId)"
+                        (click)="print(item.qrCodeId, (item.qrCodeVersion + 1))"
                       >
                         <i class="fa fa-print"></i> QRCode
                       </button>

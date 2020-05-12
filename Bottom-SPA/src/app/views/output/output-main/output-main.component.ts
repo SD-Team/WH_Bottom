@@ -94,7 +94,7 @@ export class OutputMainComponent implements OnInit {
     this.router.navigate(['output/process']);
   }
 
-  print(qrCodeId: string) {
+  print(qrCodeId: string, qrCodeVersion: number) {
     this.packingListDetailService.changePrintQrCodeAgain('2');
     let qrCodeIdList = [];
     qrCodeIdList.push(qrCodeId);
@@ -142,7 +142,8 @@ export class OutputMainComponent implements OnInit {
       inStockQty: 0,
       transOutQty: 0,
       remainingQty: 0,
-      pickupNo: ''
+      pickupNo: '',
+      qrCodeVersion: 0
     };
     this.outputService.changeOutputM(outputM);
   }
