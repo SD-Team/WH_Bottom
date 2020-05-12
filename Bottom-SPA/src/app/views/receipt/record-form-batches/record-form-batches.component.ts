@@ -110,9 +110,6 @@ export class RecordFormBatchesComponent implements OnInit {
     });
   }
   submitData() {
-    if (this.delivery_No === undefined || this.delivery_No === '') {
-      this.alertifyService.error('Please enter Delivery No');
-    } else {
       if (this.materialByBatchList.length !== 0) {
         this.materialByBatchList.map(item => {
           item.delivery_No = this.delivery_No;
@@ -124,14 +121,10 @@ export class RecordFormBatchesComponent implements OnInit {
           //   this.receiveNoMain = respo;
           //   // this.materialService.changeReceiveNoMain(this.receiveNoMain);
           this.router.navigate(['receipt/record']);
-          // }, error => {
-          //   this.alertifyService.error(error);
-          // });
         });
         } else {
           this.alertifyService.error('Please click insert');
         }
-    }
   }
   backForm() {
     this.router.navigate(['/receipt/record']);

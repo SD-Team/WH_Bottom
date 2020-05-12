@@ -116,7 +116,7 @@ export class InputMainComponent implements OnInit, OnDestroy {
       this.inputService.submitInputMain(inputModel).subscribe(
         () => {
           this.rackLocation = '';
-          // this.result = [];
+          this.result = [];
           this.alertify.success("Submit succeed");
           this.err = false;
           this.checkSubmit = true;

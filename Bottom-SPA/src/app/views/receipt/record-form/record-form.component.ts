@@ -195,9 +195,6 @@ export class RecordFormComponent implements OnInit {
   // console.log(this.orderSizeByBatch);
 }
   submitTable() {
-    if(this.delivery_No === undefined || this.delivery_No === '') {
-      this.alertifyService.error('Please enter Delivery No')
-    } else {
       this.orderSizeByBatch.map(item => {
         item.delivery_No = this.delivery_No;
         return item;
@@ -230,7 +227,6 @@ export class RecordFormComponent implements OnInit {
       }, error => {
         this.alertifyService.error(error);
       });
-    }
   }
   cancel() {
     

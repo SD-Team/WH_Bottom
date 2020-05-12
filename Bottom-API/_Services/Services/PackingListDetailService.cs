@@ -321,18 +321,15 @@ namespace Bottom_API._Services.Services
             }
             return objectResult;
         }
-
-        
+ 
         public async Task<List<Packing_List_Detail_Dto>> GetAllAsync()
         {
             return await _repoPackingListDetail.GetAll().ProjectTo<Packing_List_Detail_Dto>(_configMapper).ToListAsync();
         }
-
         public Packing_List_Detail_Dto GetById(object id)
         {
             throw new System.NotImplementedException();
         }
-
         public Task<PagedList<Packing_List_Detail_Dto>> GetWithPaginations(PaginationParams param)
         {
             throw new System.NotImplementedException();
