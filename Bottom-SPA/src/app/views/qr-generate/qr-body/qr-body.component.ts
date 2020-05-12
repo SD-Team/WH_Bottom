@@ -71,8 +71,7 @@ export class QrBodyComponent implements OnInit {
         this.time_end = this.convertStringDate(this.qrCodeMainSearch.to_Date);
         this.search();
       }
-      this.inputService.changeListInputMain([]);
-      this.inputService.changeFlag('');
+      this.inputService.clearDataChangeMenu();
   }
   getTimeNow() {
      // Lấy ngày hiện tại

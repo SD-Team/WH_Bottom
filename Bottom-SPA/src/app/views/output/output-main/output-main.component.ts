@@ -36,8 +36,7 @@ export class OutputMainComponent implements OnInit {
     this.outputService.currentFlagFinish.subscribe((res) => {
       this.flagFinish = res;
     });
-    this.inputService.changeListInputMain([]);
-    this.inputService.changeFlag('');
+    this.inputService.clearDataChangeMenu();
   }
 
   getOutputMain(e) {

@@ -32,11 +32,5 @@ namespace Bottom_API.Controllers
             var result = await _service.PrintByQRCodeIDListAgain(data);
             return Ok(result);
         }
-
-        [HttpPost("test")]
-        public async Task<IActionResult> TestPackingList([FromBody]QrCodeIDVersion data) {
-            var result = await _service.TestPackingList(data);
-            return Ok(result);
-        }
     }
 }

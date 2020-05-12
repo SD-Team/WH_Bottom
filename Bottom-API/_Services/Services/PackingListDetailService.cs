@@ -408,35 +408,5 @@ namespace Bottom_API._Services.Services
             }
             return objectResult;
         }
-
-        public async Task<List<WMSB_PackingList_Detail>> TestPackingList(QrCodeIDVersion data)
-        {
-            var qrCodeMan = await _repoQrcode.GetAll()
-                    .Where(x => x.QRCode_ID.Trim() == data.QRCode_ID.Trim() &&
-                        x.QRCode_Version == data.QRCode_Version).FirstOrDefaultAsync();
-            var packingList = await _repoPackingList.GetAll().ToListAsync();
-            // Tìm kiếm Purchase và Sheet_Type của qrcodeid với version đó.
-            var packingListFind = packingList
-                .Where(x => x.Receive_No.Trim() == qrCodeMan.Receive_No.Trim()).FirstOrDefault();
-            // Tìm List ReceiveNo tương ứng với Purchase và Sheet_Type ở trên        
-            var ReceiveNoList = packingList.Where(x => x.Sheet_Type.Trim() == packingListFind.Sheet_Type.Trim() &&
-                x.Purchase_No.Trim() == packingListFind.Purchase_No.Trim()).Select(x => x.Receive_No).ToList();
-            
-            var packingListDetailAll = await _repoPackingListDetail.GetAll().ToListAsync();
-            var lists = packingListDetailAll
-                .Where(x => x.Receive_No.Trim() == qrCodeMan.Receive_No.Trim()).ToList();
-            var packingDetailList = new List<WMSB_PackingList_Detail>();
-            foreach (var item in ReceiveNoList)
-            {
-                var packingdetailitem = packingListDetailAll.Where(x => x.Receive_No.Trim() == item.Trim()).ToList();
-                packingDetailList.AddRange(packingdetailitem);
-                packingDetailList.AddRange(packingdetailitem);
-            }
-            var result = packingDetailList.GroupBy(x => x.Tool_Size).Select(x => new {
-                Tool_Size = x.FirstOrDefault().Tool_Size,
-                Bal = x.FirstOrDefault().Purchase_Qty - x.Sum(cl => cl.Received_Qty)
-            });
-            return packingDetailList;
-        }
     }
 }
