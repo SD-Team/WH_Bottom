@@ -57,8 +57,6 @@ namespace Bottom_API._Services.Services
             var qrCodeMan = await _repoQrcode.GetAll()
                     .Where(x => x.QRCode_ID.Trim() == data.QRCode_ID.Trim() &&
                         x.QRCode_Version == data.QRCode_Version).FirstOrDefaultAsync();
-            var lists = await _repoPackingListDetail.GetAll()
-            .Where(x => x.Receive_No.Trim() == qrCodeMan.Receive_No.Trim()).ToListAsync();
             var transactionMainList = await _repoTransactionMain.GetAll()
                 .Where(x => x.Can_Move == "Y" && x.QRCode_ID.Trim() == qrCodeMan.QRCode_ID).ToListAsync();
             var transactionDetailList = _repoTransactionDetail.GetAll();
@@ -69,7 +67,28 @@ namespace Bottom_API._Services.Services
                 }).GroupBy(x => x.QrCode_ID).Select(y => new {
                     totalAct = y.Sum(cl => cl.Trans_Qty)
                 }).FirstOrDefault();
+            var packingList = await _repoPackingList.GetAll().ToListAsync();
+            // Tìm kiếm Purchase và Sheet_Type của qrcodeid với version đó.
+            var packingListFind = packingList
+                .Where(x => x.Receive_No.Trim() == qrCodeMan.Receive_No.Trim()).FirstOrDefault();
+            // Tìm List ReceiveNo tương ứng với Purchase và Sheet_Type ở trên        
+            var ReceiveNoList = packingList.Where(x => x.Sheet_Type.Trim() == packingListFind.Sheet_Type.Trim() &&
+                x.Purchase_No.Trim() == packingListFind.Purchase_No.Trim()).Select(x => x.Receive_No).ToList();
             
+            var packingListDetailAll = await _repoPackingListDetail.GetAll().ToListAsync();
+            var lists = packingListDetailAll
+                .Where(x => x.Receive_No.Trim() == qrCodeMan.Receive_No.Trim()).ToList();
+            var packingDetailList = new List<WMSB_PackingList_Detail>();
+            foreach (var item in ReceiveNoList)
+            {
+                var packingdetailitem = packingListDetailAll.Where(x => x.Receive_No.Trim() == item.Trim()).ToList();
+                packingDetailList.AddRange(packingdetailitem);
+            }
+            var packingDetailByToolSize = packingDetailList.GroupBy(x => x.Tool_Size).Select(x => new {
+                Tool_Size = x.FirstOrDefault().Tool_Size,
+                Bal = x.FirstOrDefault().Purchase_Qty - x.Sum(cl => cl.Received_Qty)
+            });
+
             var packingListDetailModel = new List<PackingListDetailViewModel>();
             var packingListDetailModel1 = new List<PackingListDetailViewModel>();
             var packingListDetailModel2 = new List<PackingListDetailViewModel>();
@@ -88,7 +107,13 @@ namespace Bottom_API._Services.Services
                 packingItem.Purchase_Qty = item.Purchase_Qty;
                 packingItem.Received_Qty = item.Received_Qty;
                 packingItem.Act = 0;
-                packingItem.Bal = item.Purchase_Qty - item.Received_Qty;
+                // packingItem.Bal = item.Purchase_Qty - item.Received_Qty;
+                foreach (var itemByToolSize in packingDetailByToolSize)
+                {
+                    if (itemByToolSize.Tool_Size.Trim() == item.Tool_Size.Trim()) {
+                        packingItem.Bal = itemByToolSize.Bal;
+                    }
+                }
                 totalPQty = totalPQty + item.Purchase_Qty;
                 totalRQty = totalRQty + item.Received_Qty;
                 packingListDetailModel.Add(packingItem);
@@ -382,6 +407,36 @@ namespace Bottom_API._Services.Services
                 objectResult.Add(objectItem);
             }
             return objectResult;
+        }
+
+        public async Task<List<WMSB_PackingList_Detail>> TestPackingList(QrCodeIDVersion data)
+        {
+            var qrCodeMan = await _repoQrcode.GetAll()
+                    .Where(x => x.QRCode_ID.Trim() == data.QRCode_ID.Trim() &&
+                        x.QRCode_Version == data.QRCode_Version).FirstOrDefaultAsync();
+            var packingList = await _repoPackingList.GetAll().ToListAsync();
+            // Tìm kiếm Purchase và Sheet_Type của qrcodeid với version đó.
+            var packingListFind = packingList
+                .Where(x => x.Receive_No.Trim() == qrCodeMan.Receive_No.Trim()).FirstOrDefault();
+            // Tìm List ReceiveNo tương ứng với Purchase và Sheet_Type ở trên        
+            var ReceiveNoList = packingList.Where(x => x.Sheet_Type.Trim() == packingListFind.Sheet_Type.Trim() &&
+                x.Purchase_No.Trim() == packingListFind.Purchase_No.Trim()).Select(x => x.Receive_No).ToList();
+            
+            var packingListDetailAll = await _repoPackingListDetail.GetAll().ToListAsync();
+            var lists = packingListDetailAll
+                .Where(x => x.Receive_No.Trim() == qrCodeMan.Receive_No.Trim()).ToList();
+            var packingDetailList = new List<WMSB_PackingList_Detail>();
+            foreach (var item in ReceiveNoList)
+            {
+                var packingdetailitem = packingListDetailAll.Where(x => x.Receive_No.Trim() == item.Trim()).ToList();
+                packingDetailList.AddRange(packingdetailitem);
+                packingDetailList.AddRange(packingdetailitem);
+            }
+            var result = packingDetailList.GroupBy(x => x.Tool_Size).Select(x => new {
+                Tool_Size = x.FirstOrDefault().Tool_Size,
+                Bal = x.FirstOrDefault().Purchase_Qty - x.Sum(cl => cl.Received_Qty)
+            });
+            return packingDetailList;
         }
     }
 }
