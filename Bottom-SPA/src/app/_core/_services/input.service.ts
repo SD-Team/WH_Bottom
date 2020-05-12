@@ -9,7 +9,6 @@ import { map } from 'rxjs/operators';
 import { TransactionMain } from '../_models/transaction-main';
 import { FilterQrCodeAgainParam } from '../_viewmodels/qrcode-again-search';
 import { PaginatedResult } from '../_models/pagination';
-import { InputSubmitModel } from '../_viewmodels/input-submit-model';
 import { FilterMissingParam } from '../_viewmodels/missing-print-search';
 
 @Injectable({
@@ -60,6 +59,10 @@ export class InputService {
   }
   changeCodeAgainParam(param: FilterQrCodeAgainParam) {
     this.qrCodeAgainParamSource.next(param);
+  }
+  clearDataChangeMenu() {
+    this.listInputMainSource.next([]);
+    this.flagSource.next('');
   }
   changeMissingParam(param: FilterMissingParam) {
     this.missingPrintParamSource.next(param);

@@ -36,8 +36,7 @@ export class OutputMainComponent implements OnInit {
     this.outputService.currentFlagFinish.subscribe((res) => {
       this.flagFinish = res;
     });
-    this.inputService.changeListInputMain([]);
-    this.inputService.changeFlag('');
+    this.inputService.clearDataChangeMenu();
   }
 
   getOutputMain(e) {
@@ -96,9 +95,13 @@ export class OutputMainComponent implements OnInit {
 
   print(qrCodeId: string, qrCodeVersion: number) {
     this.packingListDetailService.changePrintQrCodeAgain('2');
-    let qrCodeIdList = [];
-    qrCodeIdList.push(qrCodeId);
-    this.packingListDetailService.findByQrCodeIdList(qrCodeIdList).subscribe(res => {
+    let qrCodeIdVersion = [];
+    let item = {
+      qrCode_ID: qrCodeId,
+      qrCode_Version: qrCodeVersion
+    }
+    qrCodeIdVersion.push(item);
+    this.packingListDetailService.findByQrCodeIdList(qrCodeIdVersion).subscribe(res => {
       this.packingPrintAll = res;
       this.packingListDetailService.changePackingPrint(this.packingPrintAll);
       this.router.navigate(['/qr/print']);

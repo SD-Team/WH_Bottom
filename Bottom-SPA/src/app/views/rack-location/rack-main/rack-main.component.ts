@@ -43,8 +43,7 @@ export class RackMainComponent implements OnInit {
       this.rackLocations = data['racks'].result;
       this.pagination = data['racks'].pagination;
     });
-    this.inputService.changeListInputMain([]);
-    this.inputService.changeFlag('');
+    this.inputService.clearDataChangeMenu();
   }
   
   loadDatas() {

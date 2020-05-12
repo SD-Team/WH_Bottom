@@ -62,8 +62,7 @@ export class QrMainComponent implements OnInit {
     this.time_end = timeNow;
     this.bsConfig = Object.assign({}, { containerClass: 'theme-blue' });
     this.getDataLoadPage();
-    this.inputService.changeListInputMain([]);
-    this.inputService.changeFlag('');
+    this.inputService.clearDataChangeMenu();
   }
   changeSupplier() {
     if (this.supplier_ID !== undefined && this.supplier_ID !== '') {
