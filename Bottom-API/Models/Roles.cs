@@ -21,6 +21,7 @@ namespace Bottom_API.Models
         public string WH_Type { get; set; }
         [StringLength(100)]
         public string Remark { get; set; }
+        public decimal RoleSeq { get; set; }
 
         [InverseProperty("Role")]
         public virtual ICollection<RoleUser> RoleUser { get; set; }

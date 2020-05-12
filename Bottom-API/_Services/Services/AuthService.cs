@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,9 +30,9 @@ namespace Bottom_API._Services.Services
                 return null;
             }
 
-            var roleUser = _repoRoleUser.FindAll(x => x.UserId == user.Id);
+            var roleUser = _repoRoleUser.FindAll(x => x.UserId == user.Id); 
             var role = _repoRoles.FindAll(x => x.WH_Type == "B");
-            var roleName = await roleUser.Join(role, x => x.RoleId, y => y.Id, (x, y) => y.RoleUnique).ToListAsync();
+            var roleName = await roleUser.Join(role, x => x.RoleId, y => y.Id, (x, y) => new Role_Dto {Name = y.RoleUnique, Position = y.RoleSeq}).ToListAsync();
 
             var result = new UserForLogged_Dto
             {
@@ -40,7 +41,7 @@ namespace Bottom_API._Services.Services
                 Username = user.Username,
                 Name = user.Name,
                 Nik = user.Nik,
-                Role = roleName
+                Role = roleName.OrderBy(x => x.Position).Select(x => x.Name).ToList()
             };
 
             return result;
