@@ -36,7 +36,7 @@ namespace Bottom_API._Services.Services
         {
             TransferLocation_Dto model = new TransferLocation_Dto();
             // Lấy ra TransactionMain cùng QRCode_ID và Can_Move == "Y" và QRCode_Version mới nhất
-            var transctionModel = await _repoTransactionMain.FindAll(x => x.QRCode_ID.Trim() == qrCodeId.ToString().Trim() && x.Can_Move == "Y" && (x.Transac_Type.Trim() == "I" || x.Transac_Type.Trim() == "M")).OrderByDescending(x => x.QRCode_Version).FirstOrDefaultAsync();
+            var transctionModel = await _repoTransactionMain.FindAll(x => x.QRCode_ID.Trim() == qrCodeId.ToString().Trim() && x.Can_Move == "Y" && (x.Transac_Type.Trim() == "I" || x.Transac_Type.Trim() == "M" || x.Transac_Type.Trim() == "R")).OrderByDescending(x => x.QRCode_Version).FirstOrDefaultAsync();
             var qrCodeModel = await _repoQRCodeMain.GetByQRCodeID(qrCodeId);
             if (transctionModel != null)
             {

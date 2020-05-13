@@ -21,6 +21,7 @@ export class OutputProcessComponent implements OnInit {
   result3 = []; // mảng chứa số lượng cần output ra theo từng size: là mảng để so sánh result1 và result2 xem ai nhỏ hơn thì lấy, và result 3 có thể thay đổi được nên tách ra thêm mảng nữa
   output: any = [];
   sumResult1: number = 0;
+  sumResult3: number = 0;
 
   constructor(
     private router: Router,
@@ -101,6 +102,9 @@ export class OutputProcessComponent implements OnInit {
             name: this.result1[i].name,
           });
         }
+        this.sumResult3 = this.result3.reduce((value, i) => {
+          return value += i.value;
+        }, 0);
       });
   }
 

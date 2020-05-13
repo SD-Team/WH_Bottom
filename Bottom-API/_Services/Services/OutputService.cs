@@ -53,6 +53,46 @@ namespace Bottom_API._Services.Services
             // biến qrcodeid là sheet no của bảng materialsheetsize, dựa theo mã đó lấy ra listmaterialsheetsize là danh sánh đơn output ra
             var listMaterialSheetSize = await _repoMaterialSheetSize.FindAll(x => x.Sheet_No.Trim() == qrCodeId.Trim()).ProjectTo<Material_Sheet_Size_Dto>(_configMapper).OrderBy(x => x.Tool_Size).ToListAsync();
 
+            // kiểm tra xem Sheet_No đó đã output bao giờ chưa, nếu có rồi là kiểm tra đơn đó đã output ra hết chưa
+            var listTransactionMainTypeOByPickupNo = await _repoTransactionMain.FindAll().Where(x => x.Pickup_No.Trim() == qrCodeId && x.Transac_Type.Trim() == "O").ToListAsync();
+            List<WMSB_Transaction_Detail> listTransactionDetailByBistTransactionMainTypeOByPickupNo = new List<WMSB_Transaction_Detail>();
+            if (listTransactionMainTypeOByPickupNo.Count > 0)
+            {
+                foreach (var item in listTransactionMainTypeOByPickupNo)
+                {
+                    var tmp  = await _repoTransactionDetail.FindAll(x => x.Transac_No == item.Transac_No).ToListAsync();
+                    listTransactionDetailByBistTransactionMainTypeOByPickupNo.AddRange(tmp);
+                }
+
+                var totalTransQtyOutput = listTransactionDetailByBistTransactionMainTypeOByPickupNo.GroupBy(x => new {x.Order_Size})
+                    .Select(y => new {
+                        OrderSize = y.Key.Order_Size,
+                        TotalTransQty = (decimal)y.Sum(z => z.Trans_Qty)
+                    }).ToList();
+
+                listMaterialSheetSize = listMaterialSheetSize.Join(totalTransQtyOutput, x => x.Order_Size, y => y.OrderSize, (x,y) => new Material_Sheet_Size_Dto {
+                    Qty = (decimal)x.Qty - y.TotalTransQty,
+                    Factory_ID = x.Factory_ID,
+                    Batch = x.Batch,
+                    Cur_Ent = x.Cur_Ent,
+                    HP_Update_Time = x.HP_Update_Time,
+                    HP_User =  x.HP_User,
+                    Manno = x.Manno,
+                    Material_ID = x.Material_ID,
+                    Model_Size = x.Model_Size,
+                    Order_Size = x.Order_Size,
+                    Print_Size = x.Print_Size,
+                    Prod_Delivery_Way = x.Prod_Delivery_Way,
+                    Sheet_No = x.Sheet_No,
+                    Subcont_Material = x.Subcont_Material,
+                    Tool_Size = x.Tool_Size,
+                    Update_By = x.Update_By,
+                    Update_Time =x.Update_Time
+                }).ToList();
+            }
+            // hết kiểm tra xem Sheet_No đó đã output ra bao giờ chưa
+            
+
             List<OutputMain_Dto> listOuput = new List<OutputMain_Dto>();
             var materialSheetSize = await _repoMaterialSheetSize.FindAll(x => x.Sheet_No.Trim() == qrCodeId.Trim()).FirstOrDefaultAsync();
             if (materialSheetSize != null)
@@ -164,7 +204,7 @@ namespace Bottom_API._Services.Services
             modelTypeO.Material_ID = transactionMain.Material_ID;
             modelTypeO.Material_Name = transactionMain.Material_Name;
             modelTypeO.Purchase_No = transactionMain.Purchase_No;
-            modelTypeO.Rack_Location = transactionMain.Rack_Location;
+            modelTypeO.Rack_Location = null;// type O: racklocation rỗng
             modelTypeO.Purchase_Qty = transactionMain.Purchase_Qty;
             modelTypeO.QRCode_Version = transactionMain.QRCode_Version;
             modelTypeO.QRCode_ID = transactionMain.QRCode_ID;
@@ -201,7 +241,7 @@ namespace Bottom_API._Services.Services
                     var transactionDetail = await _repoTransactionDetail.FindAll(x => x.Transac_No.Trim() == transactionMain.Transac_No.Trim()).ToListAsync();
                     foreach (var item in transactionDetail)
                     {
-                        item.Trans_Qty = outputParam.transactionDetail.Where(x => x.Tool_Size == item.Tool_Size && x.Order_Size == item.Order_Size && x.Model_Size == item.Model_Size).FirstOrDefault().Trans_Qty;
+                        item.Trans_Qty = 0;// nếu transaction main là Type R là thì transaction detail của nó gán Trans_Qty = 0
                         item.Qty = outputParam.transactionDetail.Where(x => x.Tool_Size == item.Tool_Size && x.Order_Size == item.Order_Size && x.Model_Size == item.Model_Size).FirstOrDefault().Qty;
                         item.Instock_Qty = outputParam.transactionDetail.Where(x => x.Tool_Size == item.Tool_Size && x.Order_Size == item.Order_Size && x.Model_Size == item.Model_Size).FirstOrDefault().Instock_Qty;
                         item.Updated_By = "Emma";
@@ -241,6 +281,7 @@ namespace Bottom_API._Services.Services
                         itemTypeR.Transac_No = modelTypeR.Transac_No;
                         itemTypeR.Updated_By = "Emma";
                         itemTypeR.Updated_Time = timeNow;
+                        itemTypeR.Trans_Qty = 0;// nếu transaction main là Type R là thì transaction detail của nó gán Trans_Qty = 0
                         var itemModel = _mapper.Map<WMSB_Transaction_Detail>(itemTypeR);
                         _repoTransactionDetail.Add(itemModel);
                     }
