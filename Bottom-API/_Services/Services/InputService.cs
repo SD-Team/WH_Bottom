@@ -370,7 +370,7 @@ namespace Bottom_API._Services.Services
         {
             var lists = _repoTransactionMain.GetAll()
                 .ProjectTo<Transaction_Main_Dto>(_configMapper)
-                .Where(x => x.Missing_No != string.Empty);
+                .Where(x => x.Missing_No != string.Empty && x.Transac_Type.Trim() == "I");
             if (filterParam.MO_No != null && filterParam.MO_No != "") {
                 lists = lists.Where(x => x.MO_No.Trim() == filterParam.MO_No.Trim());
             }
