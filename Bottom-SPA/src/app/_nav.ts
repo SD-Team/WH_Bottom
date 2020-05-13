@@ -88,7 +88,7 @@ export class NavItem {
     user.role.forEach((element) => {
       if (element === 'wmsb.ReceivingMaterial') {
         const navItem = {
-          name: 'Receiving Material',
+          name: '1. Receiving Material',
           url: '/receipt/main',
           icon: 'icon-list',
         };
@@ -96,17 +96,17 @@ export class NavItem {
       }
       if (element === 'wmsb.QrGenerateMain') {
         const navItem = {
-          name: 'QR Generate',
+          name: '2. QR Generate',
           url: 'qr',
           icon: 'icon-frame',
           children: [
             {
-              name: 'Main',
+              name: '2.1 Main',
               url: '/qr/main',
               icon: 'icon-arrow-right-circle',
             },
             {
-              name: 'Print',
+              name: '2.2 Print',
               url: '/qr/body',
               icon: 'icon-printer',
             },
@@ -116,22 +116,22 @@ export class NavItem {
       }
       if (element === 'wmsb.InputMain') {
         const navItem = {
-          name: 'Input',
+          name: '3. Input',
           url: 'io',
           icon: 'icon-loop',
           children: [
             {
-              name: 'Main',
+              name: '3.1 Main',
               url: '/input/main',
               icon: 'icon-arrow-right-circle',
             },
             {
-              name: 'QrCode Print',
+              name: '3.2 QrCode Print',
               url: '/input/qrcode-again',
               icon: 'icon-printer',
             },
             {
-              name: 'Missing Print',
+              name: '3.3 Missing Print',
               url: '/input/missing-again',
               icon: 'icon-printer',
             }
@@ -141,7 +141,7 @@ export class NavItem {
       }
       if (element === 'wmsb.Output') {
         const navItem = {
-          name: 'Output',
+          name: '4. Output',
           url: '/output/main',
           icon: 'icon-loop',
         };
@@ -149,7 +149,7 @@ export class NavItem {
       }
       if (element === 'wmsb.InOutHistory') {
         const navItem = {
-          name: 'History',
+          name: '6. History',
           url: '/transfer/history',
           icon: 'icon-speech',
         };
@@ -157,7 +157,7 @@ export class NavItem {
       }
       if (element === 'wmsb.RackLocationMain') {
         const navItem = {
-          name: 'Rack Location',
+          name: '7. Rack Location',
           url: '/rack/main',
           icon: 'icon-book-open',
         };
@@ -165,7 +165,7 @@ export class NavItem {
       }
       if (element === 'wmsb.TransferLocationMain') {
         const navItem = {
-          name: 'Transfer Location',
+          name: '5. Transfer Location',
           url: '/transfer/main',
           icon: 'icon-frame',
         };
