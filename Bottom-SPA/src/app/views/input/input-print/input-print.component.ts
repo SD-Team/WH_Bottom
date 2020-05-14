@@ -33,7 +33,9 @@ export class InputPrintComponent implements OnInit {
       this.transInModel[i] = this.inputDetailItem.detail_Size[i].qty;
     }
   }
-
+  cancel() {
+    this.router.navigate(["/input/main"]);
+  }
   saveInput() {
     console.log(this.inputDetailItem);
     let params: any = [];
@@ -70,7 +72,7 @@ export class InputPrintComponent implements OnInit {
       });
       this.alertify.success("Save succeed");
       this.inputService.changeListInputMain(this.listInputMain);
-      this.router.navigate(["/input/main"])
+      this.router.navigate(["/input/main"]);
     localStorage.setItem("inputMain", JSON.stringify(params));
     
     console.log(params)
