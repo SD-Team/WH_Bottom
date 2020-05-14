@@ -90,5 +90,11 @@ namespace Bottom_API.Controllers
             var materialName = await _service.FindMaterialName(materialID);
             return Ok(new {materialName = materialName});
         }
+
+        [HttpGet("findMiss/{qrCodeId}")]
+        public async Task<IActionResult> FindMissingByQrCode (string qrCodeId) {
+            var missingNo = await _service.FindMissingByQrCode(qrCodeId);
+            return Ok(new {missingNo = missingNo});
+        }
     }
 }

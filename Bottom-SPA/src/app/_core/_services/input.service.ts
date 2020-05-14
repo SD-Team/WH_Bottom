@@ -28,6 +28,8 @@ export class InputService {
   missingPrintStart: FilterMissingParam;
   missingPrintParamSource = new BehaviorSubject<FilterMissingParam>(this.missingPrintStart);
   currentMissingParam = this.missingPrintParamSource.asObservable();
+  checkSubmitSource = new BehaviorSubject<boolean>(false);
+  currentCheckSubmit = this.checkSubmitSource.asObservable();
   constructor(private http: HttpClient) { }
 
   getMainByQrCodeID(qrCodeID: string) {
@@ -60,9 +62,13 @@ export class InputService {
   changeCodeAgainParam(param: FilterQrCodeAgainParam) {
     this.qrCodeAgainParamSource.next(param);
   }
+  changeCheckSubmit(check: boolean) {
+    this.checkSubmitSource.next(check);
+  }
   clearDataChangeMenu() {
     this.listInputMainSource.next([]);
     this.flagSource.next('');
+    this.checkSubmitSource.next(false);
   }
   changeMissingParam(param: FilterMissingParam) {
     this.missingPrintParamSource.next(param);
@@ -115,5 +121,7 @@ export class InputService {
   findMaterialName(materialID: string) {
     return this.http.get<any>(this.baseUrl + 'input/findMaterialName/' + materialID, {});
   }
-
+  findMiss(qrCode: string) {
+    return this.http.get<any>(this.baseUrl + 'input/findMiss/' + qrCode, {});
+  }
 }

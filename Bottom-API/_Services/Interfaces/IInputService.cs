@@ -16,6 +16,7 @@ namespace Bottom_API._Services.Interfaces
         Task<PagedList<Transaction_Main_Dto>> FilterQrCodeAgain(PaginationParams param, FilterQrCodeAgainParam filterParam);
         Task<PagedList<Transaction_Main_Dto>> FilterMissingPrint(PaginationParams param, FilterMissingParam filterParam);
         Task<string> FindMaterialName(string materialID);
+        Task<string> FindMissingByQrCode(string qrCodeID);
         
     }
 }

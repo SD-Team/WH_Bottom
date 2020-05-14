@@ -38,8 +38,10 @@ export class QrPrintComponent implements OnInit {
       this.router.navigate(['/input/qrcode-again']);
     } else if(this.printQrCodeAgain === '2') {
       this.router.navigate(['/output/main']);
+    } else if(this.printQrCodeAgain === 'inputMain') {
+      this.router.navigate(['/input/main']);
     } else {
-
+      
     }
   }
 }

@@ -12,5 +12,7 @@ namespace Bottom_API._Services.Interfaces
         Task<object> FindByQrCodeIDAgain(QrCodeIDVersion data);
         Task<List<object>> PrintByQRCodeIDList(List<QrCodeIDVersion> data);
         Task<List<object>> PrintByQRCodeIDListAgain(List<QrCodeIDVersion> data);
+        Task<object> FindByQrCode(string qrCodeId);
+        Task<List<object>> PrintByQRCodeID(List<string> listQrCode);
     }
 }

@@ -15,11 +15,14 @@ export class PackingListDetailService {
   printQrCodeAgainSource = new BehaviorSubject<string>('0');
   currentPrintQrCodeAgain = this.printQrCodeAgainSource.asObservable();
   constructor(private http: HttpClient) { }
-  findByQrCodeIdList(receives: QRCodeIDVersion[]): Observable<PackingPrintAll[]> {
-    return this.http.post<any>(this.baseUrl + 'packingListDetail/findPrint/', receives);
+  findByQrCodeIdList(data: QRCodeIDVersion[]): Observable<PackingPrintAll[]> {
+    return this.http.post<any>(this.baseUrl + 'packingListDetail/findPrint/', data);
   }
-  findByQrCodeIdListAgain(receives: QRCodeIDVersion[]): Observable<PackingPrintAll[]> {
-    return this.http.post<any>(this.baseUrl + 'packingListDetail/findPrintAgain/', receives);
+  findByQrCodeId(data: string[]): Observable<PackingPrintAll[]> {
+    return this.http.post<any>(this.baseUrl + 'packingListDetail/findPrintQrCode/', data);
+  }
+  findByQrCodeIdListAgain(data: QRCodeIDVersion[]): Observable<PackingPrintAll[]> {
+    return this.http.post<any>(this.baseUrl + 'packingListDetail/findPrintAgain/', data);
   }
   changePackingPrint(packingPrintAll: PackingPrintAll[]) {
     this.packingPrintSourse.next(packingPrintAll);

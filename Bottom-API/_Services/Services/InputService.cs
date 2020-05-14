@@ -380,5 +380,14 @@ namespace Bottom_API._Services.Services
             lists = lists.Distinct().OrderByDescending(x => x.Updated_Time);
             return await PagedList<Transaction_Main_Dto>.CreateAsync(lists, param.PageNumber, param.PageSize);
         }
+
+        public async Task<string> FindMissingByQrCode(string qrCodeID)
+        {
+            var trans = await _repoTransactionMain.GetAll()
+                .Where(x => x.QRCode_ID.Trim() == qrCodeID.Trim() &&
+                    x.Missing_No != string.Empty && x.Missing_No != null)
+                    .OrderByDescending(x => x.QRCode_Version).FirstOrDefaultAsync();
+            return trans.Missing_No;
+        }
     }
 }

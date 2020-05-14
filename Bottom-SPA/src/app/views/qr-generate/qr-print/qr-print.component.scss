@@ -4,7 +4,11 @@ td {
 }
 .print-all {
     height: 1530px;
-}
+ }
+ .margin-row-print {
+    margin-right: 5px;
+    margin-left: 5px;
+ }
 .div-hidden {
     display: none;
 }
@@ -14,8 +18,8 @@ td {
 .text-margin1 {
     margin-left: 20px;
 }
-.font-mateName {
-    font-size: 10px;
+span, td {
+    font-size: 15px;
 }
 .hr-margin {
     margin-top: 2px;

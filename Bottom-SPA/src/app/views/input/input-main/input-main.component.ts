@@ -1,8 +1,10 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
 import { Router } from '@angular/router';
 import { InputService } from '../../../_core/_services/input.service';
 import { InputDetail } from '../../../_core/_models/input-detail';
+import { PackingListDetailService } from '../../../_core/_services/packing-list-detail.service';
+import { PackingPrintAll } from '../../../_core/_viewmodels/packing-print-all';
 
 @Component({
   selector: 'app-input-main',
@@ -16,17 +18,28 @@ export class InputMainComponent implements OnInit {
   qrCodeID = "";
   rackLocation = "";
   err = true;
-  checkSubmit = false;
+  checkSubmit: boolean;
+  packingPrintAll: PackingPrintAll[] = [];
   constructor(private inputService: InputService,
+    private packingListDetailService: PackingListDetailService,
     private alertify: AlertifyService,
     private router: Router) { }
 
   ngOnInit() {
+    this.inputService.currentCheckSubmit.subscribe(res => this.checkSubmit = res);
     this.inputService.currentFlag.subscribe(flag => this.rackLocation = flag);
     this.inputService.currentListInputMain.subscribe(listInputMain => this.result = listInputMain);
   }
   enter() {
     document.getElementById("scanQrCodeId").focus();
+  }
+  printMiss(qrCode: string) {
+    this.inputService.findMiss(qrCode).subscribe(res => {
+      let missingNo = res.missingNo;
+      this.router.navigate(['/input/missing-print/', missingNo]);
+    }, error => {
+      this.alertify.error(error);
+    })
   }
   getInputMain(e) {
     if(this.rackLocation === "") {
@@ -70,9 +83,16 @@ export class InputMainComponent implements OnInit {
     }
 
   }
-
-  
-
+  printQrCode(qrCodeId: string) {
+    this.packingListDetailService.changePrintQrCodeAgain('inputMain');
+    let qrCode = [];
+    qrCode.push(qrCodeId);
+    this.packingListDetailService.findByQrCodeId(qrCode).subscribe(res => {
+      this.packingPrintAll = res;
+      this.packingListDetailService.changePackingPrint(this.packingPrintAll);
+      this.router.navigate(['/qr/print']);
+    })
+  }
   getDetailByQRCode(inputDetail: InputDetail) {
       this.inputService.changeListInputMain(this.result);
       this.inputService.changeInputDetail(inputDetail);
@@ -122,10 +142,11 @@ export class InputMainComponent implements OnInit {
       this.inputService.submitInputMain(inputModel).subscribe(
         () => {
           this.rackLocation = '';
-          this.result = [];
+          // this.result = [];
           this.alertify.success("Submit succeed");
           this.err = false;
           this.checkSubmit = true;
+          this.inputService.changeCheckSubmit(this.checkSubmit);
         },
         error => {
           this.alertify.error(error);

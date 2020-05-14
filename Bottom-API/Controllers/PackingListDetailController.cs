@@ -27,6 +27,12 @@ namespace Bottom_API.Controllers
             return Ok(result);
         }
 
+        [HttpPost("findPrintQrCode")]
+        public async Task<IActionResult> FindByQRCodeID([FromBody]List<string> data) {
+            var result = await _service.PrintByQRCodeID(data);
+            return Ok(result);
+        }
+
         [HttpPost("findPrintAgain")]
         public async Task<IActionResult> FindByQRCodeIDListAgain([FromBody]List<QrCodeIDVersion> data) {
             var result = await _service.PrintByQRCodeIDListAgain(data);

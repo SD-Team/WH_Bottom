@@ -13,6 +13,7 @@ export class InputPrintComponent implements OnInit {
   inputDetailItem: any = [];
   transInModel: any = [];
   rackLocation = "";
+  checkSubmitMain: boolean;
   constructor(
     private inputService: InputService,
     private alertify: AlertifyService,
@@ -23,6 +24,7 @@ export class InputPrintComponent implements OnInit {
       this.inputDetailItem.detail_Size.forEach(e => {
           this.transInModel.push(e.qty)
       });
+      this.inputService.currentCheckSubmit.subscribe(res => this.checkSubmitMain = res);
       this.inputService.currentListInputMain.subscribe(listInputMain => this.listInputMain = listInputMain);
   }
 
