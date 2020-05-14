@@ -43,7 +43,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <hr>
+                                <hr class="hr-margin">
                                 <div class="row">
                                     <div class="col-12">
                                         <span >E1</span>
@@ -57,7 +57,7 @@
                                                {{ item.object1.totalAct }}</span>
                                         <span class="text-margin1" *ngIf="item.object1.totalPQty !== undefined">
                                             {{ item.object1.totalPQty }}</span>
-                                        <span class="text-margin1">{{item.qrCodeMainItem.receive_Date | date: "yyyy/MM/dd"}}</span>   
+                                        <span class="text-margin1">Rec: {{item.qrCodeMainItem.receive_Date | date: "yyyy/MM/dd"}}</span>   
                                     </div>
                                 </div>
                                 <div class="row">
@@ -75,7 +75,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <span>{{item.qrCodeMainItem.material_Name}}</span>
+                                        <span class="font-mateName">{{item.qrCodeMainItem.material_Name}}</span>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -222,7 +222,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <hr>
+                                <hr class="hr-margin">
                                 <div class="row">
                                     <div class="col-12">
                                         <span >E1</span>
@@ -254,7 +254,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <span>{{item.qrCodeMainItem.material_Name}}</span>
+                                        <span class="font-mateName">{{item.qrCodeMainItem.material_Name}}</span>
                                     </div>
                                 </div>
                                 <div class="row">

@@ -19,17 +19,11 @@ export class InputPrintComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit() {
-    this.inputService.currentFlag.subscribe(flag => this.rackLocation = flag);
-    if (this.rackLocation === "")
-      this.router.navigate(["/input/main"])
-    else {
       this.inputService.currentInputDetail.subscribe(inputDetailItem => this.inputDetailItem = inputDetailItem);
       this.inputDetailItem.detail_Size.forEach(e => {
           this.transInModel.push(e.qty)
       });
       this.inputService.currentListInputMain.subscribe(listInputMain => this.listInputMain = listInputMain);
-    }
-    console.log("List: ",this.listInputMain);
   }
 
   changeInput(e, i) {
@@ -41,16 +35,18 @@ export class InputPrintComponent implements OnInit {
   }
 
   saveInput() {
+    console.log(this.inputDetailItem);
     let params: any = [];
     params = this.inputDetailItem;
-    params.rack_Location = this.rackLocation;
+    // params.rack_Location = this.rackLocation;
     params.trans_In_Qty = 0;
     params.detail_Size.forEach((element, index) => {
       element.qty = this.transInModel[index];
       params.trans_In_Qty += element.qty;
     });
     params.inStock_Qty = params.trans_In_Qty;
-    params.input_No = "BI" + params.plan_No + (Math.floor(Math.random() * (999 - 100)) + 100);
+    //params.input_No = "BI" + params.plan_No + (Math.floor(Math.random() * (999 - 100)) + 100);
+    console.log(params);
     // this.inputService.saveInput(params).subscribe(
     //   () => {
     //     this.alertify.success("Save succeed");
@@ -66,6 +62,8 @@ export class InputPrintComponent implements OnInit {
     //     this.alertify.error(error);
     //   }
     // )
+
+    //--------------------- Tạm thời cmt lại--------------------------------//
     this.listInputMain.forEach((e, i) => {
       if (e.qrCode_Id === params.qrCode_Id)
         this.listInputMain[i] = params;

@@ -9,7 +9,7 @@ import { InputDetail } from '../../../_core/_models/input-detail';
   templateUrl: './input-main.component.html',
   styleUrls: ['./input-main.component.scss']
 })
-export class InputMainComponent implements OnInit, OnDestroy {
+export class InputMainComponent implements OnInit {
   result: any = [];
   resultDetail: InputDetail;
   listInputNo: any = [];
@@ -25,53 +25,59 @@ export class InputMainComponent implements OnInit, OnDestroy {
     this.inputService.currentFlag.subscribe(flag => this.rackLocation = flag);
     this.inputService.currentListInputMain.subscribe(listInputMain => this.result = listInputMain);
   }
-
-  ngOnDestroy() {
-    
+  enter() {
+    document.getElementById("scanQrCodeId").focus();
   }
   getInputMain(e) {
-    console.log(e.length);
-    if (e.length === 14) {
-      let flag = true;
-      this.result.forEach(item => {
-        if (item.qrCode_Id === e)
-          flag = false;
-      });
-      if (flag) {
-        this.inputService.getMainByQrCodeID(this.qrCodeID)
-          .subscribe((res) => {
-            console.log(res);
-            if(res === null) {
-              this.alertify.error('Does not exist QRCodeID!!!');
-            } else if(res.is_Scanned === 'Y') {
-              this.alertify.error('This qrCode has been scanned!!!');
-            } else {
-              if (res != null) {
-                this.result.push(res);
-                console.log("result: ", this.result);
-                
+    if(this.rackLocation === "") {
+      this.alertify.error("Please Scan Rack Location!");
+    } else {
+      if (e.length === 14) {
+        let flag = true;
+        this.result.forEach(item => {
+          if (item.qrCode_Id === e)
+            flag = false;
+        });
+        if (flag) {
+          this.inputService.getMainByQrCodeID(this.qrCodeID)
+            .subscribe((res) => {
+              console.log(res);
+              if(res === null) {
+                this.alertify.error('Does not exist QRCodeID!!!');
+              } else if(res.is_Scanned === 'Y') {
+                this.alertify.error('This qrCode has been scanned!!!');
+              } else {
+                if (res != null) {
+                  this.result.push(res);
+                  this.result.forEach(element => {
+                    if(element.qrCode_Id.trim() === e.toString().trim()) {
+                      element.rack_Location = this.rackLocation;
+                      element.inStock_Qty = element.accumated_Qty;
+                      element.trans_In_Qty = element.accumated_Qty;
+                      element.input_No = "BI" + element.plan_No + (Math.floor(Math.random() * (999 - 100)) + 100);
+                    }
+                  });
+                  console.log(this.result);
+                }
               }
-            }
-          }, error => {
-            this.alertify.error(error);
-          });
-      } else
-        this.alertify.error("This QRCode scanded!");
-      this.qrCodeID = ""
+            }, error => {
+              this.alertify.error(error);
+            });
+        } else
+          this.alertify.error("This QRCode scanded!");
+        this.qrCodeID = ""
+      }
     }
+
   }
 
   
 
   getDetailByQRCode(inputDetail: InputDetail) {
-    if (this.rackLocation === "")
-      this.alertify.error("Please Scan Rack Location!");
-    else {
       this.inputService.changeListInputMain(this.result);
       this.inputService.changeInputDetail(inputDetail);
       this.inputService.changeFlag(this.rackLocation);
-      this.router.navigate(["/input/print"])
-    }
+      this.router.navigate(["/input/print"]);
       // this.inputService.getDetailByQrCodeID(qrCode)
       //   .subscribe((res) => {
       //     this.resultDetail = res;
