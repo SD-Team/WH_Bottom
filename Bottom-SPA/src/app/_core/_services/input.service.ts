@@ -30,6 +30,8 @@ export class InputService {
   currentMissingParam = this.missingPrintParamSource.asObservable();
   checkSubmitSource = new BehaviorSubject<boolean>(false);
   currentCheckSubmit = this.checkSubmitSource.asObservable();
+  printMissingSource = new BehaviorSubject<string>('0');
+  currentPrintMissing = this.printMissingSource.asObservable();
   constructor(private http: HttpClient) { }
 
   getMainByQrCodeID(qrCodeID: string) {
@@ -65,10 +67,14 @@ export class InputService {
   changeCheckSubmit(check: boolean) {
     this.checkSubmitSource.next(check);
   }
+  changeMissingPrint(missing: string) {
+    this.printMissingSource.next(missing);
+  }
   clearDataChangeMenu() {
     this.listInputMainSource.next([]);
     this.flagSource.next('');
     this.checkSubmitSource.next(false);
+    this.printMissingSource.next('0');
   }
   changeMissingParam(param: FilterMissingParam) {
     this.missingPrintParamSource.next(param);

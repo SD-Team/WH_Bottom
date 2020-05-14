@@ -18,12 +18,13 @@ export class MissingPrintComponent implements OnInit {
   totalQty = 0;
   blanceQty = 0;
   missingNo: string = 'BTM20200413466';
-
+  checkBackMiss: string = '';
   constructor(private router: Router, private inputService: InputService, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.missingNo = this.route.snapshot.params['missingNo'];
     this.getMissingPrint();
+    this.inputService.currentPrintMissing.subscribe(res => this.checkBackMiss = res);
   }
 
   print(e) {
@@ -36,7 +37,13 @@ export class MissingPrintComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/input/missing-again']);
+    if(this.checkBackMiss === '0') {
+      this.router.navigate(['/input/missing-again']);
+    } else if(this.checkBackMiss === '1') {
+      this.router.navigate(['/input/main']);
+    } else {
+      
+    }
   }
 
   getMissingPrint() {

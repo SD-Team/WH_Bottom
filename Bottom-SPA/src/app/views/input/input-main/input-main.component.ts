@@ -35,6 +35,7 @@ export class InputMainComponent implements OnInit {
   }
   printMiss(qrCode: string) {
     this.inputService.findMiss(qrCode).subscribe(res => {
+      this.inputService.changeMissingPrint('1');
       let missingNo = res.missingNo;
       this.router.navigate(['/input/missing-print/', missingNo]);
     }, error => {
