@@ -61,7 +61,6 @@ import { QrGenerateNavGuard } from './_core/_guards/qr-generate-nav.guard';
 import { RackLocationNavNavGuard } from './_core/_guards/rack-location-nav.guard';
 import { ReceivingMaterialNavGuard } from './_core/_guards/receiving-material-nav.guard';
 import { TransferLocationNavGuard } from './_core/_guards/transfer-loaction-nav.guard';
-import { QrcodePrintComponent } from './views/qrcode-print/qrcode-print.component';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -106,7 +105,6 @@ export function tokenGetter() {
     LoginComponent,
     RegisterComponent,
     CheckLoginComponent,
-    QrcodePrintComponent
   ],
   providers: [
     AuthService,

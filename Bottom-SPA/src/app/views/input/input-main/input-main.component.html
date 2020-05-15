@@ -11,18 +11,18 @@
           <div class="card-body">
 
             <div class="form-group row">
-              <div class="col-md-2">
+              <div class="col-md-3">
                 <label>Rack Location:</label>
                 <div class="input-group">
                   <span class="input-group-prepend">
                     <button class="btn btn-primary" type="button" disabled>SCAN</button>
                   </span>
-                  <input type="text" (keyup.enter)="enter()" placeholder="Scan" class="form-control" [(ngModel)]="rackLocation" name="rackLocation">
+                  <input type="text" (keyup.enter)="enter()" (keyup)="upperCase()" placeholder="Scan" class="form-control" [(ngModel)]="rackLocation" name="rackLocation">
                 </div>
               </div>
             </div>
             <div class="form-group row">
-              <div class="col-md-2">
+              <div class="col-md-3">
                 <label> QrCode:</label>
                 <div class="input-group">
                   <span class="input-group-prepend">
@@ -79,7 +79,7 @@
                     <td>{{item.inStock_Qty}}</td>
                     <td rowspan="2" class="text-center vertical-middle">
                       <button class="btn btn-warning mr-2" (click)="getDetailByQRCode(item)"><i class="fa fa-search-plus"></i>  Detail</button>
-                      <button class="btn btn-danger" *ngIf="item.input_No === null && checkSubmit === false" (click)="remove(item.qrCode_Id)"><i class="fa fa-trash" ></i> Delete</button>
+                      <button class="btn btn-danger" *ngIf="item.input_No === null" (click)="remove(item.qrCode_Id)"><i class="fa fa-trash" ></i> Delete</button>
                       <button class="btn btn-primary" (click)="printQrCode(item.qrCode_Id)" *ngIf="checkSubmit === true">QrCode</button>
                       <button class="btn btn-success" (click)="printMiss(item.qrCode_Id)"
                       *ngIf="checkSubmit === true && item.accumated_Qty!== item.trans_In_Qty">Missing</button>

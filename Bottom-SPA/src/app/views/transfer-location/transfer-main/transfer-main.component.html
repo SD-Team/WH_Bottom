@@ -17,14 +17,8 @@
                       SCAN
                     </button>
                   </span>
-                  <input
-                    type="text"
-                    placeholder="To Location"
-                    class="form-control"
-                    name="toLocation"
-                    [(ngModel)]="toLocation"
-                    (ngModelChange)="changeTransferNo()"
-                  />
+                  <input type="text" (keyup.enter)="enter()"  placeholder="To Location" class="form-control" name="toLocation"
+                    [(ngModel)]="toLocation" (ngModelChange)="changeTransferNo()" />
                 </div>
               </div>
             </div>
@@ -37,14 +31,8 @@
                       SCAN
                     </button>
                   </span>
-                  <input
-                    type="text"
-                    placeholder="QRCode"
-                    name="qrCodeID"
-                    class="form-control"
-                    [(ngModel)]="qrCodeId"
-                    (ngModelChange)="getTransferMain($event)"
-                  />
+                  <input type="text" id="qrCodeId" placeholder="QRCode" name="qrCodeID" class="form-control" [(ngModel)]="qrCodeId"
+                    (ngModelChange)="getTransferMain($event)" />
                 </div>
               </div>
             </div>
@@ -88,10 +76,7 @@
                   <td>{{ item.fromLocation }}</td>
                   <td>{{ item.toLocation }}</td>
                   <td *ngIf="!flagSubmit">
-                    <button
-                      class="btn btn-danger"
-                      (click)="remove(item.qrCodeId)"
-                    >
+                    <button class="btn btn-danger" (click)="remove(item.qrCodeId)">
                       <i class="fa fa-trash"></i> Delete
                     </button>
                   </td>
@@ -104,16 +89,12 @@
           <button class="btn btn-danger mr-2">
             <i class="fa fa-ban"></i> Cancel
           </button>
-          <button
-            class="btn btn-success mr-2"
-            (click)="submitMain()"
-            [disabled]="flagSubmit"
-          >
+          <button class="btn btn-success mr-2" (click)="submitMain()" [disabled]="flagSubmit">
             <i class="fa fa-check"></i> Submit
           </button>
-          <button class="btn btn-primary" [disabled]="!flagSubmit" (click)="printMain()">
+          <!-- <button class="btn btn-primary" [disabled]="!flagSubmit" (click)="printMain()">
             <i class="fa fa-print"></i> Print
-          </button>
+          </button> -->
         </div>
       </div>
     </div>

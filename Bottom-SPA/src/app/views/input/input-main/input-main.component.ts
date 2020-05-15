@@ -42,6 +42,9 @@ export class InputMainComponent implements OnInit {
       this.alertify.error(error);
     })
   }
+  upperCase() {
+    this.rackLocation = this.rackLocation.toUpperCase();
+  }
   getInputMain(e) {
     if(this.rackLocation === "") {
       this.alertify.error("Please Scan Rack Location!");
@@ -68,7 +71,7 @@ export class InputMainComponent implements OnInit {
                       element.rack_Location = this.rackLocation;
                       element.inStock_Qty = element.accumated_Qty;
                       element.trans_In_Qty = element.accumated_Qty;
-                      element.input_No = "BI" + element.plan_No + (Math.floor(Math.random() * (999 - 100)) + 100);
+                      // element.input_No = "BI" + element.plan_No + (Math.floor(Math.random() * (999 - 100)) + 100);
                     }
                   });
                   console.log(this.result);
@@ -124,17 +127,11 @@ export class InputMainComponent implements OnInit {
       else
         this.listInputNo.push(e.input_No);
     });
+    this.result.forEach(element => {
+      element.input_No = "BI" + element.plan_No + (Math.floor(Math.random() * (999 - 100)) + 100);
+    });
     console.log("Lists qr: ", this.listInputNo);
     if( this.err) {
-      // Create Input
-      // this.result.forEach(element => {
-      //   this.inputService.saveInput(element).subscribe(res => {
-      //     // Add succeed!
-      //   }, error => {
-      //     this.alertify.error("error");
-      //   });
-      // });
-
       // Submit Input
       let inputModel = {
         transactionList: this.result,

@@ -33,7 +33,9 @@ export class TransferMainComponent implements OnInit {
     this.inputService.changeListInputMain([]);
     this.inputService.changeFlag('');
   }
-
+  enter() {
+    document.getElementById('qrCodeId').focus();
+  }
   getTransferMain(e) {
     if (e.length >= 14) {
       let flag = true;
