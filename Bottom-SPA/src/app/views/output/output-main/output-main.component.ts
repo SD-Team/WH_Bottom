@@ -16,6 +16,7 @@ export class OutputMainComponent implements OnInit {
   outputs: OutputM[] = [];
   qrCodeId = '';
   output: any = [];
+  flagSubmit: boolean = false;
   flagFinish: boolean = false;
   packingPrintAll: PackingPrintAll[] = [];
   constructor(
@@ -35,6 +36,9 @@ export class OutputMainComponent implements OnInit {
     });
     this.outputService.currentFlagFinish.subscribe((res) => {
       this.flagFinish = res;
+    });
+    this.outputService.currentFlagSubmit.subscribe((res) => {
+      this.flagSubmit = res;
     });
     this.inputService.clearDataChangeMenu();
   }
@@ -79,6 +83,8 @@ export class OutputMainComponent implements OnInit {
       } else {
         this.alertify.error('This QRCode scanded!');
       }
+
+      this.outputService.changeFlagSubmit(false);
     }
   }
 
@@ -109,6 +115,9 @@ export class OutputMainComponent implements OnInit {
   }
 
   submit() {
+    // flag submit == false
+    this.flagSubmit = true;
+    this.outputService.changeFlagSubmit(true);
     // kiểm tra output nào mà không output ra(không process) thì loại bỏ
     this.outputs.forEach((e, i) => {
       if (e.transOutQty === 0) {

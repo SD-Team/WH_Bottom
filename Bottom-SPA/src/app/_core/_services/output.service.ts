@@ -24,6 +24,8 @@ export class OutputService {
   currentQrCodeId = this.qrCodeIdSource.asObservable();
   flagFinishSource = new BehaviorSubject<boolean>(false);
   currentFlagFinish = this.flagFinishSource.asObservable();
+  flagSubmitSource = new BehaviorSubject<boolean>(false);
+  currentFlagSubmit = this.flagFinishSource.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -41,6 +43,9 @@ export class OutputService {
   }
   changeFlagFinish(flag: boolean) {
     this.flagFinishSource.next(flag);
+  }
+  changeFlagSubmit(flag: boolean) {
+    this.flagSubmitSource.next(flag);
   }
   getMainByQrCodeId(qrCodeId: string) {
     return this.http.get<Output>(this.baseUrl + 'Output/GetByQrCodeId', { params: { qrCodeId: qrCodeId } });
