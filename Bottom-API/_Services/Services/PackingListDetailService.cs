@@ -254,14 +254,12 @@ namespace Bottom_API._Services.Services
                 {
                     if (item1.Tool_Size.Trim() == item.Tool_Size.Trim() && item1.Order_Size.Trim() == item.Order_Size.Trim()) {
                         packingItem.Received_Qty = item1.Qty;
-                        packingItem.Act = item1.Trans_Qty;
+                        packingItem.Act = item1.Instock_Qty;
                         packingItem.Bal = item1.Untransac_Qty;
-                        totalRQty = totalRQty + item1.Trans_Qty;
+                        totalRQty = totalRQty + item1.Instock_Qty;
                     }
                 }
-                // packingItem.Bal = item.Purchase_Qty - item.Received_Qty;
                 totalPQty = totalPQty + item.Purchase_Qty;
-                // totalRQty = totalRQty + item.Received_Qty;
                 packingListDetailModel.Add(packingItem);
             }
 
@@ -331,7 +329,6 @@ namespace Bottom_API._Services.Services
              // Lấy dữ liệu show phần Suggested Location Sorting Form
             var transactionMain2 = transactionMain
                     .Where(x => x.QRCode_ID.Trim() == data.QRCode_ID.Trim() &&
-                    x.Transac_Type == "I" &&
                     x.Can_Move.Trim() == "Y");
             var suggestedReturn2 = transactionMain2.Select(x => new {
                         rack_Location = x.Rack_Location
@@ -483,80 +480,74 @@ namespace Bottom_API._Services.Services
                 }).GroupBy(x => x.QrCode_ID).Select(y => new {
                     totalAct = y.Sum(cl => cl.Trans_Qty)
                 }).FirstOrDefault();
-            var packingList = await _repoPackingList.GetAll().ToListAsync();
-            // Tìm kiếm Purchase và Sheet_Type của qrcodeid với version đó.
-            var packingListFind = packingList
-                .Where(x => x.Receive_No.Trim() == qrCodeMan.Receive_No.Trim()).FirstOrDefault();
-            // Tìm List ReceiveNo tương ứng với Purchase và Sheet_Type ở trên        
-            var ReceiveNoList = packingList.Where(x => x.Sheet_Type.Trim() == packingListFind.Sheet_Type.Trim() &&
-                x.Purchase_No.Trim() == packingListFind.Purchase_No.Trim()).Select(x => x.Receive_No).ToList();
             
-            var packingListDetailAll = await _repoPackingListDetail.GetAll().ToListAsync();
-            var lists = packingListDetailAll
-                .Where(x => x.Receive_No.Trim() == qrCodeMan.Receive_No.Trim()).ToList();
-            var packingDetailList = new List<WMSB_PackingList_Detail>();
-            foreach (var item in ReceiveNoList)
-            {
-                var packingdetailitem = packingListDetailAll.Where(x => x.Receive_No.Trim() == item.Trim()).ToList();
-                packingDetailList.AddRange(packingdetailitem);
-            }
-            var packingDetailByToolSize = packingDetailList.GroupBy(x => x.Tool_Size).Select(x => new {
-                Tool_Size = x.FirstOrDefault().Tool_Size,
-                Purchase_Qty = x.Sum(cl => cl.Purchase_Qty),
-                Received_Qty = x.Sum(cl => cl.Received_Qty),
-                Bal = x.Sum(cl => cl.Purchase_Qty) - x.Sum(cl => cl.Received_Qty)
-            });
-
             var packingListDetailModel = new List<PackingListDetailViewModel>();
             var packingListDetailModel1 = new List<PackingListDetailViewModel>();
             var packingListDetailModel2 = new List<PackingListDetailViewModel>();
             var packingListDetailModel3 = new List<PackingListDetailViewModel>();
             decimal? totalPQty = 0;
             decimal? totalRQty = 0;
-
-            // List các Tool Size mà có nhiều Order Size trong bảng Packing List Detail
-            var toolSizeMoreOrderSize = lists.Where(x => x.Tool_Size.Trim() != x.Order_Size.Trim()).Select(x => x.Tool_Size).Distinct().ToList();
-
+            var transaction = await _repoTransactionMain.GetAll().Where(x => x.QRCode_ID.Trim() == qrCodeId.Trim() &&
+                    x.QRCode_Version == versionNew).FirstOrDefaultAsync();
+            var transactionDetails = await _repoTransactionDetail.GetAll()
+                .Where(x => x.Transac_No.Trim() == transaction.Transac_No.Trim()).ToListAsync();
+            
+            var lists = await _repoPackingListDetail.GetAll()
+                .Where(x => x.Receive_No.Trim() == qrCodeMan.Receive_No.Trim()).ToListAsync();
             foreach (var item in lists)
             {
-                    var packingItem1 = new PackingListDetailViewModel();
-                    packingItem1.Receive_No = item.Receive_No;
-                    packingItem1.Order_Size = item.Order_Size;
-                    packingItem1.Model_Size = item.Model_Size;
-                    packingItem1.Tool_Size = item.Tool_Size;
-                    packingItem1.Spec_Size = item.Spec_Size;
-                    packingItem1.MO_Qty = item.MO_Qty;
-                    
-                    packingItem1.Act = 0;
-                    foreach (var itemByToolSize in packingDetailByToolSize)
-                    {
-                        if (itemByToolSize.Tool_Size.Trim() == item.Tool_Size.Trim()) {
-                            packingItem1.Purchase_Qty = itemByToolSize.Purchase_Qty;
-                            packingItem1.Received_Qty = itemByToolSize.Received_Qty;
-                            packingItem1.Bal = itemByToolSize.Bal;
-                        }
+                var packingItem = new PackingListDetailViewModel();
+                packingItem.Receive_No = item.Receive_No;
+                packingItem.Order_Size = item.Order_Size;
+                packingItem.Model_Size = item.Model_Size;
+                packingItem.Tool_Size = item.Tool_Size;
+                packingItem.Spec_Size = item.Spec_Size;
+                packingItem.MO_Qty = item.MO_Qty;
+                packingItem.Purchase_Qty = item.Purchase_Qty;
+                foreach (var item1 in transactionDetails)
+                {
+                    if (item1.Tool_Size.Trim() == item.Tool_Size.Trim() && item1.Order_Size.Trim() == item.Order_Size.Trim()) {
+                        packingItem.Received_Qty = item1.Qty;
+                        packingItem.Act = item1.Instock_Qty;
+                        packingItem.Bal = item1.Untransac_Qty;
+                        totalRQty = totalRQty + item1.Instock_Qty;
                     }
-                    totalPQty = totalPQty + item.Purchase_Qty;
-                    totalRQty = totalRQty + item.Received_Qty;
-                    packingListDetailModel.Add(packingItem1);
+                }
+                // packingItem.Bal = item.Purchase_Qty - item.Received_Qty;
+                totalPQty = totalPQty + item.Purchase_Qty;
+                // totalRQty = totalRQty + item.Received_Qty;
+                packingListDetailModel.Add(packingItem);
             }
 
-            //----------------- Xử lý mảng dữ liệu cho 1 số dòng cùng tool size.----------------//
-            foreach (var itemToolSize in toolSizeMoreOrderSize)
-            {
-                var list1 = lists.Where(x => x.Tool_Size.Trim() == itemToolSize.Trim()).First();
-                foreach (var itemPack in packingListDetailModel)
+             //----------------- Xử lý mảng dữ liệu cho 1 số dòng cùng tool size.----------------//
+               // List các Tool Size mà có nhiều Order Size trong bảng Packing List Detail
+            var toolSizeMoreOrderSize = lists.Where(x => x.Tool_Size.Trim() != x.Order_Size.Trim()).Select(x => x.Tool_Size).Distinct().ToList();
+            if(toolSizeMoreOrderSize.Count() > 0) {
+                foreach (var itemToolSize in toolSizeMoreOrderSize)
                 {
-                    if(itemPack.Tool_Size.Trim() == itemToolSize.Trim() &&
-                        itemPack.Order_Size.Trim() != list1.Order_Size.Trim()) {
+                    var model1 = packingListDetailModel.Where(x => x.Tool_Size.Trim() == itemToolSize.Trim())
+                        .GroupBy(x => x.Tool_Size).Select(x => new {
+                            Purchase_Qty = x.Sum(cl => cl.Purchase_Qty),
+                            Received_Qty = x.Sum(cl => cl.Received_Qty),
+                            Act = x.Sum(cl => cl.Act),
+                            Bal = x.Sum(cl => cl.Bal)
+                        }).FirstOrDefault();
+                    foreach (var itemPack in packingListDetailModel)
+                    {
+                        if(itemPack.Tool_Size.Trim() == itemToolSize && itemPack.Tool_Size != itemPack.Order_Size) {
                             itemPack.Purchase_Qty = null;
                             itemPack.Received_Qty = null;
                             itemPack.Act = null;
                             itemPack.Bal = null;
+                        } else if(itemPack.Tool_Size.Trim() == itemToolSize && itemPack.Tool_Size == itemPack.Order_Size) {
+                            itemPack.Purchase_Qty = model1.Purchase_Qty;
+                            itemPack.Received_Qty = model1.Received_Qty;
+                            itemPack.Act = model1.Act;
+                            itemPack.Bal = model1.Bal;
+                        }
                     }
                 }
             }
-
             var count= packingListDetailModel.Count();
             if(count > 0 && count <=8) {
                 packingListDetailModel1 = packingListDetailModel;
@@ -594,7 +585,6 @@ namespace Bottom_API._Services.Services
              // Lấy dữ liệu show phần Suggested Location Sorting Form
             var transactionMain2 = transactionMain
                     .Where(x => x.QRCode_ID.Trim() == qrCodeId.Trim() &&
-                    x.Transac_Type == "I" &&
                     x.Can_Move.Trim() == "Y");
             var suggestedReturn2 = transactionMain2.Select(x => new {
                         rack_Location = x.Rack_Location
@@ -624,6 +614,7 @@ namespace Bottom_API._Services.Services
                 };
                 return result;
             }
+
         }
 
         public async Task<List<object>> PrintByQRCodeID(List<string> listQrCode)

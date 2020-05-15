@@ -46,6 +46,7 @@ export class InputMainComponent implements OnInit {
     this.rackLocation = this.rackLocation.toUpperCase();
   }
   getInputMain(e) {
+    this.checkSubmit = false;
     if(this.rackLocation === "") {
       this.alertify.error("Please Scan Rack Location!");
     } else {
@@ -121,14 +122,14 @@ export class InputMainComponent implements OnInit {
   }
 
   submitInput() {
+    this.result.forEach(element => {
+      element.input_No = "BI" + element.plan_No + (Math.floor(Math.random() * (999 - 100)) + 100);
+    });
     this.result.forEach((e, i) => {
       if (e.input_No == null)
         this.err = false;
       else
         this.listInputNo.push(e.input_No);
-    });
-    this.result.forEach(element => {
-      element.input_No = "BI" + element.plan_No + (Math.floor(Math.random() * (999 - 100)) + 100);
     });
     console.log("Lists qr: ", this.listInputNo);
     if( this.err) {

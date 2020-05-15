@@ -50,12 +50,7 @@
                                         <span >E1</span>
                                         <span class="text-margin1">{{item.qrCodeMainItem.mO_No}}</span>
                                         <span class="text-margin1">{{item.qrCodeMainItem.mO_Seq}}</span>
-                                        <span class="text-margin1"
-                                         *ngIf="printQrCodeAgain === '0'">
-                                            {{ item.object1.totalRQty }}</span>
-                                            <span class="text-margin1"
-                                            *ngIf="printQrCodeAgain === '2' || printQrCodeAgain === '1'">
-                                               {{ item.object1.totalAct }}</span>
+                                        <span class="text-margin1">{{ item.object1.totalRQty }}</span>
                                         <span class="text-margin1" *ngIf="item.object1.totalPQty !== undefined">
                                             {{ item.object1.totalPQty }}</span>
                                         <span class="text-margin1">Rec: {{item.qrCodeMainItem.receive_Date | date: "yyyy/MM/dd"}}</span>   
@@ -150,7 +145,7 @@
                                         </div>
                                     </div>
                                     <div class="col-4">
-                                        <span>{{item.qrCodeMainItem.t3_Supplier}} - {{item.qrCodeMainItem.t3_Supplier_Name}}</span>
+                                        <span *ngIf="item.qrCodeMainItem.t3_Supplier !== 'Null'">{{item.qrCodeMainItem.t3_Supplier}} - {{item.qrCodeMainItem.t3_Supplier_Name}}</span>
                                         <div>
                                         
                                         </div>
@@ -230,12 +225,7 @@
                                         <span >E1</span>
                                         <span class="text-margin1">{{item.qrCodeMainItem.mO_No}}</span>
                                         <span class="text-margin1">{{item.qrCodeMainItem.mO_Seq}}</span>
-                                        <span class="text-margin1"
-                                         *ngIf="printQrCodeAgain === '0' ">
-                                            {{ item.object1.totalRQty }}</span>
-                                            <span class="text-margin1"
-                                            *ngIf="printQrCodeAgain === '2' || printQrCodeAgain === '1'">
-                                               {{ item.object1.totalAct }}</span>
+                                        <span class="text-margin1">{{ item.object1.totalRQty }}</span>
                                         <span class="text-margin1" *ngIf="item.object1.totalPQty !== undefined">
                                             {{ item.object1.totalPQty }}</span>
                                         <span class="text-margin1">{{item.qrCodeMainItem.receive_Date | date: 'yyyy/mm/dd'}}</span>   
@@ -304,7 +294,7 @@
                                         </div>
                                     </div>
                                     <div class="col-4">
-                                        <span>{{item.qrCodeMainItem.t3_Supplier}} - {{item.qrCodeMainItem.t3_Supplier_Name}}</span>
+                                        <span *ngIf="item.qrCodeMainItem.t3_Supplier != 'Null'">{{item.qrCodeMainItem.t3_Supplier}} - {{item.qrCodeMainItem.t3_Supplier_Name}}</span>
                                         <div>
                                         
                                         </div>
