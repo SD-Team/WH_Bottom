@@ -57,16 +57,6 @@ namespace Bottom_API._Services.Services
             var qrCodeMan = await _repoQrcode.GetAll()
                     .Where(x => x.QRCode_ID.Trim() == data.QRCode_ID.Trim() &&
                         x.QRCode_Version == data.QRCode_Version).FirstOrDefaultAsync();
-            var transactionMainList = await _repoTransactionMain.GetAll()
-                .Where(x => x.Can_Move == "Y" && x.QRCode_ID.Trim() == qrCodeMan.QRCode_ID).ToListAsync();
-            var transactionDetailList = _repoTransactionDetail.GetAll();
-            var totalAct = (from a in transactionMainList join b in transactionDetailList
-                on a.Transac_No.Trim() equals b.Transac_No.Trim() select new {
-                    QrCode_ID = qrCodeMan.QRCode_ID,
-                    Trans_Qty = b.Trans_Qty
-                }).GroupBy(x => x.QrCode_ID).Select(y => new {
-                    totalAct = y.Sum(cl => cl.Trans_Qty)
-                }).FirstOrDefault();
             var packingList = await _repoPackingList.GetAll().ToListAsync();
             // Tìm kiếm Purchase và Sheet_Type của qrcodeid với version đó.
             var packingListFind = packingList
@@ -182,26 +172,12 @@ namespace Bottom_API._Services.Services
                     .Where(x => x.QRCode_ID.Trim() == data.QRCode_ID.Trim() &&
                     x.Transac_Type == "I" &&
                     x.Can_Move.Trim() == "Y");
-            var suggestedReturn2 = transactionMain2.Select(x => new {
+                var suggestedReturn2 = transactionMain2.Select(x => new {
                         rack_Location = x.Rack_Location
                     }).Distinct().ToList();
-            if (totalAct != null) {
                 var result = new {
                     totalPQty,
                     totalRQty,
-                    totalAct.totalAct,
-                    packingListDetailModel1, 
-                    packingListDetailModel2,
-                    packingListDetailModel3,
-                    suggestedReturn1,
-                    suggestedReturn2,
-                };
-                return result;
-            } else {
-                var result = new {
-                    totalPQty,
-                    totalRQty,
-                    totalAct,
                     packingListDetailModel1, 
                     packingListDetailModel2,
                     packingListDetailModel3,
@@ -210,23 +186,11 @@ namespace Bottom_API._Services.Services
                 };
                 return result;
             }
-        }
         public async Task<object> FindByQrCodeIDAgain(QrCodeIDVersion data)
         {
             var qrCodeMan = await _repoQrcode.GetAll()
                     .Where(x => x.QRCode_ID.Trim() == data.QRCode_ID.Trim() &&
-                        x.QRCode_Version == data.QRCode_Version).FirstOrDefaultAsync();
-            var transactionMainList = await _repoTransactionMain.GetAll()
-                .Where(x => x.Can_Move == "Y" && x.QRCode_ID.Trim() == qrCodeMan.QRCode_ID).ToListAsync();
-            var transactionDetailList = _repoTransactionDetail.GetAll();
-            var totalAct = (from a in transactionMainList join b in transactionDetailList
-                on a.Transac_No.Trim() equals b.Transac_No.Trim() select new {
-                    QrCode_ID = qrCodeMan.QRCode_ID,
-                    Trans_Qty = b.Trans_Qty
-                }).GroupBy(x => x.QrCode_ID).Select(y => new {
-                    totalAct = y.Sum(cl => cl.Trans_Qty)
-                }).FirstOrDefault();
-            
+                        x.QRCode_Version == data.QRCode_Version).FirstOrDefaultAsync();  
             var packingListDetailModel = new List<PackingListDetailViewModel>();
             var packingListDetailModel1 = new List<PackingListDetailViewModel>();
             var packingListDetailModel2 = new List<PackingListDetailViewModel>();
@@ -333,11 +297,9 @@ namespace Bottom_API._Services.Services
             var suggestedReturn2 = transactionMain2.Select(x => new {
                         rack_Location = x.Rack_Location
                     }).Distinct().ToList();
-            if (totalAct != null) {
                 var result = new {
                     totalPQty,
                     totalRQty,
-                    totalAct.totalAct,
                     packingListDetailModel1, 
                     packingListDetailModel2,
                     packingListDetailModel3,
@@ -345,19 +307,6 @@ namespace Bottom_API._Services.Services
                     suggestedReturn2,
                 };
                 return result;
-            } else {
-                var result = new {
-                    totalPQty,
-                    totalRQty,
-                    totalAct,
-                    packingListDetailModel1, 
-                    packingListDetailModel2,
-                    packingListDetailModel3,
-                    suggestedReturn1,
-                    suggestedReturn2,
-                };
-                return result;
-            }
         }
         public async Task<List<object>> PrintByQRCodeIDList(List<QrCodeIDVersion> data)
         {
@@ -469,18 +418,7 @@ namespace Bottom_API._Services.Services
 
             var qrCodeMan = await _repoQrcode.GetAll()
                     .Where(x => x.QRCode_ID.Trim() == qrCodeId.Trim() &&
-                        x.QRCode_Version == versionNew).FirstOrDefaultAsync();
-            var transactionMainList = await _repoTransactionMain.GetAll()
-                .Where(x => x.Can_Move == "Y" && x.QRCode_ID.Trim() == qrCodeMan.QRCode_ID).ToListAsync();
-            var transactionDetailList = _repoTransactionDetail.GetAll();
-            var totalAct = (from a in transactionMainList join b in transactionDetailList
-                on a.Transac_No.Trim() equals b.Transac_No.Trim() select new {
-                    QrCode_ID = qrCodeMan.QRCode_ID,
-                    Trans_Qty = b.Trans_Qty
-                }).GroupBy(x => x.QrCode_ID).Select(y => new {
-                    totalAct = y.Sum(cl => cl.Trans_Qty)
-                }).FirstOrDefault();
-            
+                        x.QRCode_Version == versionNew).FirstOrDefaultAsync();    
             var packingListDetailModel = new List<PackingListDetailViewModel>();
             var packingListDetailModel1 = new List<PackingListDetailViewModel>();
             var packingListDetailModel2 = new List<PackingListDetailViewModel>();
@@ -589,11 +527,9 @@ namespace Bottom_API._Services.Services
             var suggestedReturn2 = transactionMain2.Select(x => new {
                         rack_Location = x.Rack_Location
                     }).Distinct().ToList();
-            if (totalAct != null) {
                 var result = new {
                     totalPQty,
                     totalRQty,
-                    totalAct.totalAct,
                     packingListDetailModel1, 
                     packingListDetailModel2,
                     packingListDetailModel3,
@@ -601,20 +537,6 @@ namespace Bottom_API._Services.Services
                     suggestedReturn2,
                 };
                 return result;
-            } else {
-                var result = new {
-                    totalPQty,
-                    totalRQty,
-                    totalAct,
-                    packingListDetailModel1, 
-                    packingListDetailModel2,
-                    packingListDetailModel3,
-                    suggestedReturn1,
-                    suggestedReturn2,
-                };
-                return result;
-            }
-
         }
 
         public async Task<List<object>> PrintByQRCodeID(List<string> listQrCode)
