@@ -125,16 +125,16 @@ export class NavItem {
               url: '/input/main',
               icon: 'icon-arrow-right-circle',
             },
-            {
-              name: '3.2 QrCode Print',
-              url: '/input/qrcode-again',
-              icon: 'icon-printer',
-            },
-            {
-              name: '3.3 Missing Print',
-              url: '/input/missing-again',
-              icon: 'icon-printer',
-            }
+            // {
+            //   name: '3.2 QrCode Print',
+            //   url: '/input/qrcode-again',
+            //   icon: 'icon-printer',
+            // },
+            // {
+            //   name: '3.3 Missing Print',
+            //   url: '/input/missing-again',
+            //   icon: 'icon-printer',
+            // }
           ],
         };
         this.navItems.push(navItem);
@@ -168,6 +168,56 @@ export class NavItem {
           name: '5. Transfer Location',
           url: '/transfer/main',
           icon: 'icon-frame',
+        };
+        this.navItems.push(navItem);
+      }
+      if (element === 'wmsb.MissingPrint' && user.role.includes('wmsb.QrPrintAgain') === true) {
+        const navItem = {
+          name: '8. Print',
+          url: 'print ',
+          icon: 'icon-printer',
+          children: [
+            {
+              name: '8.1 QrCode Print',
+              url: '/input/qrcode-again',
+              icon: 'icon-printer',
+            },
+            {
+              name: '8.2 Missing Print',
+              url: '/input/missing-again',
+              icon: 'icon-printer',
+            }
+          ],
+        };
+        this.navItems.push(navItem);
+      }
+      if (element === 'wmsb.MissingPrint' && user.role.includes('wmsb.QrPrintAgain') === false) {
+        const navItem = {
+          name: '8. Print',
+          url: 'print ',
+          icon: 'icon-printer',
+          children: [
+            {
+              name: '8.2 Missing Print',
+              url: '/input/missing-again',
+              icon: 'icon-printer',
+            }
+          ],
+        };
+        this.navItems.push(navItem);
+      }
+      if (element === 'wmsb.QrPrintAgain' && user.role.includes('wmsb.MissingPrint') === false) {
+        const navItem = {
+          name: '8. Print',
+          url: 'print ',
+          icon: 'icon-printer',
+          children: [
+            {
+              name: '8.1 QrCode Print',
+              url: '/input/qrcode-again',
+              icon: 'icon-printer',
+            },
+          ],
         };
         this.navItems.push(navItem);
       }

@@ -10,7 +10,7 @@ import { MissingAgainComponent } from './missing-again/missing-again.component';
 const routes: Routes = [
   {
     path: '',
-    canActivate: [InputNavGuard],
+    // canActivate: [InputNavGuard],
     data: {
       title: 'Input'
     },
