@@ -22,6 +22,7 @@ namespace Bottom_API.Models
         public string Mat__Name {get;set;}
         public string Model_No {get;set;}
         public string Model_Name {get;set;}
+        public string Custmoer_Name {get;set;}
         public string Article {get;set;}
         public string Supplier_No {get;set;}
         public string Supplier_Name {get;set;}

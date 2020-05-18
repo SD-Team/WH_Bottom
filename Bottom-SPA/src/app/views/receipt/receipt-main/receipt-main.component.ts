@@ -26,9 +26,9 @@ export class ReceiptMainComponent implements OnInit {
   toDate = new Date();
   mO_No: string;
   supplier_ID: string;
-  supplier_Name: string;
+  supplierList: any[] = [];
   materialSearch: MaterialSearch;
-  materialLists: MaterialModel[];
+  materialLists: MaterialModel[] = [];
   receiveNoMain: ReceiveNoMain[];
   status: string = 'all';
   alerts: any = [
@@ -53,6 +53,7 @@ export class ReceiptMainComponent implements OnInit {
               private alertifyService: AlertifyService) { }
 
   ngOnInit() {
+    this.changeSupplier();
     this.pagination = {
       currentPage: 1,
       itemsPerPage: 3,
@@ -60,69 +61,81 @@ export class ReceiptMainComponent implements OnInit {
       totalPages: 0
     };
     // Lấy ngày hiện tại
-    const timeNow = new Date().getFullYear().toString() +
-                    '/' + (new Date().getMonth() + 1).toString() +
-                    '/' + new Date().getDate().toString();
-    this.time_start = timeNow;
-    this.time_end = timeNow;
+    // const timeNow = new Date().getFullYear().toString() +
+    //                 '/' + (new Date().getMonth() + 1).toString() +
+    //                 '/' + new Date().getDate().toString();
+    // this.time_start = timeNow;
+    // this.time_end = timeNow;
     this.bsConfig = Object.assign({}, { containerClass: 'theme-blue' });
 
     this.materialService.currentMaterialSearch.subscribe(res => this.materialSearch = res);
-    if (this.materialSearch === undefined || this.materialSearch === null) {
-      this.getDataLoadPage();
-    } else {
-      this.mO_No = this.materialSearch.mO_No;
-      this.supplier_ID = this.materialSearch.supplier_ID;
-      this.changeSupplier();
-      this.status = this.materialSearch.status;
-      this.time_start = this.convertStringDate(this.materialSearch.from_Date);
-      this.time_end = this.convertStringDate(this.materialSearch.to_Date);
-      this.search();
-    }
+    // if (this.materialSearch === undefined || this.materialSearch === null) {
+    //   this.getDataLoadPage();
+    // } else {
+    //   this.mO_No = this.materialSearch.mO_No;
+    //   this.supplier_ID = this.materialSearch.supplier_ID;
+    //   this.changeSupplier();
+    //   this.status = this.materialSearch.status;
+    //   this.time_start = this.convertStringDate(this.materialSearch.from_Date);
+    //   this.time_end = this.convertStringDate(this.materialSearch.to_Date);
+    //   this.search();
+    // }
     this.inputService.changeListInputMain([]);
     this.inputService.changeFlag('');
   }
   changeSupplier() {
-    if (this.supplier_ID !== undefined && this.supplier_ID !== null) {
-      this.packingListService.findBySupplier(this.supplier_ID).subscribe(res => {
-        this.supplier_Name = res.supplierName;
+      this.packingListService.supplierList().subscribe(res => {
+        this.supplierList = res;
       });
-    }
   }
-  getDataLoadPage() {
-    let form_date = new Date(this.time_start).toLocaleDateString();
-    let to_date = new Date(this.time_end).toLocaleDateString();
-    this.materialSearch = {
-      supplier_ID: '',
-      mO_No: '',
-      from_Date: form_date,
-      to_Date: to_date,
-      status: 'all'
-    };
-    this.materialService.search(this.pagination.currentPage , this.pagination.itemsPerPage, this.materialSearch)
-        .subscribe((res: PaginatedResult<MaterialModel[]>) => {
-          this.materialLists = res.result;
-          this.pagination = res.pagination;
-          if(this.materialLists.length === 0) {
-            this.alertifyService.error('No Data!');
-          }
-        }, error => {
-        this.alertifyService.error(error);
-    });
-  }
+  // getDataLoadPage() {
+  //   let form_date = new Date(this.time_start).toLocaleDateString();
+  //   let to_date = new Date(this.time_end).toLocaleDateString();
+  //   this.materialSearch = {
+  //     supplier_ID: '',
+  //     mO_No: '',
+  //     from_Date: form_date,
+  //     to_Date: to_date,
+  //     status: 'all'
+  //   };
+  //   this.materialService.search(this.pagination.currentPage , this.pagination.itemsPerPage, this.materialSearch)
+  //       .subscribe((res: PaginatedResult<MaterialModel[]>) => {
+  //         this.materialLists = res.result;
+  //         this.pagination = res.pagination;
+  //         if(this.materialLists.length === 0) {
+  //           this.alertifyService.error('No Data!');
+  //         }
+  //       }, error => {
+  //       this.alertifyService.error(error);
+  //   });
+  // }
   search() {
-    if (this.time_start === undefined || this.time_end === undefined) {
-      this.alertifyService.error('Please option start and end time');
-    } else {
-      let form_date = new Date(this.time_start).toLocaleDateString();
-      let to_date = new Date(this.time_end).toLocaleDateString();
-      this.materialSearch = {
-        supplier_ID: this.supplier_ID,
-        mO_No: this.mO_No,
-        from_Date: form_date,
-        to_Date: to_date,
-        status: this.status
-      };
+      if(this.time_start === undefined || this.time_start === '') {
+        this.materialSearch = {
+          supplier_ID: this.supplier_ID,
+          mO_No: this.mO_No,
+          from_Date: null,
+          to_Date: null,
+          status: this.status
+        };
+      } else if(this.time_start !== undefined && this.time_start !== '') {
+        if(this.time_end === undefined || this.time_end === '') {
+          this.alertifyService.error('Please option time end!');
+        } else {
+          let form_date = new Date(this.time_start).toLocaleDateString();
+          let to_date = new Date(this.time_end).toLocaleDateString();
+          this.materialSearch = {
+            supplier_ID: this.supplier_ID,
+            mO_No: this.mO_No,
+            from_Date: form_date,
+            to_Date: to_date,
+            status: this.status
+          };
+        }
+      } else {
+
+      }
+      console.log(this.materialSearch);
       this.materialService.changeMaterialSearch(this.materialSearch);
       this.materialService.search(this.pagination.currentPage , this.pagination.itemsPerPage, this.materialSearch)
         .subscribe((res: PaginatedResult<MaterialModel[]>) => {
@@ -134,7 +147,6 @@ export class ReceiptMainComponent implements OnInit {
         }, error => {
           this.alertifyService.error(error);
       });
-    }
   }
   changePageAdd(materialModel) {
     this.materialService.changeMaterialModel(materialModel);

@@ -28,10 +28,10 @@ namespace Bottom_API.Controllers
             return Ok(lists);
         }
 
-        [HttpGet("findBySupplier/{supplier_ID}")]
-        public async Task<IActionResult> FindBySupplier(string supplier_ID) {
-            var data = await _service.FindBySupplier(supplier_ID);
-            return Ok(new {supplierName = data});
+        [HttpGet("supplierList")]
+        public async Task<IActionResult> SupplierList() {
+            var data = await _service.SupplierList();
+            return Ok(data);
         }
     }
 }

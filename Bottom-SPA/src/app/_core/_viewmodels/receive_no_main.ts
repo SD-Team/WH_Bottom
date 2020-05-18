@@ -12,4 +12,6 @@ export interface ReceiveNoMain {
     generated_QRCode: string;
     sheet_Type: string;
     updated_By: string;
+    material_ID: string
+    material_Name: string;
 }

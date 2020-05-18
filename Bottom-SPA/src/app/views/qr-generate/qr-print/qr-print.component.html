@@ -50,7 +50,10 @@
                                         <span >E1</span>
                                         <span class="text-margin1">{{item.qrCodeMainItem.mO_No}}</span>
                                         <span class="text-margin1">{{item.qrCodeMainItem.mO_Seq}}</span>
-                                        <span class="text-margin1">{{ item.object1.totalRQty }}</span>
+                                        <span *ngIf="printQrCodeAgain === '0'; else totalRelse1" class="text-margin1">R:{{ item.object1.totalRQty }}</span>
+                                        <ng-template #totalRelse1>
+                                            <span class="text-margin1">A:{{ item.object1.totalRQty }}</span>
+                                        </ng-template>
                                         <span class="text-margin1" *ngIf="item.object1.totalPQty !== undefined">
                                             {{ item.object1.totalPQty }}</span>
                                         <span class="text-margin1">Rec: {{item.qrCodeMainItem.receive_Date | date: "yyyy/MM/dd"}}</span>   
@@ -60,11 +63,12 @@
                                     <div class="col-12">
                                         <span>{{item.qrCodeMainItem.model_Name}}</span>
                                         <span class="text-margin1">{{item.qrCodeMainItem.model_No}}</span>
+                                        <span class="text-margin1">{{item.qrCodeMainItem.article}}</span>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <span>7713</span>
+                                        <span>7317</span>
                                         <span class="text-margin1">Outsole</span>
                                         <span class="text-margin1">{{item.qrCodeMainItem.material_ID}}</span>
                                     </div>
@@ -78,11 +82,11 @@
                                     <div class="col-12">
                                         <table>
                                             <tr>
-                                                <td>TSize</td>
+                                                <td>Tool</td>
                                                 <td *ngFor="let item1 of item.object1.packingListDetailModel1">{{ item1.tool_Size}}</td>
                                             </tr>
                                             <tr>
-                                                <td>Size</td>
+                                                <td>PO</td>
                                                 <td *ngFor="let item1 of item.object1.packingListDetailModel1">{{ item1.order_Size }}</td>
                                             </tr>
                                             <tr>
@@ -98,17 +102,20 @@
                                                 <td *ngFor="let item1 of item.object1.packingListDetailModel1">{{ item1.act }}</td>
                                             </tr>
                                             <tr>
-                                                <td>Bal</td>
+                                                <td *ngIf="printQrCodeAgain === '0'; else balElse1">Bal</td>
+                                                <ng-template #balElse1>
+                                                    <td>Missing</td>
+                                                </ng-template>
                                                 <td *ngFor="let item1 of item.object1.packingListDetailModel1">{{ item1.bal }}</td>
                                             </tr>
                                         </table>
                                         <table *ngIf="item.object1.packingListDetailModel2.length > 0">
                                             <tr>
-                                                <td>TSize</td>
+                                                <td>Tool</td>
                                                 <td *ngFor="let item1 of item.object1.packingListDetailModel2">{{ item1.tool_Size}}</td>
                                             </tr>
                                             <tr>
-                                                <td>Size</td>
+                                                <td>PO</td>
                                                 <td *ngFor="let item1 of item.object1.packingListDetailModel2">{{ item1.order_Size }}</td>
                                             </tr>
                                             <tr>
@@ -124,7 +131,10 @@
                                                 <td *ngFor="let item1 of item.object1.packingListDetailModel2">{{ item1.act }}</td>
                                             </tr>
                                             <tr>
-                                                <td>Bal</td>
+                                                <td *ngIf="printQrCodeAgain === '0'; else balElse1">Bal</td>
+                                                <ng-template #balElse1>
+                                                    <td>Missing</td>
+                                                </ng-template>
                                                 <td *ngFor="let item1 of item.object1.packingListDetailModel2">{{ item1.bal }}</td>
                                             </tr>
                                         </table>
@@ -225,7 +235,10 @@
                                         <span >E1</span>
                                         <span class="text-margin1">{{item.qrCodeMainItem.mO_No}}</span>
                                         <span class="text-margin1">{{item.qrCodeMainItem.mO_Seq}}</span>
-                                        <span class="text-margin1">{{ item.object1.totalRQty }}</span>
+                                        <span *ngIf="printQrCodeAgain === '0'; else totalRelse2" class="text-margin1">R:{{ item.object1.totalRQty }}</span>
+                                        <ng-template #totalRelse2>
+                                            <span class="text-margin1">A:{{ item.object1.totalRQty }}</span>
+                                        </ng-template>
                                         <span class="text-margin1" *ngIf="item.object1.totalPQty !== undefined">
                                             {{ item.object1.totalPQty }}</span>
                                         <span class="text-margin1">{{item.qrCodeMainItem.receive_Date | date: 'yyyy/mm/dd'}}</span>   
@@ -235,11 +248,12 @@
                                     <div class="col-12">
                                         <span>{{item.qrCodeMainItem.model_Name}}</span>
                                         <span class="text-margin1">{{item.qrCodeMainItem.model_No}}</span>
+                                        <span class="text-margin1">{{item.qrCodeMainItem.article}}</span>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <span>7713</span>
+                                        <span>7317</span>
                                         <span class="text-margin1">Outsole</span>
                                         <span class="text-margin1">{{item.qrCodeMainItem.material_ID}}</span>
                                     </div>
@@ -253,11 +267,11 @@
                                     <div class="col-12">
                                         <table>
                                             <tr>
-                                                <td>TSize</td>
+                                                <td>Tool</td>
                                                 <td *ngFor="let item1 of item.object1.packingListDetailModel3">{{ item1.tool_Size}}</td>
                                             </tr>
                                             <tr>
-                                                <td>Size</td>
+                                                <td>PO</td>
                                                 <td *ngFor="let item1 of item.object1.packingListDetailModel3">{{ item1.order_Size }}</td>
                                             </tr>
                                             <tr>
@@ -273,7 +287,10 @@
                                                 <td *ngFor="let item1 of item.object1.packingListDetailModel3">{{ item1.act }}</td>
                                             </tr>
                                             <tr>
-                                                <td>Bal</td>
+                                                <td *ngIf="printQrCodeAgain === '0'; else balElse1">Bal</td>
+                                                <ng-template #balElse1>
+                                                    <td>Missing</td>
+                                                </ng-template>
                                                 <td *ngFor="let item1 of item.object1.packingListDetailModel3">{{ item1.bal }}</td>
                                             </tr>
                                         </table>

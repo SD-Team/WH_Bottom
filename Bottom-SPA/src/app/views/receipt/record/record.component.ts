@@ -17,6 +17,7 @@ export class RecordComponent implements OnInit {
   receiveDetail: ReceiveNoDetail[] = [];
   materialEditModels: MaterialEditModel[] = [];
   checkButtonAdd = true;
+  
   constructor(private router: Router,
               private materialService: MaterialService) { }
 
@@ -42,8 +43,9 @@ export class RecordComponent implements OnInit {
       this.receiveNoMain = res;
     });
   }
-  changeFormDetail(receiveNo) {
-    this.materialService.receiveNoDetails(receiveNo).subscribe(res => {
+  changeFormDetail(item: ReceiveNoMain) {
+    this.materialService.changeReceiveNoMainItem(item);
+    this.materialService.receiveNoDetails(item.receive_No).subscribe(res => {
       this.receiveDetail = res;
       this.materialService.changeReceiveNoDetail(this.receiveDetail);
       this.router.navigate(['/receipt/record/record-detail']);

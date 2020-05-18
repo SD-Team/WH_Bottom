@@ -49,16 +49,13 @@ namespace Bottom_API._Services.Services
             throw new System.NotImplementedException();
         }
 
-        public async Task<string> FindBySupplier(string supplier_ID)
+        public async Task<List<SupplierModel>> SupplierList()
         {
-            var data =  await _repoMaterialView.GetAll()
-                        .Where(x => x.Supplier_No.Trim() == supplier_ID.Trim())
-                        .FirstOrDefaultAsync();
-            if (data != null) {
-                return data.Supplier_Name;
-            } else {
-                return "";
-            }
+            var data =  await _repoMaterialView.GetAll().Select(x => new SupplierModel {
+                Supplier_No = x.Supplier_No,
+                Supplier_Name = x.Supplier_Name
+            }).Distinct().ToListAsync();
+            return data;
         }
 
         public async Task<PagedList<Packing_List_Dto>> SearchViewModel(PaginationParams param,FilterPackingListParam filterParam)

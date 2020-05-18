@@ -53,7 +53,7 @@
                 <td class="text-center vertical-middle">{{item.sheet_Type}}</td>
                 <td class="text-center vertical-middle">{{item.updated_By}}</td>
                 <td class="text-center vertical-middle">
-                  <button (click)="changeFormDetail(item.receive_No)" class="btn btn-block btn-success">Show Detail</button>
+                  <button (click)="changeFormDetail(item)" class="btn btn-block btn-success">Show Detail</button>
                   <button (click)="editReceiveNo(item)" 
                   class="btn btn-block btn-warning" 
                   *ngIf="item.generated_QRCode === 'N' && item.purchase_Qty !== item.accumated_Qty_All">Edit</button>

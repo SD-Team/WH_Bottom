@@ -7,6 +7,7 @@ export interface MaterialModel {
     purchase_No: string;
     model_No: string;
     model_Name: string;
+    custmoer_Name: string;
     article: string;
     supplier_ID: string;
     supplier_Name: string;

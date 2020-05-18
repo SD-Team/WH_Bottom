@@ -14,6 +14,25 @@
           </div>
         </div>
         <div class="card-body">
+          <div class="form-group row">
+            <label class="col-md-2 col-form-label" for="fromDate"><strong class="float-right">Plan No</strong></label>
+            <div class="col-md-2">
+              <input type="text" [(ngModel)]="receiveNoMain.mO_No" disabled name="plan_no" class="form-control">
+            </div>
+            <label class="col-md-2 col-form-label" for="fromDate"><strong class="float-right">Batch</strong></label>
+            <div class="col-md-1">
+              <input type="text" [(ngModel)]="receiveNoMain.mO_Seq" disabled name="Batch" class="form-control">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 col-form-label" for="fromDate"><strong class="float-right">Material No</strong></label>
+            <div class="col-md-2">
+              <input type="text" [(ngModel)]="receiveNoMain.material_ID" disabled name="material_no" class="form-control">
+            </div>
+            <div class="col-md-6">
+              <input type="text" [(ngModel)]="receiveNoMain.material_Name" disabled name="material_name" class="form-control">
+            </div>
+          </div>
           <table *ngIf="receiveDetail !== undefined && receiveDetail !== null" class="table table-bordered">
             <thead>
               <tr>

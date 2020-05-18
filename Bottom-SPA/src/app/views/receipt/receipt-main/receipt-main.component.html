@@ -49,10 +49,9 @@
             <div class="form-group row">
               <label class="col-md-2 col-form-label" for="Supplier No"><strong class="float-right">Supplier No</strong></label>
               <div class="col-md-2">
-                <input type="text" name="supplierNo" [(ngModel)]="supplier_ID" (change)="changeSupplier()" class="form-control" placeholder="Enter Supplier No  ..">
-              </div>
-              <div class="col-md-2">
-                <input type="text" [(ngModel)]="supplier_Name" disabled name="supplier_Name" class="form-control">
+                <select class="form-control" [(ngModel)]="supplier_ID" id="status" name="status">
+                  <option value="{{item.supplier_No}}" *ngFor="let item of supplierList"> {{item.supplier_No}}-{{item.supplier_Name}}</option>
+                </select>
               </div>
               <label class="col-md-2 col-form-label" for="status"><strong class="float-right">Status</strong></label>
               <div class="col-md-2">
@@ -92,13 +91,14 @@
                 <th>Model No</th>
                 <th>Model Name</th>
                 <th>Article</th>
+                <th>Apart</th>
                 <th>Supplier No</th>
                 <th>Supplier Name</th>
               </tr>
             </thead>
             <tbody *ngIf="materialLists!== undefined && materialLists.length === 0">
               <tr>
-                <td colspan="9">
+                <td colspan="10">
                   <alert class="text-center" type='danger'>
                     <strong>No Data matching!</strong> 
                   </alert>
@@ -120,6 +120,7 @@
                   <th class="text-center vertical-middle">{{item.model_No}}</th>
                   <th class="text-center vertical-middle">{{item.model_Name}}</th>
                   <th class="text-center vertical-middle">{{item.article}}</th>
+                  <th class="text-center vertical-middle">{{item.custmoer_Name}}</th>
                   <th class="text-center vertical-middle">{{item.supplier_ID}}</th>
                   <th class="text-center vertical-middle">{{item.supplier_Name}}</th>
                 </tr>

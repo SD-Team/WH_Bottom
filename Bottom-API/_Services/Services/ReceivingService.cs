@@ -56,6 +56,7 @@ namespace Bottom_API._Services.Services
             public string Purchase_No {get;set;}
             public string Status {get;set;}
             public string Missing_No {get;set;}
+            public DateTime? Confirm_Delivery {get;set;}
         }
         public async Task<object> MaterialMerging(MaterialMainViewModel model)
         {
@@ -167,21 +168,20 @@ namespace Bottom_API._Services.Services
         public async Task<PagedList<MaterialMainViewModel>> SearchByModel(PaginationParams param, FilterMaterialParam filterParam)
         {
             var listMaterialView = await _repoMaterialView.FindAll().ToListAsync();
-            var materialPurchaseList = await _repoPurchase.FindAll()
-            .Where(x => x.Confirm_Delivery >= Convert.ToDateTime(filterParam.From_Date + " 00:00:00.000") &&
-                        x.Confirm_Delivery <= Convert.ToDateTime(filterParam.To_Date + " 23:59:59.997")).Select(x => new {
+            var materialPurchaseList = await _repoPurchase.FindAll().
+                Select(x => new {
                             Purchase_No = x.Purchase_No,
                             Status = x.Status,
-                            Missing_No = ""
+                            Missing_No = "",
+                            Confirm_Delivery = x.Confirm_Delivery
                         }).Distinct().ToListAsync();
 
             var materialMissingList = await _repoMissing.GetAll()
-            .Where(x => x.Confirm_Delivery >= Convert.ToDateTime(filterParam.From_Date + " 00:00:00.000") &&
-                        x.Confirm_Delivery <= Convert.ToDateTime(filterParam.To_Date + " 23:59:59.997"))
                         .Select(x => new {
                             Purchase_No = x.Purchase_No,
                             Status = x.Status,
-                            Missing_No = x.Missing_No
+                            Missing_No = x.Missing_No,
+                            Confirm_Delivery = x.Confirm_Delivery
                         }).Distinct().ToListAsync();
             foreach (var item in materialMissingList)
             {
@@ -195,7 +195,8 @@ namespace Bottom_API._Services.Services
                 var item1 = new PurchaseConvert {
                     Purchase_No = item.Purchase_No,
                     Status = item.Status,
-                    Missing_No = item.Missing_No
+                    Missing_No = item.Missing_No,
+                    Confirm_Delivery = item.Confirm_Delivery
                 };
                 materialPurchaseListConvert.Add(item1);
             }
@@ -220,10 +221,12 @@ namespace Bottom_API._Services.Services
                                     Material_Name = b.Mat__Name,
                                     Missing_No = a.Missing_No == null? "" : a.Missing_No,
                                     MO_No = b.Plan_No,
+                                    Confirm_Delivery = a.Confirm_Delivery,
                                     Purchase_No = a.Purchase_No,
                                     Model_No = b.Model_No,
                                     Model_Name = b.Model_Name,
                                     Article = b.Article,
+                                    Custmoer_Name = b.Custmoer_Name,
                                     Supplier_ID = b.Supplier_No,
                                     Supplier_Name = b.Supplier_Name,
                                     Subcon_No = b.Subcon_No,
@@ -231,6 +234,10 @@ namespace Bottom_API._Services.Services
                                     T3_Supplier = b.T3_Supplier,
                                     T3_Supplier_Name = b.T3_Supplier_Name
                                 }).ToList();
+            if (filterParam.From_Date != null && filterParam.To_Date != null) {
+                listMaterial = listMaterial.Where(x => x.Confirm_Delivery >= Convert.ToDateTime(filterParam.From_Date + " 00:00:00.000") &&
+                        x.Confirm_Delivery <= Convert.ToDateTime(filterParam.To_Date + " 23:59:59.997")).ToList();
+            }
             if(filterParam.MO_No != null && filterParam.MO_No != string.Empty) {
                 listMaterial = listMaterial.Where(x => x.MO_No.Trim() == filterParam.MO_No.Trim()).ToList();
             }
@@ -489,6 +496,8 @@ namespace Bottom_API._Services.Services
                             MO_No = model.MO_No,
                             Receive_No = a.Receive_No,
                             MO_Seq = a.MO_Seq,
+                            Material_ID = a.Material_ID,
+                            Material_Name = a.Material_Name,
                             Receive_Date = a.Receive_Date,
                             Purchase_Qty = b.Purchase_Qty,
                             Received_Qty = b.Received_Qty,
@@ -502,6 +511,8 @@ namespace Bottom_API._Services.Services
                             Delivery_No = cl.First().Delivery_No,
                             Receive_No = cl.First().Receive_No,
                             MO_Seq = cl.First().MO_Seq,
+                            Material_ID = cl.First().Material_ID,
+                            Material_Name = cl.First().Material_Name,
                             Receive_Date = cl.First().Receive_Date,
                             Purchase_Qty = cl.Sum(c => c.Purchase_Qty),
                             Accumated_Qty = cl.Sum(c => c.Received_Qty),
