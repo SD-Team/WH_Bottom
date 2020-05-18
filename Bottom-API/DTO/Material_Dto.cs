@@ -43,5 +43,6 @@ namespace Bottom_API.DTO
         public string T3_Purchase_No {get;set;}
         public DateTime? Updated_Time {get;set;}
         public string Updated_By {get;set;}
+        public string Custmoer_Name { get; set; }
     }
 }

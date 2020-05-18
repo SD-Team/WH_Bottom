@@ -221,7 +221,9 @@ namespace Bottom_API._Services.Services
             var materialMissingModel = await _repoMaterialMissing.FindAll(x => x.Missing_No.Trim() == missingNo.Trim()).ProjectTo<Material_Dto>(_configMapper).FirstOrDefaultAsync();
             var transactionMainModel = _repoTransactionMain.FindSingle(x => x.Missing_No.Trim() == missingNo.Trim() && x.Transac_Type.Trim() == "I");
             var transactionDetailByMissingNo = await _repoTransactionDetail.FindAll(x => x.Transac_No.Trim() == transactionMainModel.Transac_No.Trim()).ProjectTo<TransferLocationDetail_Dto>(_configMapper).OrderBy(x => x.Tool_Size).ToListAsync();
+            var materialPurchaseModel = await _repoMaterialView.FindAll().Where(x => x.Plan_No.Trim() == materialMissingModel.MO_No.Trim() && x.Purchase_No.Trim() == materialMissingModel.Purchase_No.Trim() && x.Mat_.Trim() == materialMissingModel.Material_ID.Trim()).FirstOrDefaultAsync();
 
+            materialMissingModel.Custmoer_Name = materialPurchaseModel.Custmoer_Name;
             // Lấy ra những thuộc tính cần in
             MissingPrint_Dto result = new MissingPrint_Dto();
             result.MaterialMissing = materialMissingModel;

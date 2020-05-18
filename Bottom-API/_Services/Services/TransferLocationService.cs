@@ -19,39 +19,53 @@ namespace Bottom_API._Services.Services
         private readonly IQRCodeMainRepository _repoQRCodeMain;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
+        private readonly IPackingListRepository _repoPackingList;
+        private readonly IMaterialViewRepository _repoMaterialView;
+
         public TransferLocationService(
             ITransactionMainRepo repoTransactionMain,
             ITransactionDetailRepo repoTransactionDetail,
             IQRCodeMainRepository repoQRCodeMain,
             IMapper mapper,
-            MapperConfiguration configMapper)
+            MapperConfiguration configMapper,
+            IPackingListRepository repoPackingList,
+            IMaterialViewRepository repoMaterialView)
         {
             _configMapper = configMapper;
+            _repoPackingList = repoPackingList;
             _mapper = mapper;
             _repoTransactionMain = repoTransactionMain;
             _repoTransactionDetail = repoTransactionDetail;
             _repoQRCodeMain = repoQRCodeMain;
+            _repoMaterialView = repoMaterialView;
         }
         public async Task<TransferLocation_Dto> GetByQrCodeId(object qrCodeId)
         {
             TransferLocation_Dto model = new TransferLocation_Dto();
             // Lấy ra TransactionMain cùng QRCode_ID và Can_Move == "Y" và QRCode_Version mới nhất
-            var transctionModel = await _repoTransactionMain.FindAll(x => x.QRCode_ID.Trim() == qrCodeId.ToString().Trim() && x.Can_Move == "Y" && (x.Transac_Type.Trim() == "I" || x.Transac_Type.Trim() == "M" || x.Transac_Type.Trim() == "R")).OrderByDescending(x => x.QRCode_Version).FirstOrDefaultAsync();
+            var transactionModel = await _repoTransactionMain.FindAll(x => x.QRCode_ID.Trim() == qrCodeId.ToString().Trim() && x.Can_Move == "Y" && (x.Transac_Type.Trim() == "I" || x.Transac_Type.Trim() == "M" || x.Transac_Type.Trim() == "R")).OrderByDescending(x => x.QRCode_Version).FirstOrDefaultAsync();
             var qrCodeModel = await _repoQRCodeMain.GetByQRCodeID(qrCodeId);
-            if (transctionModel != null)
+            if (transactionModel != null)
             {
-                model.Id = transctionModel.ID;
-                model.QrCodeId = transctionModel.QRCode_ID.Trim();
+                var packingListModel = await _repoPackingList.FindAll().Where(x => x.MO_No.Trim() == transactionModel.MO_No.Trim()).FirstOrDefaultAsync();
+                var materialPurchaseModel = await _repoMaterialView.FindAll().Where(x => x.Plan_No.Trim() == transactionModel.MO_No.Trim() && x.Purchase_No.Trim() == transactionModel.Purchase_No.Trim() && x.Mat_.Trim() == transactionModel.Material_ID.Trim()).FirstOrDefaultAsync();
+                model.Id = transactionModel.ID;
+                model.QrCodeId = transactionModel.QRCode_ID.Trim();
                 model.TransferNo = "TB" + DateTime.Now.ToString("yyyyMMdd") + "001";
-                model.PlanNo = transctionModel.MO_No.Trim();
+                model.PlanNo = transactionModel.MO_No.Trim();
                 model.ReceiveNo = qrCodeModel.Receive_No.Trim();
-                model.Batch = transctionModel.MO_Seq;
-                model.MatId = transctionModel.Material_ID.Trim();
-                model.MatName = transctionModel.Material_Name.Trim();
-                model.FromLocation = transctionModel.Rack_Location.Trim();
-                model.Qty = _repoTransactionDetail.GetQtyByTransacNo(transctionModel.Transac_No);
+                model.Batch = transactionModel.MO_Seq;
+                model.MatId = transactionModel.Material_ID.Trim();
+                model.MatName = transactionModel.Material_Name.Trim();
+                model.FromLocation = transactionModel.Rack_Location.Trim();
+                model.Qty = _repoTransactionDetail.GetQtyByTransacNo(transactionModel.Transac_No);
                 model.UpdateBy = "Emma";
                 model.TransacTime = DateTime.Now;
+                model.ModelName = packingListModel.Model_Name;
+                model.ModelNo =  packingListModel.Model_No;
+                model.Article = packingListModel.Article;
+                model.CustmoerPart = materialPurchaseModel.Custmoer_Part;
+                model.CustmoerName = materialPurchaseModel.Custmoer_Name;
             }
 
             return model;

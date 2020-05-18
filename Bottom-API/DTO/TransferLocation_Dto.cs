@@ -18,5 +18,10 @@ namespace Bottom_API.DTO
         public string UpdateBy { get; set; }
         public DateTime? TransacTime { get; set; }
         public string TransacType { get; set; }
+        public string ModelName { get; set; }
+        public string ModelNo { get; set; }
+        public string Article { get; set; }
+        public string CustmoerPart { get; set; }
+        public string CustmoerName { get; set; }
     }
 }

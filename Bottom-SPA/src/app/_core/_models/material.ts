@@ -38,4 +38,5 @@ export interface Material {
     t3_Purchase_No: string; 
     updated_Time: Date;
     updated_By: string; 
+    custmoer_Name: string; 
 }

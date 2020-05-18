@@ -4,11 +4,7 @@
       <div class="card">
         <div class="card-header">
           <strong>Missing Print</strong>
-          <button
-            type="button"
-            class="btn btn-sm btn-primary float-right"
-            (click)="back()"
-          >
+          <button type="button" class="btn btn-sm btn-primary float-right" (click)="back()">
             <i class="fa fa-chevron-left"></i> Back
           </button>
         </div>
@@ -41,11 +37,8 @@
                   </div> -->
                 </div>
               </div>
-              <div
-                class="row"
-                class="custom-thead pt-3 pb-3 border-3 border-primary"
-                style="border:solid 1px #e4e5e6 !important;"
-              >
+              <div class="row" class="custom-thead pt-3 pb-3 border-3 border-primary"
+                style="border:solid 1px #e4e5e6 !important;">
                 <div class="col">
                   <div class="row m-2">
                     <div class="col-2">PO# : {{ missingPrint.mO_No }}</div>
@@ -53,7 +46,7 @@
                       Purchase# : {{ missingPrint.purchase_No }}
                     </div>
                     <div class="col-1">Batch : {{ missingPrint.mO_Seq }}</div>
-                    <div class="col-2">Model : {{ missingPrint.model_No }}</div>
+                    <div class="col-2">Model : {{ missingPrint.model_No }} - {{missingPrint.model_Name}}</div>
                     <div class="col-2">Art# : {{ missingPrint.article }}</div>
                     <div class="col-3">
                       Original Delivery Date:
@@ -73,6 +66,15 @@
                     </div>
                   </div>
                   <div class="row m-2">
+                    <div class="col-1">
+                      Apart :
+                    </div>
+                    <div class="col-4">
+                      {{ missingPrint.custmoer_Part}} -
+                      {{ missingPrint.custmoer_Name }}
+                    </div>
+                  </div>
+                  <div class="row m-2">
                     <div class="col-5">
                       Subcon : {{ missingPrint.process_Code }} -
                       {{ missingPrint.subcon_Name }}
@@ -82,7 +84,7 @@
                       {{ missingPrint.t3_Supplier_Name }}
                     </div>
                     <div class="col-2 text-right">
-                      Blance Qty : {{ blanceQty }}
+                      Missing Qty : {{ blanceQty }}
                     </div>
                   </div>
                 </div>
@@ -111,7 +113,7 @@
                       </td>
                     </tr>
                     <tr>
-                      <td class="custom-thead">Blance Qty</td>
+                      <td class="custom-thead">Missing Qty</td>
                       <td *ngFor="let item of transferDetailByMissing">
                         {{ item.untransac_Qty }}
                       </td>
@@ -123,13 +125,7 @@
           </div>
         </div>
         <div class="card-footer">
-          <button
-            type="button"
-            class="btn btn-primary"
-            [useExistingCss]="true"
-            printSectionId="wrap-print"
-            ngxPrint
-          >
+          <button type="button" class="btn btn-primary" [useExistingCss]="true" printSectionId="wrap-print" ngxPrint>
             <i class="fa fa-print"></i> Print
           </button>
         </div>

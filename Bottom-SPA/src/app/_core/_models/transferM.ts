@@ -13,4 +13,9 @@ export interface TransferM {
     updateBy: string;
     transacTime: string;
     transacType: string;
+    modelNo: string;
+    modelName: string;
+    article: string;
+    custmoerPart: string;
+    custmoerName: string;
 }
