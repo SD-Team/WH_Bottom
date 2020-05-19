@@ -107,7 +107,7 @@ export class OutputMainComponent implements OnInit {
       qrCode_Version: qrCodeVersion
     }
     qrCodeIdVersion.push(item);
-    this.packingListDetailService.findByQrCodeIdList(qrCodeIdVersion).subscribe(res => {
+    this.packingListDetailService.findByQrCodeIdListAgain(qrCodeIdVersion).subscribe(res => {
       this.packingPrintAll = res;
       this.packingListDetailService.changePackingPrint(this.packingPrintAll);
       this.router.navigate(['/qr/print']);
