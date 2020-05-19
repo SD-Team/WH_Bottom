@@ -52,8 +52,8 @@ namespace Bottom_API._Services.Services
         public async Task<List<SupplierModel>> SupplierList()
         {
             var data =  await _repoMaterialView.GetAll().Select(x => new SupplierModel {
-                Supplier_No = x.Supplier_No,
-                Supplier_Name = x.Supplier_Name
+                Supplier_No = x.Supplier_No.Trim(),
+                Supplier_Name = x.Supplier_Name.Trim()
             }).Distinct().ToListAsync();
             return data;
         }
@@ -75,6 +75,14 @@ namespace Bottom_API._Services.Services
             return await PagedList<Packing_List_Dto>.CreateAsync(packingSearch, param.PageNumber, param.PageSize);
         }
 
+        public async Task<Packing_List_Dto> FindBySupplier(string supplier_ID)
+        {
+            var data =  await _repo.GetAll()
+                        .Where(x => x.Supplier_ID.Trim() == supplier_ID.Trim())
+                        .FirstOrDefaultAsync();
+            var model = _mapper.Map<Packing_List_Dto>(data);
+            return model;
+        }
         public async Task<bool> Add(Packing_List_Dto model)
         {
             var data = _mapper.Map<WMSB_Packing_List>(model);
