@@ -50,16 +50,20 @@
                     <div class="col-2">Art# : {{ missingPrint.article }}</div>
                     <div class="col-3">
                       Original Delivery Date:
-                      {{ missingPrint.require_Delivery | date: "yyyy/MM/dd" }}
+                      {{ missingPrint.confirm_Delivery | date: "yyyy/MM/dd" }}
                     </div>
                   </div>
                   <div class="row m-2">
                     <div class="col-1">
                       Mat# :
                     </div>
-                    <div class="col-9">
+                    <div class="col-6">
                       {{ missingPrint.material_ID }} -
                       {{ missingPrint.material_Name }}
+                    </div>
+                    <div class="col-3">
+                      T2_Supplier : {{ missingPrint.supplier_ID }} -
+                      {{ missingPrint.supplier_Name }}
                     </div>
                     <div class="col-2 text-right">
                       Total Qty : {{ totalQty }}
