@@ -69,46 +69,54 @@ export class ReceiptMainComponent implements OnInit {
     this.bsConfig = Object.assign({}, { containerClass: 'theme-blue' });
 
     this.materialService.currentMaterialSearch.subscribe(res => this.materialSearch = res);
-    // if (this.materialSearch === undefined || this.materialSearch === null) {
-    //   this.getDataLoadPage();
-    // } else {
-    //   this.mO_No = this.materialSearch.mO_No;
-    //   this.supplier_ID = this.materialSearch.supplier_ID;
-    //   this.changeSupplier();
-    //   this.status = this.materialSearch.status;
-    //   this.time_start = this.convertStringDate(this.materialSearch.from_Date);
-    //   this.time_end = this.convertStringDate(this.materialSearch.to_Date);
-    //   this.search();
-    // }
+    if (this.materialSearch !== undefined && this.materialSearch !== null) {
+      this.mO_No = this.materialSearch.mO_No;
+      this.supplier_ID = this.materialSearch.supplier_ID;
+      console.log(this.materialSearch.supplier_ID);
+      this.status = this.materialSearch.status;
+      console.log(this.status);
+      if(this.fromDate === null) {
+        this.time_start = '';
+      } else {
+        this.time_start = this.convertStringDate(this.materialSearch.from_Date);
+      }
+      if(this.toDate === null) {
+        this.time_end = '';
+      } else {
+        this.time_end = this.convertStringDate(this.materialSearch.to_Date);
+      }
+      this.search();
+    }
     this.inputService.changeListInputMain([]);
     this.inputService.changeFlag('');
   }
   changeSupplier() {
       this.packingListService.supplierList().subscribe(res => {
+        console.log(res);
         this.supplierList = res;
       });
   }
-  // getDataLoadPage() {
-  //   let form_date = new Date(this.time_start).toLocaleDateString();
-  //   let to_date = new Date(this.time_end).toLocaleDateString();
-  //   this.materialSearch = {
-  //     supplier_ID: '',
-  //     mO_No: '',
-  //     from_Date: form_date,
-  //     to_Date: to_date,
-  //     status: 'all'
-  //   };
-  //   this.materialService.search(this.pagination.currentPage , this.pagination.itemsPerPage, this.materialSearch)
-  //       .subscribe((res: PaginatedResult<MaterialModel[]>) => {
-  //         this.materialLists = res.result;
-  //         this.pagination = res.pagination;
-  //         if(this.materialLists.length === 0) {
-  //           this.alertifyService.error('No Data!');
-  //         }
-  //       }, error => {
-  //       this.alertifyService.error(error);
-  //   });
-  // }
+  getDataLoadPage() {
+    let form_date = new Date(this.time_start).toLocaleDateString();
+    let to_date = new Date(this.time_end).toLocaleDateString();
+    this.materialSearch = {
+      supplier_ID: '',
+      mO_No: '',
+      from_Date: form_date,
+      to_Date: to_date,
+      status: 'all'
+    };
+    this.materialService.search(this.pagination.currentPage , this.pagination.itemsPerPage, this.materialSearch)
+        .subscribe((res: PaginatedResult<MaterialModel[]>) => {
+          this.materialLists = res.result;
+          this.pagination = res.pagination;
+          if(this.materialLists.length === 0) {
+            this.alertifyService.error('No Data!');
+          }
+        }, error => {
+        this.alertifyService.error(error);
+    });
+  }
   search() {
       if(this.time_start === undefined || this.time_start === '') {
         this.materialSearch = {

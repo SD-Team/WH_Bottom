@@ -32,6 +32,9 @@ export class PackingListService {
         })
       );
     }
+    findBySupplier(supplier: any): Observable<PackingList> {
+      return this.http.get<any>(this.baseUrl + 'findBySupplier/' + supplier, {});
+    }
     supplierList(): any {
         return this.http.get<any>(this.baseUrl + 'supplierList/', {});
     }

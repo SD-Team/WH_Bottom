@@ -75,10 +75,8 @@ namespace Bottom_API._Services.Services
             }
 
             // Gộp theo từng tool size và tính tổng Purchase, Received Qty theo tool size đó.
-            var packingDetailByToolSize = packingDetailList.GroupBy(x => x.Tool_Size).Select(x => new {
+            var BalByToolSize = packingDetailList.GroupBy(x => x.Tool_Size).Select(x => new {
                 Tool_Size = x.FirstOrDefault().Tool_Size,
-                Purchase_Qty = x.Sum(cl => cl.Purchase_Qty),
-                Received_Qty = x.Sum(cl => cl.Received_Qty),
                 Bal = x.Sum(cl => cl.Purchase_Qty) - x.Sum(cl => cl.Received_Qty)
             });
 
@@ -91,9 +89,6 @@ namespace Bottom_API._Services.Services
 
             var lists = packingListDetailAll
                 .Where(x => x.Receive_No.Trim() == qrCodeMan.Receive_No.Trim()).ToList();
-            // List các Tool Size mà có nhiều Order Size trong bảng Packing List Detail
-            var toolSizeMoreOrderSize = lists.Where(x => x.Tool_Size.Trim() != x.Order_Size.Trim()).Select(x => x.Tool_Size).Distinct().ToList();
-
             foreach (var item in lists)
             {
                     var packingItem1 = new PackingListDetailViewModel();
@@ -103,13 +98,12 @@ namespace Bottom_API._Services.Services
                     packingItem1.Tool_Size = item.Tool_Size;
                     packingItem1.Spec_Size = item.Spec_Size;
                     packingItem1.MO_Qty = item.MO_Qty;
-                    
+                    packingItem1.Purchase_Qty = item.Purchase_Qty;
+                    packingItem1.Received_Qty = item.Received_Qty;
                     packingItem1.Act = 0;
-                    foreach (var itemByToolSize in packingDetailByToolSize)
+                    foreach (var itemByToolSize in BalByToolSize)
                     {
                         if (itemByToolSize.Tool_Size.Trim() == item.Tool_Size.Trim()) {
-                            packingItem1.Purchase_Qty = itemByToolSize.Purchase_Qty;
-                            packingItem1.Received_Qty = itemByToolSize.Received_Qty;
                             packingItem1.Bal = itemByToolSize.Bal;
                         }
                     }
@@ -119,17 +113,33 @@ namespace Bottom_API._Services.Services
             }
 
             //----------------- Xử lý mảng dữ liệu cho 1 số dòng cùng tool size.----------------//
-            foreach (var itemToolSize in toolSizeMoreOrderSize)
-            {
-                var list1 = lists.Where(x => x.Tool_Size.Trim() == itemToolSize.Trim()).First();
-                foreach (var itemPack in packingListDetailModel)
+              // List các Tool Size mà có nhiều Order Size trong bảng Packing List Detail
+            var toolSizeMoreOrderSize = lists.Where(x => x.Tool_Size.Trim() != x.Order_Size.Trim()).Select(x => x.Tool_Size).Distinct().ToList();
+            if(toolSizeMoreOrderSize.Count() > 0) {
+                foreach (var itemToolSize in toolSizeMoreOrderSize)
                 {
-                    if(itemPack.Tool_Size.Trim() == itemToolSize.Trim() &&
-                        itemPack.Order_Size.Trim() != list1.Order_Size.Trim()) {
-                            itemPack.Purchase_Qty = null;
-                            itemPack.Received_Qty = null;
-                            itemPack.Act = null;
-                            itemPack.Bal = null;
+                    var model1 = packingListDetailModel.Where(x => x.Tool_Size.Trim() == itemToolSize.Trim())
+                        .GroupBy(x => x.Tool_Size).Select(x => new {
+                            Purchase_Qty = x.Sum(cl => cl.Purchase_Qty),
+                            Received_Qty = x.Sum(cl => cl.Received_Qty),
+                            Act = x.Sum(cl => cl.Act),
+                            Bal = x.Sum(cl => cl.Bal)
+                        }).FirstOrDefault();
+                    foreach (var itemPack in packingListDetailModel)
+                    {
+                        if(itemPack.Tool_Size.Trim() == itemToolSize.Trim() &&
+                            itemPack.Order_Size.Trim() != itemToolSize.Trim()) {
+                                itemPack.Purchase_Qty = null;
+                                itemPack.Received_Qty = null;
+                                itemPack.Act = null;
+                                itemPack.Bal = null;
+                        } else if(itemPack.Tool_Size.Trim() == itemToolSize.Trim() &&
+                            itemPack.Order_Size.Trim() == itemToolSize.Trim()) {
+                            itemPack.Purchase_Qty = model1.Purchase_Qty;
+                            itemPack.Received_Qty = model1.Received_Qty;
+                            itemPack.Act = model1.Act;
+                            itemPack.Bal = model1.Bal;
+                        }
                     }
                 }
             }

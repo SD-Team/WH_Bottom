@@ -31,6 +31,5 @@ namespace Bottom_API.Models
         public string T3_Supplier {get;set;}
         public string T3_Supplier_Name {get;set;}
         public string Custmoer_Part {get;set;}
-        public string Custmoer_Name {get;set;}
     }
 }

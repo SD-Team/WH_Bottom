@@ -10,6 +10,7 @@ namespace Bottom_API._Services.Interfaces
     public interface IPackingListService : IBottomService<Packing_List_Dto>
     {
         Task<PagedList<Packing_List_Dto>> SearchViewModel(PaginationParams param,FilterPackingListParam filterParam);
+        Task<Packing_List_Dto> FindBySupplier(string supplier_ID);
         Task<List<SupplierModel>> SupplierList();
         
     }
