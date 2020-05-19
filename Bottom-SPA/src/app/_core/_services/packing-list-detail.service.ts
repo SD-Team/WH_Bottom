@@ -15,12 +15,18 @@ export class PackingListDetailService {
   printQrCodeAgainSource = new BehaviorSubject<string>('0');
   currentPrintQrCodeAgain = this.printQrCodeAgainSource.asObservable();
   constructor(private http: HttpClient) { }
-  findByQrCodeIdList(data: QRCodeIDVersion[]): Observable<PackingPrintAll[]> {
-    return this.http.post<any>(this.baseUrl + 'packingListDetail/findPrintAgain/', data);
+
+  // In QrCodeId sau khi generate Qr Code ở Mục 2.2
+  printMaterialForm(data: QRCodeIDVersion[]): Observable<PackingPrintAll[]> {
+    return this.http.post<any>(this.baseUrl + 'packingListDetail/findPrint/', data);
   }
+
+  // In QrCodeId ở mục Input
   findByQrCodeId(data: string[]): Observable<PackingPrintAll[]> {
     return this.http.post<any>(this.baseUrl + 'packingListDetail/findPrintQrCode/', data);
   }
+
+  // In QrCodeId ở Mục 8.1 Và Output.
   findByQrCodeIdListAgain(data: QRCodeIDVersion[]): Observable<PackingPrintAll[]> {
     return this.http.post<any>(this.baseUrl + 'packingListDetail/findPrintAgain/', data);
   }

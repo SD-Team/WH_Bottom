@@ -135,7 +135,7 @@ export class QrBodyComponent implements OnInit {
         qrCode_Version: qrCodeMain.qrCode_Version
       };
       qrCodeId.push(qrCodeIDItem);
-      this.packingListDetailService.findByQrCodeIdList(qrCodeId).subscribe(res => {
+      this.packingListDetailService.printMaterialForm(qrCodeId).subscribe(res => {
         this.packingPrintAll = res;
         this.packingListDetailService.changePackingPrint(this.packingPrintAll);
         this.packingListDetailService.changePrintQrCodeAgain('0');
@@ -193,7 +193,7 @@ export class QrBodyComponent implements OnInit {
           }
         });
       });
-      this.packingListDetailService.findByQrCodeIdList(qrCodeVersionList).subscribe(res => {
+      this.packingListDetailService.printMaterialForm(qrCodeVersionList).subscribe(res => {
         this.packingPrintAll = res;
         this.packingListDetailService.changePackingPrint(this.packingPrintAll);
         this.packingListDetailService.changePrintQrCodeAgain('0');
