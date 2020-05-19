@@ -16,7 +16,7 @@ export class PackingListDetailService {
   currentPrintQrCodeAgain = this.printQrCodeAgainSource.asObservable();
   constructor(private http: HttpClient) { }
   findByQrCodeIdList(data: QRCodeIDVersion[]): Observable<PackingPrintAll[]> {
-    return this.http.post<any>(this.baseUrl + 'packingListDetail/findPrint/', data);
+    return this.http.post<any>(this.baseUrl + 'packingListDetail/findPrintAgain/', data);
   }
   findByQrCodeId(data: string[]): Observable<PackingPrintAll[]> {
     return this.http.post<any>(this.baseUrl + 'packingListDetail/findPrintQrCode/', data);
