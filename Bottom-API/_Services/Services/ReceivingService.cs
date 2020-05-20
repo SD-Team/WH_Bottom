@@ -451,24 +451,13 @@ namespace Bottom_API._Services.Services
         // ------------------Hàm lấy chi tiết của 1 Receive_No.------------------------------------------------------------
         public async Task<List<ReceiveNoDetail>> ReceiveNoDetails(string receive_No)
         {
-            var packingList = await _repoPackingList.GetAll().Where(x => x.Receive_No.Trim() == receive_No.Trim()).FirstOrDefaultAsync();
-            var materialList = new List<Material_Dto>();
-            if(packingList.Missing_No == "") {
-                materialList = await _repoPurchase.GetAll()
-                    .Where(x => x.Purchase_No.Trim() == packingList.Purchase_No.Trim() &&
-                            x.MO_Seq.Trim() == packingList.MO_Seq.Trim())
-                    .ProjectTo<Material_Dto>(_configMapper).ToListAsync();
-            } else {
-                await _repoMissing.GetAll()
-                    .Where(x => x.Purchase_No.Trim() == packingList.Purchase_No.Trim() &&
-                            x.MO_Seq.Trim() == packingList.MO_Seq.Trim())
-                    .ProjectTo<Material_Dto>(_configMapper).ToListAsync();
-            }
-            var listData = materialList.Select( x => new ReceiveNoDetail() {
+            
+            var packingListDetail = await _repoPackingListDetail.GetAll()
+                .Where(x => x.Receive_No.Trim() == receive_No.Trim()).ToListAsync();
+            var listData = packingListDetail.Select( x => new ReceiveNoDetail() {
                 Order_Size = x.Order_Size,
                 Purchase_Qty = x.Purchase_Qty,
-                Received_Qty = x.Accumlated_In_Qty,
-                Remaining = x.Purchase_Qty - x.Accumlated_In_Qty
+                Received_Qty = x.Received_Qty,
             }).ToList();
             return listData;
         }

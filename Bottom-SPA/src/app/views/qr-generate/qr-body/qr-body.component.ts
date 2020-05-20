@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { QrcodeMainService } from '../../../_core/_services/qrcode-main.service';
 import { QRCodeMainModel } from '../../../_core/_viewmodels/qrcode-main-model';
 import { Pagination, PaginatedResult } from '../../../_core/_models/pagination';
-import { BsDatepickerConfig } from 'ngx-bootstrap';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { AlertifyService } from '../../../_core/_services/alertify.service';
 import { PackingListDetailService } from '../../../_core/_services/packing-list-detail.service';
 import { PackingListDetailModel } from '../../../_core/_viewmodels/packing-list-detail-model';
@@ -12,6 +12,7 @@ declare var $: any;
 import * as _ from 'lodash';
 import { QRCodeMainSearch } from '../../../_core/_viewmodels/qrcode-main-search';
 import { InputService } from '../../../_core/_services/input.service';
+import { FunctionUtility } from '../../../_core/_utility/function-utility';
 @Component({
   selector: 'app-qr-body',
   templateUrl: './qr-body.component.html',
@@ -51,7 +52,8 @@ export class QrBodyComponent implements OnInit {
               private qrCodeMainService: QrcodeMainService,
               private packingListDetailService: PackingListDetailService,
               private inputService: InputService,
-              private alertifyService: AlertifyService) { }
+              private alertifyService: AlertifyService,
+              private functionUtility: FunctionUtility) { }
 
   ngOnInit() {
       this.pagination = {
@@ -61,14 +63,22 @@ export class QrBodyComponent implements OnInit {
         totalPages: 0
       };
       this.getTimeNow();
-      this.bsConfig = Object.assign({}, { containerClass: 'theme-blue' });
+      // this.bsConfig = Object.assign({}, { containerClass: 'theme-blue' });
+      this.bsConfig = Object.assign(
+        {},
+        {
+          containerClass: 'theme-blue',
+          isAnimated: true,
+          dateInputFormat: 'YYYY/MM/DD',
+        }
+      );
       this.qrCodeMainService.currentQrCodeMainSearch.subscribe(res => this.qrCodeMainSearch = res);
       if (this.qrCodeMainSearch === undefined) {
         this.getDataLoadPage();
       } else {
         this.mO_No = this.qrCodeMainSearch.mO_No;
-        this.time_start = this.convertStringDate(this.qrCodeMainSearch.from_Date);
-        this.time_end = this.convertStringDate(this.qrCodeMainSearch.to_Date);
+        this.time_start = this.qrCodeMainSearch.from_Date;
+        this.time_end = this.qrCodeMainSearch.to_Date;
         this.search();
       }
       this.inputService.clearDataChangeMenu();
@@ -82,8 +92,8 @@ export class QrBodyComponent implements OnInit {
       this.time_end = timeNow;
   }
   getDataLoadPage() {
-    let form_date = new Date(this.time_start).toLocaleDateString();
-    let to_date = new Date(this.time_end).toLocaleDateString();
+    let form_date = this.functionUtility.getDateFormat(new Date(this.time_start));
+    let to_date = this.functionUtility.getDateFormat(new Date(this.time_end));
     if (this.mO_No === undefined) {
       this.mO_No = null;
     }
@@ -104,8 +114,8 @@ export class QrBodyComponent implements OnInit {
       if (this.time_start === undefined || this.time_end === undefined) {
         this.alertifyService.error('Please option start and end time');
       } else {
-        let form_date = new Date(this.time_start).toLocaleDateString();
-        let to_date = new Date(this.time_end).toLocaleDateString();
+        let form_date = this.functionUtility.getDateFormat(new Date(this.time_start));
+          let to_date = this.functionUtility.getDateFormat(new Date(this.time_end));
         if (this.mO_No === undefined) {
           this.mO_No = null;
         }
@@ -202,11 +212,6 @@ export class QrBodyComponent implements OnInit {
     } else {
       this.alertifyService.error('Please check in checkbox!');
     }
-  }
-  convertStringDate(dateString: string) {
-    let arrayDate = dateString.split('/');
-    let dateReturn = arrayDate[2] + '/' + arrayDate[0] + '/' + arrayDate[1]
-    return dateReturn;
   }
   cancel() {
     this.getTimeNow();

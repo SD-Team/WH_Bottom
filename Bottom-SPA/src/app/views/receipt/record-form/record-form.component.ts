@@ -194,6 +194,7 @@ export class RecordFormComponent implements OnInit {
   // console.log(listInput);
   // console.log(this.orderSizeByBatch);
 }
+
   submitTable() {
       this.orderSizeByBatch.map(item => {
         item.delivery_No = this.delivery_No;
@@ -229,7 +230,7 @@ export class RecordFormComponent implements OnInit {
       });
   }
   cancel() {
-    
+    this.router.navigate(['/receipt/main/']);
   }
   backForm() {
     this.router.navigate(['/receipt/record/']);

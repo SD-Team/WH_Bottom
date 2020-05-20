@@ -126,6 +126,9 @@ export class RecordFormBatchesComponent implements OnInit {
           this.alertifyService.error('Please click insert');
         }
   }
+  cancel() {
+    this.router.navigate(['/receipt/main/']);
+  }
   backForm() {
     this.router.navigate(['/receipt/record']);
   }

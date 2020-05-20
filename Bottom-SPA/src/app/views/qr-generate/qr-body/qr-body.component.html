@@ -1,136 +1,135 @@
-    <div class="animated fadeIn">
-        <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-            <div class="card-header">
-                <strong>Qr Generate</strong>
-                Qr Body
-            </div>
-            <form class="form-horizontal">
-                <div class="card-body">
-                <div class="form-group row">
-                    <label class="col-md-2 col-form-label" for="fromDate"><strong class="float-right">Receive Date</strong></label>
-                    <div class="col-md-2">
-                    <div class="input-group">
-                        <input type="text"
-                            placeholder="Start"
-                            id="fromDate" class="form-control"
-                            bsDatepicker [bsValue]="fromDate"
-                            [(ngModel)]="time_start"
-                            name="time_start"
-                            [bsConfig]="{isAnimated: true, dateInputFormat: 'YYYY/MM/DD'}">
-                        <span class="input-group-append">
-                        <button class="btn btn-primary" type="button" disabled><i class="fa fa-calendar"></i></button>
-                        </span>
-                    </div>
-                    </div>
-                    <div class="col-md-2">
-                    <div class="input-group">
-                        <input type="text"
-                            placeholder="End"
-                            class="form-control"
-                            [(ngModel)]="time_end"
-                            bsDatepicker
-                            [bsValue]="toDate"
-                            name="time_end"
-                            [bsConfig]="{isAnimated: true, dateInputFormat: 'YYYY/MM/DD'}">
-                        <span class="input-group-append">
-                            <button class="btn btn-primary" type="button" disabled><i class="fa fa-calendar"></i></button>
-                        </span>
-                    </div>
-                    </div>
-                    <label class="col-md-1 offset-md-1 col-form-label" for="audit_Type2_Name"><strong class="float-right">Plan No </strong></label>
-                    <div class="col-md-2">
-                    <input type="text" [(ngModel)]="mO_No"  name="mO_No" class="form-control">
-                    </div>
-                    <div class="col-md-2">
-                        <button type="button" (click)="search()" class="btn btn-success btn-block"><i class="fa fa-search"></i>
-                            Search
-                        </button>
-                    </div>
-                </div>
-                </div>
-            </form>
-            </div>
+<div class="animated fadeIn">
+    <div class="row">
+    <div class="col-md-12">
+        <div class="card">
+        <div class="card-header">
+            <strong>Qr Generate</strong>
+            Qr Body
         </div>
-        </div>
-        <div class="row">
-        <div class="col-lg-12">
-            <div class="card">
+        <form class="form-horizontal">
             <div class="card-body">
-                <!-- <ngx-spinner bdOpacity=0.2 bdColor="rgba(51,51,51,0.8)" size="medium" color="#20A8D8" type="pacman">
-                </ngx-spinner> -->
-                <table class="table table-bordered">
-                <thead>
-                    <tr>
-                    <th class="text-center">
-                        <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" (change)="checkAll($event)" id="all">
-                        <label class="custom-control-label" for="all"></label>
-                        </div>
-                        </th>
-                        <th>QRCodeID</th>
-                        <th>Plan No</th>
-                        <th>Receive No</th>
-                        <th>Batch</th>
-                        <th>Mat#</th>
-                        <th>Mat# Name</th>
-                        <th>QRCode</th>
-                    </tr>
-                    </thead>
-                    <tbody *ngIf="listQrCodeMainModel.length === 0">
-                        <tr>
-                          <td colspan="8">
-                            <alert class="text-center" type="danger">
-                              <strong>No Data Matching!</strong>
-                            </alert>
-                          </td>
-                        </tr>
-                      </tbody>
-                    <tbody *ngIf="listQrCodeMainModel.length > 0">
-                        <ng-container *ngFor="let item of listQrCodeMainModel; let i = index">
-                        <tr>
-                            <td class="text-center">
-                            <div class="custom-control custom-checkbox">
-                                <input type="checkbox"
-                                id="{{i}}"
-                                [value]="item.qrCode_ID"
-                                (change)="onCheckboxChange($event)"
-                                class="custom-control-input yourClass">
-                                <label class="custom-control-label" for="{{i}}"></label>
-                            </div>
-                            </td>
-                            <th>{{item.qrCode_ID}}</th>
-                            <th>{{item.mO_No}}</th>
-                            <th>{{item.receive_No}}</th>
-                            <th>{{item.mO_Seq}}</th>
-                            <th>{{item.material_ID}}</th>
-                            <th>{{item.material_Name}}</th>
-                            <th class="center-btn">
-                                <button (click)="print(item)"
-                                class="btn-print1 btn btn-block btn-primary">QrCode</button>
-                            </th>
-                        </tr>
-                    </ng-container>
-                    </tbody>
-                </table>
-                <div *ngIf="listQrCodeMainModel.length > 0" class="d-flex">
-                    <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [(ngModel)]="pagination.currentPage"
-                    [itemsPerPage]="pagination.itemsPerPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;"
-                    nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [maxSize]=5>
-                    </pagination>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label" for="fromDate"><strong class="float-right">Receive Date</strong></label>
+                <div class="col-md-2">
+                <div class="input-group">
+                    <input type="text"
+                        placeholder="Start"
+                        id="fromDate" class="form-control"
+                        bsDatepicker
+                        [(ngModel)]="time_start"
+                        name="time_start"
+                        [bsConfig]="{isAnimated: true, dateInputFormat: 'YYYY/MM/DD'}">
+                    <span class="input-group-append">
+                    <button class="btn btn-primary" type="button" disabled><i class="fa fa-calendar"></i></button>
+                    </span>
+                </div>
+                </div>
+                <div class="col-md-2">
+                <div class="input-group">
+                    <input type="text"
+                        placeholder="End"
+                        class="form-control"
+                        [(ngModel)]="time_end"
+                        bsDatepicker
+                        name="time_end"
+                        [bsConfig]="{isAnimated: true, dateInputFormat: 'YYYY/MM/DD'}">
+                    <span class="input-group-append">
+                        <button class="btn btn-primary" type="button" disabled><i class="fa fa-calendar"></i></button>
+                    </span>
+                </div>
+                </div>
+                <label class="col-md-1 offset-md-1 col-form-label" for="audit_Type2_Name"><strong class="float-right">Plan No </strong></label>
+                <div class="col-md-2">
+                <input type="text" [(ngModel)]="mO_No"  name="mO_No" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <button type="button" (click)="search()" class="btn btn-success btn-block"><i class="fa fa-search"></i>
+                        Search
+                    </button>
                 </div>
             </div>
-            <div class="card-footer" *ngIf="listQrCodeMainModel.length > 0">
-                <button (click)="cancel()" class="btn btn-danger mr-2"><i class="fa fa-ban"></i>
-                Cancel
-                </button>
-                <button (click)="printAll()"  class="btn btn-success">
-                <i class="fa fa-check"></i>
-                Print
-                </button>
             </div>
+        </form>
+        </div>
+    </div>
+    </div>
+    <div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+        <div class="card-body">
+            <!-- <ngx-spinner bdOpacity=0.2 bdColor="rgba(51,51,51,0.8)" size="medium" color="#20A8D8" type="pacman">
+            </ngx-spinner> -->
+            <table class="table table-bordered">
+            <thead>
+                <tr>
+                <th class="text-center">
+                    <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" (change)="checkAll($event)" id="all">
+                    <label class="custom-control-label" for="all"></label>
+                    </div>
+                    </th>
+                    <th>QRCodeID</th>
+                    <th>Plan No</th>
+                    <th>Receive No</th>
+                    <th>Batch</th>
+                    <th>Mat#</th>
+                    <th>Mat# Name</th>
+                    <th>QRCode</th>
+                </tr>
+                </thead>
+                <tbody *ngIf="listQrCodeMainModel.length === 0">
+                    <tr>
+                      <td colspan="8">
+                        <alert class="text-center" type="danger">
+                          <strong>No Data Matching!</strong>
+                        </alert>
+                      </td>
+                    </tr>
+                  </tbody>
+                <tbody *ngIf="listQrCodeMainModel.length > 0">
+                    <ng-container *ngFor="let item of listQrCodeMainModel; let i = index">
+                    <tr>
+                        <td class="text-center">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox"
+                            id="{{i}}"
+                            [value]="item.qrCode_ID"
+                            (change)="onCheckboxChange($event)"
+                            class="custom-control-input yourClass">
+                            <label class="custom-control-label" for="{{i}}"></label>
+                        </div>
+                        </td>
+                        <th>{{item.qrCode_ID}}</th>
+                        <th>{{item.mO_No}}</th>
+                        <th>{{item.receive_No}}</th>
+                        <th>{{item.mO_Seq}}</th>
+                        <th>{{item.material_ID}}</th>
+                        <th>{{item.material_Name}}</th>
+                        <th class="center-btn">
+                            <button (click)="print(item)"
+                            class="btn-print1 btn btn-block btn-primary">QrCode</button>
+                        </th>
+                    </tr>
+                </ng-container>
+                </tbody>
+            </table>
+            <div *ngIf="listQrCodeMainModel.length > 0" class="d-flex">
+                <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [(ngModel)]="pagination.currentPage"
+                [itemsPerPage]="pagination.itemsPerPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;"
+                nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [maxSize]=5>
+                </pagination>
             </div>
+        </div>
+        <div class="card-footer" *ngIf="listQrCodeMainModel.length > 0">
+            <button (click)="cancel()" class="btn btn-danger mr-2"><i class="fa fa-ban"></i>
+            Cancel
+            </button>
+            <button (click)="printAll()"  class="btn btn-success">
+            <i class="fa fa-check"></i>
+            Print
+            </button>
         </div>
         </div>
     </div>
+    </div>
+</div>

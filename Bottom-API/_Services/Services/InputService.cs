@@ -338,7 +338,10 @@ namespace Bottom_API._Services.Services
             var listTransactionMain = await _repoTransactionMain.GetAll().ProjectTo<Transaction_Main_Dto>(_configMapper).ToListAsync();
             foreach (var item in listQrCodeId)
             {
-                var transactionItem = listTransactionMain.Where(x => x.QRCode_ID.Trim() == item.Trim())
+
+                // Fix Show Main
+                var transactionItem = listTransactionMain
+                .Where(x => x.QRCode_ID.Trim() == item.Trim() && x.Can_Move == "Y")
                     .OrderByDescending(x => x.QRCode_Version).FirstOrDefault();
                 if(transactionItem != null) {
                     lists.Add(transactionItem);

@@ -14,10 +14,10 @@
                   <input type="text" 
                     placeholder="Start" 
                     id="fromDate" class="form-control" 
-                    bsDatepicker [bsValue]="fromDate"
+                    bsDatepicker
                     [(ngModel)]="time_start"
                     name="time_start"
-                    [bsConfig]="{isAnimated: true, dateInputFormat: 'YYYY/MM/DD'}">
+                    [bsConfig]="bsConfig">
                   <span class="input-group-append">
                     <button class="btn btn-primary" type="button" disabled><i class="fa fa-calendar"></i></button>
                   </span>
@@ -29,10 +29,9 @@
                     placeholder="End" 
                     class="form-control" 
                     bsDatepicker 
-                    [bsValue]="toDate" 
                     [(ngModel)]="time_end"
                     name="time_end"
-                    [bsConfig]="{isAnimated: true, dateInputFormat: 'YYYY/MM/DD'}">
+                    [bsConfig]="bsConfig">
                   <span class="input-group-append">
                     <button class="btn btn-primary" type="button" disabled><i class="fa fa-calendar"></i></button>
                   </span>

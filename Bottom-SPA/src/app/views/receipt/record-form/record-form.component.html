@@ -69,7 +69,7 @@
           </div>
         </form>
         <div class="card-footer">
-          <button type="button" style="margin-right: 5px;" class="btn btn-danger"><i class="fa fa-ban"></i> Cancel</button>
+          <button type="button" (click)="cancel()" style="margin-right: 5px;" class="btn btn-danger"><i class="fa fa-ban"></i> Cancel</button>
           <button type="button" (click)="submitTable()" class="btn btn-success" [disabled]="!addAuditTypeForm.valid"><i
               class="fa fa-check"></i> Save</button>
         </div>
