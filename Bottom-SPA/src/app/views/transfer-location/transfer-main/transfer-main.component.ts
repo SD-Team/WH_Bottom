@@ -25,11 +25,9 @@ export class TransferMainComponent implements OnInit {
     private inputService: InputService,
     private router: Router,
     private functionUtility: FunctionUtility
-  ) {}
+  ) { }
 
   ngOnInit() {
-    // lấy ra transferNo mới theo yêu cầu: TB(ngày thực hiện yyyymmdd) 3 mã số random number. (VD: TB20200310001)
-    this.transferNo = this.functionUtility.getTransferNo();
     this.inputService.changeListInputMain([]);
     this.inputService.changeFlag('');
   }
@@ -47,9 +45,9 @@ export class TransferMainComponent implements OnInit {
       if (flag) {
         this.transferService.getMainByQrCodeId(this.qrCodeId).subscribe(
           (res) => {
-            debugger
             if (res != null) {
-              res.transferNo = this.transferNo;
+              // lấy ra transferNo mới theo yêu cầu: TB(ngày thực hiện yyyymmdd) 3 mã số random number. (VD: TB20200310001)
+              res.transferNo = this.functionUtility.getTransferNo();
               res.toLocation = this.toLocation;
               this.transfers.push(res);
             }
