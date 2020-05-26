@@ -1,3 +1,5 @@
+import { TransferDetail } from './transfer-detail';
+
 export interface OutputM {
     transacNo: string;
     qrCodeId: string;
@@ -16,4 +18,9 @@ export interface OutputM {
     transOutQty: number;
     remainingQty: number;
     pickupNo: string;
+}
+
+export interface OutputParam {
+    output: OutputM;
+    transactionDetail: TransferDetail[];
 }

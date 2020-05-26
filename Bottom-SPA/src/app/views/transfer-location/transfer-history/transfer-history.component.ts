@@ -65,8 +65,8 @@ export class TransferHistoryComponent implements OnInit, OnDestroy {
   }
 
   getData() {
-    const t1 = new Date(this.fromDate).toLocaleDateString();
-    const t2 = new Date(this.toDate).toLocaleDateString();
+    const t1 = this.functionUtility.getDateFormat(new Date(this.fromDate));
+    const t2 = this.functionUtility.getDateFormat(new Date(this.toDate));
     const transferHistoryParam = new TransferHistoryParam();
     transferHistoryParam.toDate = t2;
     transferHistoryParam.fromDate = t1;

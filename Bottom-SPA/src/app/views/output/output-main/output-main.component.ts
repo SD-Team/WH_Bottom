@@ -88,8 +88,12 @@ export class OutputMainComponent implements OnInit {
     }
   }
 
-  detail(output: OutputM) {
-    this.router.navigate(['output/detail', output.transacNo]);
+  detail(output: OutputM, index: number) {
+    if (this.flagSubmit === false) {
+      this.router.navigate(['output/detail', output.transacNo]);
+    } else {
+      this.router.navigate(['output/detail-preview', index]);
+    }
   }
 
   process(output: OutputM) {
@@ -101,17 +105,17 @@ export class OutputMainComponent implements OnInit {
 
   print(qrCodeId: string, qrCodeVersion: number) {
     this.packingListDetailService.changePrintQrCodeAgain('2');
-    let qrCodeIdVersion = [];
-    let item = {
+    const qrCodeIdVersion = [];
+    const item = {
       qrCode_ID: qrCodeId,
       qrCode_Version: qrCodeVersion
-    }
+    };
     qrCodeIdVersion.push(item);
     this.packingListDetailService.findByQrCodeIdListAgain(qrCodeIdVersion).subscribe(res => {
       this.packingPrintAll = res;
       this.packingListDetailService.changePackingPrint(this.packingPrintAll);
       this.router.navigate(['/qr/print']);
-    })
+    });
   }
 
   submit() {
@@ -124,15 +128,23 @@ export class OutputMainComponent implements OnInit {
         this.outputs.splice(i, 1);
       }
     });
-    // gửi lên server để update transacsheet no những output được process
-    this.outputService.submitOutput(this.outputs).subscribe(
-      () => {
-        this.alertify.success('Submit succeed');
-      },
-      (error) => {
-        this.alertify.error(error);
-      }
-    );
+
+    //// gửi lên server lưu 1 list output
+    let tmpListOutputSave: any = [];
+    this.outputService.currentListOutputSave.subscribe(res => {
+      tmpListOutputSave = res;
+    });
+    this.outputService
+      .saveListOutput(tmpListOutputSave)
+      .subscribe(
+        () => {
+          this.alertify.success('Save succeed');
+        },
+        (error) => {
+          this.alertify.error(error);
+        }
+      );
+    //// ---------
 
     // gán lại mấy giá trị dùng chung trên service thành giá trị mặc định ban đầu để ouput đơn khác không bị nhớ ouput cũ
     this.outputService.changeListMaterialSheetSize([]);
@@ -158,5 +170,32 @@ export class OutputMainComponent implements OnInit {
       qrCodeVersion: 0
     };
     this.outputService.changeOutputM(outputM);
+  }
+
+  cancel() {
+    this.outputService.changeListMaterialSheetSize([]);
+    this.outputService.changeFlagFinish(false);
+    this.outputService.changeQrCodeId('');
+    const outputM: OutputM = {
+      transacNo: '',
+      qrCodeId: '',
+      planNo: '',
+      supplierNo: '',
+      supplierName: '',
+      batch: '',
+      matId: '',
+      matName: '',
+      wh: '',
+      building: '',
+      area: '',
+      rackLocation: '',
+      inStockQty: 0,
+      transOutQty: 0,
+      remainingQty: 0,
+      pickupNo: '',
+      qrCodeVersion: 0
+    };
+    this.outputService.changeOutputM(outputM);
+    this.outputs = [];
   }
 }

@@ -60,23 +60,25 @@ namespace Bottom_API._Services.Services
             {
                 foreach (var item in listTransactionMainTypeOByPickupNo)
                 {
-                    var tmp  = await _repoTransactionDetail.FindAll(x => x.Transac_No == item.Transac_No).ToListAsync();
+                    var tmp = await _repoTransactionDetail.FindAll(x => x.Transac_No == item.Transac_No).ToListAsync();
                     listTransactionDetailByBistTransactionMainTypeOByPickupNo.AddRange(tmp);
                 }
 
-                var totalTransQtyOutput = listTransactionDetailByBistTransactionMainTypeOByPickupNo.GroupBy(x => new {x.Order_Size})
-                    .Select(y => new {
+                var totalTransQtyOutput = listTransactionDetailByBistTransactionMainTypeOByPickupNo.GroupBy(x => new { x.Order_Size })
+                    .Select(y => new
+                    {
                         OrderSize = y.Key.Order_Size,
                         TotalTransQty = (decimal)y.Sum(z => z.Trans_Qty)
                     }).ToList();
 
-                listMaterialSheetSize = listMaterialSheetSize.Join(totalTransQtyOutput, x => x.Order_Size, y => y.OrderSize, (x,y) => new Material_Sheet_Size_Dto {
+                listMaterialSheetSize = listMaterialSheetSize.Join(totalTransQtyOutput, x => x.Order_Size, y => y.OrderSize, (x, y) => new Material_Sheet_Size_Dto
+                {
                     Qty = (decimal)x.Qty - y.TotalTransQty,
                     Factory_ID = x.Factory_ID,
                     Batch = x.Batch,
                     Cur_Ent = x.Cur_Ent,
                     HP_Update_Time = x.HP_Update_Time,
-                    HP_User =  x.HP_User,
+                    HP_User = x.HP_User,
                     Manno = x.Manno,
                     Material_ID = x.Material_ID,
                     Model_Size = x.Model_Size,
@@ -87,11 +89,11 @@ namespace Bottom_API._Services.Services
                     Subcont_Material = x.Subcont_Material,
                     Tool_Size = x.Tool_Size,
                     Update_By = x.Update_By,
-                    Update_Time =x.Update_Time
+                    Update_Time = x.Update_Time
                 }).ToList();
             }
             // hết kiểm tra xem Sheet_No đó đã output ra bao giờ chưa
-            
+
 
             List<OutputMain_Dto> listOuput = new List<OutputMain_Dto>();
             var materialSheetSize = await _repoMaterialSheetSize.FindAll(x => x.Sheet_No.Trim() == qrCodeId.Trim()).FirstOrDefaultAsync();
@@ -169,172 +171,160 @@ namespace Bottom_API._Services.Services
 
             return result;
         }
-
-        public async Task<bool> SaveOutput(OutputParam outputParam)
+        public async Task<bool> SaveListOutput(List<OutputParam> outputParam)
         {
             DateTime timeNow = DateTime.Now;
-            Random ran = new Random();
-            int num = ran.Next(100, 999);
-
-            // Tìm ra TransactionMain theo id
-            var transactionMain = _repoTransactionMain.FindSingle(x => x.ID == outputParam.output.Id);
-            if (transactionMain.Transac_Type != "R")
+            foreach (var itemt in outputParam)
             {
-                transactionMain.Can_Move = "N"; // nếu type != R update transaction main cũ: Can_Move thành N
-                _repoTransactionMain.Update(transactionMain);
-            }
-            if (transactionMain.Transac_Type == "R" && outputParam.output.RemainingQty == 0)
-            {
-                transactionMain.Can_Move = "N"; // nếu type == R và output ra hết update : Can_Move thành N
-                _repoTransactionMain.Update(transactionMain);
-            }
+                Random ran = new Random();
+                int num = ran.Next(100, 999);
 
-            // thêm transaction main type O
-            WMSB_Transaction_Main modelTypeO = new WMSB_Transaction_Main();
-            modelTypeO.Transac_Type = "O";
-            modelTypeO.Can_Move = "N";
-            modelTypeO.Transac_No = outputParam.output.TransacNo;
-            // modelTypeO.Transac_Sheet_No = outputParam.output.RemainingQty > 0 ? "OB" + DateTime.Now.ToString("yyyyMMdd") + num.ToString() : "";
-            modelTypeO.Transacted_Qty = outputParam.output.TransOutQty;
-            modelTypeO.Pickup_No = outputParam.output.PickupNo;
-            modelTypeO.Transac_Time = timeNow;
-            modelTypeO.Updated_Time = timeNow;
-            modelTypeO.Updated_By = "Emma";
-            modelTypeO.Missing_No = transactionMain.Missing_No;
-            modelTypeO.Material_ID = transactionMain.Material_ID;
-            modelTypeO.Material_Name = transactionMain.Material_Name;
-            modelTypeO.Purchase_No = transactionMain.Purchase_No;
-            modelTypeO.Rack_Location = null;// type O: racklocation rỗng
-            modelTypeO.Purchase_Qty = transactionMain.Purchase_Qty;
-            modelTypeO.QRCode_Version = transactionMain.QRCode_Version;
-            modelTypeO.QRCode_ID = transactionMain.QRCode_ID;
-            modelTypeO.MO_No = transactionMain.MO_No;
-            modelTypeO.MO_Seq = transactionMain.MO_Seq;
-            _repoTransactionMain.Add(modelTypeO);
-
-            // Thêm transaction detail mới theo type = o, dựa vào transaction detail của transaction main cũ
-            foreach (var item in outputParam.transactionDetail)
-            {
-                item.ID = 0;// ID trong db là tự tăng: dựa vào transaction detail cũ nên thêm mới gán id bằng 0, không cần phải new hết thuộc tính của đổi tượng ra
-                item.Transac_No = outputParam.output.TransacNo;
-                item.Updated_By = "Emma";
-                item.Updated_Time = timeNow;
-                var itemModel = _mapper.Map<WMSB_Transaction_Detail>(item);
-                _repoTransactionDetail.Add(itemModel);
-            }
-
-            // Nếu output ra chưa hết thì thêm transaction main type R, và transaction detail, thêm qrcode mới và update version lên
-            if (outputParam.output.RemainingQty > 0)
-            {
-                //  thêm type R
-                // nếu type là R: thì update lại
-                if (transactionMain.Transac_Type.Trim() == "R")
+                // Tìm ra TransactionMain theo id
+                var transactionMain = _repoTransactionMain.FindSingle(x => x.ID == itemt.output.Id);
+                if (transactionMain.Transac_Type != "R")
                 {
-                    var tmpQrcodeVersion = transactionMain.QRCode_Version + 1;
-                    transactionMain.Updated_Time = timeNow;
-                    transactionMain.Updated_By = "Emma";
-                    transactionMain.Transacted_Qty = outputParam.output.TransOutQty;
-                    transactionMain.QRCode_Version = tmpQrcodeVersion;
+                    transactionMain.Can_Move = "N"; // nếu type != R update transaction main cũ: Can_Move thành N
                     _repoTransactionMain.Update(transactionMain);
-
-                    // update transaction main thì cũng phải update transaction detail
-                    var transactionDetail = await _repoTransactionDetail.FindAll(x => x.Transac_No.Trim() == transactionMain.Transac_No.Trim()).ToListAsync();
-                    foreach (var item in transactionDetail)
-                    {
-                        item.Trans_Qty = 0;// nếu transaction main là Type R là thì transaction detail của nó gán Trans_Qty = 0
-                        item.Qty = outputParam.transactionDetail.Where(x => x.Tool_Size == item.Tool_Size && x.Order_Size == item.Order_Size && x.Model_Size == item.Model_Size).FirstOrDefault().Qty;
-                        item.Instock_Qty = outputParam.transactionDetail.Where(x => x.Tool_Size == item.Tool_Size && x.Order_Size == item.Order_Size && x.Model_Size == item.Model_Size).FirstOrDefault().Instock_Qty;
-                        item.Updated_By = "Emma";
-                        item.Updated_Time = timeNow;
-                        _repoTransactionDetail.Update(item);
-                    }
                 }
-                // ngược lại thì thêm mới type R
-                else
+                if (transactionMain.Transac_Type == "R" && itemt.output.RemainingQty == 0)
                 {
-                    var tmpQrcodeVersion = transactionMain.QRCode_Version + 1;
-                    WMSB_Transaction_Main modelTypeR = new WMSB_Transaction_Main();
-                    modelTypeR.Transac_Type = "R";
-                    modelTypeR.Transac_No = "R" + transactionMain.Transac_No;
-                    modelTypeR.Transac_Sheet_No = "R" + transactionMain.Transac_Sheet_No;
-                    modelTypeR.Transacted_Qty = outputParam.output.TransOutQty;
-                    modelTypeR.Updated_By = "Emma";
-                    modelTypeR.Updated_Time = timeNow;
-                    modelTypeR.Missing_No = transactionMain.Missing_No;
-                    modelTypeR.Material_ID = transactionMain.Material_ID;
-                    modelTypeR.Material_Name = transactionMain.Material_Name;
-                    modelTypeR.Purchase_No = transactionMain.Purchase_No;
-                    modelTypeR.Rack_Location = transactionMain.Rack_Location;
-                    modelTypeR.Purchase_Qty = transactionMain.Purchase_Qty;
-                    modelTypeR.QRCode_Version = tmpQrcodeVersion;
-                    modelTypeR.QRCode_ID = transactionMain.QRCode_ID;
-                    modelTypeR.MO_No = transactionMain.MO_No;
-                    modelTypeR.MO_Seq = transactionMain.MO_Seq;
-                    modelTypeR.Can_Move = "Y";
-                    modelTypeR.Transac_Time = transactionMain.Transac_Time;
-                    _repoTransactionMain.Add(modelTypeR);
-
-                    // thêm transaction main cũng phải thêm transaction detail
-                    foreach (var itemTypeR in outputParam.transactionDetail)
-                    {
-                        itemTypeR.ID = 0;// ID trong db là tự tăng: dựa vào transaction detail cũ nên thêm mới gán id bằng 0, không cần phải new hết thuộc tính của đổi tượng ra
-                        itemTypeR.Transac_No = modelTypeR.Transac_No;
-                        itemTypeR.Updated_By = "Emma";
-                        itemTypeR.Updated_Time = timeNow;
-                        itemTypeR.Trans_Qty = 0;// nếu transaction main là Type R là thì transaction detail của nó gán Trans_Qty = 0
-                        var itemModel = _mapper.Map<WMSB_Transaction_Detail>(itemTypeR);
-                        _repoTransactionDetail.Add(itemModel);
-                    }
+                    transactionMain.Can_Move = "N"; // nếu type == R và output ra hết update : Can_Move thành N
+                    _repoTransactionMain.Update(transactionMain);
                 }
 
-                // thêm qrcode mới, nếu output ra chưa hết thì thêm qrcode main mới dựa vào cái cũ và update version lên
-                var qrCodeMain = await _repoQRCodeMain.FindAll(x => x.QRCode_ID.Trim() == outputParam.output.QrCodeId.Trim()).OrderByDescending(x => x.QRCode_Version).FirstOrDefaultAsync();
-                WMSB_QRCode_Main modelQrCodeMain = new WMSB_QRCode_Main();
-                modelQrCodeMain.QRCode_ID = qrCodeMain.QRCode_ID;
-                modelQrCodeMain.QRCode_Type = qrCodeMain.QRCode_Type;
-                modelQrCodeMain.Receive_No = qrCodeMain.Receive_No;
-                modelQrCodeMain.Valid_Status = "Y";
-                modelQrCodeMain.Is_Scanned = "Y";
-                modelQrCodeMain.Invalid_Date = qrCodeMain.Invalid_Date;
-                modelQrCodeMain.QRCode_Version = qrCodeMain.QRCode_Version + 1;
-                modelQrCodeMain.Updated_Time = timeNow;
-                modelQrCodeMain.Updated_By = "Emma";
-                _repoQRCodeMain.Add(modelQrCodeMain);
+                // thêm transaction main type O
+                WMSB_Transaction_Main modelTypeO = new WMSB_Transaction_Main();
+                modelTypeO.Transac_Type = "O";
+                modelTypeO.Can_Move = "N";
+                modelTypeO.Transac_No = itemt.output.TransacNo;
+                modelTypeO.Transac_Sheet_No = "OB" + DateTime.Now.ToString("yyyyMMdd") + num.ToString();
+                modelTypeO.Transacted_Qty = itemt.output.TransOutQty;
+                modelTypeO.Pickup_No = itemt.output.PickupNo;
+                modelTypeO.Transac_Time = timeNow;
+                modelTypeO.Updated_Time = timeNow;
+                modelTypeO.Updated_By = "Emma";
+                modelTypeO.Missing_No = transactionMain.Missing_No;
+                modelTypeO.Material_ID = transactionMain.Material_ID;
+                modelTypeO.Material_Name = transactionMain.Material_Name;
+                modelTypeO.Purchase_No = transactionMain.Purchase_No;
+                modelTypeO.Rack_Location = null;// type O: racklocation rỗng
+                modelTypeO.Purchase_Qty = transactionMain.Purchase_Qty;
+                modelTypeO.QRCode_Version = transactionMain.QRCode_Version;
+                modelTypeO.QRCode_ID = transactionMain.QRCode_ID;
+                modelTypeO.MO_No = transactionMain.MO_No;
+                modelTypeO.MO_Seq = transactionMain.MO_Seq;
+                _repoTransactionMain.Add(modelTypeO);
 
-                // Update cho QRCode cũ, Valid_Status =N, Invalid_Date = Ngày mà tạo ra version mới
-                qrCodeMain.Valid_Status = "N";
-                qrCodeMain.Invalid_Date = timeNow;
-                _repoQRCodeMain.Update(qrCodeMain);
-
-                // thêm qrcodedetail của qrcode mới: thêm qrcode main cũng phải thêm qrcode detail
-                var qrCodeDetails = await _repoQRCodeDetail.FindAll(x => x.QRCode_ID.Trim() == qrCodeMain.QRCode_ID.Trim() && x.QRCode_Version == qrCodeMain.QRCode_Version).ToListAsync();
-                foreach (var itemQrCodeDetail in qrCodeDetails)
+                // Thêm transaction detail mới theo type = o, dựa vào transaction detail của transaction main cũ
+                foreach (var item in itemt.transactionDetail)
                 {
-                    itemQrCodeDetail.QID = 0;
-                    itemQrCodeDetail.Updated_By = "Emma";
-                    itemQrCodeDetail.Updated_Time = timeNow;
-                    itemQrCodeDetail.QRCode_Version = modelQrCodeMain.QRCode_Version;
-                    itemQrCodeDetail.Qty = outputParam.transactionDetail.Where(x => x.Tool_Size == itemQrCodeDetail.Tool_Size && x.Order_Size == itemQrCodeDetail.Order_Size && x.Model_Size == itemQrCodeDetail.Model_Size).FirstOrDefault().Instock_Qty;
-                    _repoQRCodeDetail.Add(itemQrCodeDetail);
+                    item.ID = 0;// ID trong db là tự tăng: dựa vào transaction detail cũ nên thêm mới gán id bằng 0, không cần phải new hết thuộc tính của đổi tượng ra
+                    item.Transac_No = itemt.output.TransacNo;
+                    item.Updated_By = "Emma";
+                    item.Updated_Time = timeNow;
+                    var itemModel = _mapper.Map<WMSB_Transaction_Detail>(item);
+                    _repoTransactionDetail.Add(itemModel);
+                }
+
+                // Nếu output ra chưa hết thì thêm transaction main type R, và transaction detail, thêm qrcode mới và update version lên
+                if (itemt.output.RemainingQty > 0)
+                {
+                    //  thêm type R
+                    // nếu type là R: thì update lại
+                    if (transactionMain.Transac_Type.Trim() == "R")
+                    {
+                        var tmpQrcodeVersion = transactionMain.QRCode_Version + 1;
+                        transactionMain.Updated_Time = timeNow;
+                        transactionMain.Updated_By = "Emma";
+                        transactionMain.Transacted_Qty = itemt.output.TransOutQty;
+                        transactionMain.QRCode_Version = tmpQrcodeVersion;
+                        _repoTransactionMain.Update(transactionMain);
+
+                        // update transaction main thì cũng phải update transaction detail
+                        var transactionDetail = await _repoTransactionDetail.FindAll(x => x.Transac_No.Trim() == transactionMain.Transac_No.Trim()).ToListAsync();
+                        foreach (var item in transactionDetail)
+                        {
+                            item.Trans_Qty = 0;// nếu transaction main là Type R là thì transaction detail của nó gán Trans_Qty = 0
+                            item.Qty = itemt.transactionDetail.Where(x => x.Tool_Size == item.Tool_Size && x.Order_Size == item.Order_Size && x.Model_Size == item.Model_Size).FirstOrDefault().Qty;
+                            item.Instock_Qty = itemt.transactionDetail.Where(x => x.Tool_Size == item.Tool_Size && x.Order_Size == item.Order_Size && x.Model_Size == item.Model_Size).FirstOrDefault().Instock_Qty;
+                            item.Updated_By = "Emma";
+                            item.Updated_Time = timeNow;
+                            _repoTransactionDetail.Update(item);
+                        }
+                    }
+                    // ngược lại thì thêm mới type R
+                    else
+                    {
+                        var tmpQrcodeVersion = transactionMain.QRCode_Version + 1;
+                        WMSB_Transaction_Main modelTypeR = new WMSB_Transaction_Main();
+                        modelTypeR.Transac_Type = "R";
+                        modelTypeR.Transac_No = "R" + transactionMain.Transac_No;
+                        modelTypeR.Transac_Sheet_No = "R" + transactionMain.Transac_Sheet_No;
+                        modelTypeR.Transacted_Qty = itemt.output.TransOutQty;
+                        modelTypeR.Updated_By = "Emma";
+                        modelTypeR.Updated_Time = timeNow;
+                        modelTypeR.Missing_No = transactionMain.Missing_No;
+                        modelTypeR.Material_ID = transactionMain.Material_ID;
+                        modelTypeR.Material_Name = transactionMain.Material_Name;
+                        modelTypeR.Purchase_No = transactionMain.Purchase_No;
+                        modelTypeR.Rack_Location = transactionMain.Rack_Location;
+                        modelTypeR.Purchase_Qty = transactionMain.Purchase_Qty;
+                        modelTypeR.QRCode_Version = tmpQrcodeVersion;
+                        modelTypeR.QRCode_ID = transactionMain.QRCode_ID;
+                        modelTypeR.MO_No = transactionMain.MO_No;
+                        modelTypeR.MO_Seq = transactionMain.MO_Seq;
+                        modelTypeR.Can_Move = "Y";
+                        modelTypeR.Transac_Time = transactionMain.Transac_Time;
+                        _repoTransactionMain.Add(modelTypeR);
+
+                        // thêm transaction main cũng phải thêm transaction detail
+                        foreach (var itemTypeR in itemt.transactionDetail)
+                        {
+                            itemTypeR.ID = 0;// ID trong db là tự tăng: dựa vào transaction detail cũ nên thêm mới gán id bằng 0, không cần phải new hết thuộc tính của đổi tượng ra
+                            itemTypeR.Transac_No = modelTypeR.Transac_No;
+                            itemTypeR.Updated_By = "Emma";
+                            itemTypeR.Updated_Time = timeNow;
+                            itemTypeR.Trans_Qty = 0;// nếu transaction main là Type R là thì transaction detail của nó gán Trans_Qty = 0
+                            var itemModel = _mapper.Map<WMSB_Transaction_Detail>(itemTypeR);
+                            _repoTransactionDetail.Add(itemModel);
+                        }
+                    }
+
+                    // thêm qrcode mới, nếu output ra chưa hết thì thêm qrcode main mới dựa vào cái cũ và update version lên
+                    var qrCodeMain = await _repoQRCodeMain.FindAll(x => x.QRCode_ID.Trim() == itemt.output.QrCodeId.Trim()).OrderByDescending(x => x.QRCode_Version).FirstOrDefaultAsync();
+                    WMSB_QRCode_Main modelQrCodeMain = new WMSB_QRCode_Main();
+                    modelQrCodeMain.QRCode_ID = qrCodeMain.QRCode_ID;
+                    modelQrCodeMain.QRCode_Type = qrCodeMain.QRCode_Type;
+                    modelQrCodeMain.Receive_No = qrCodeMain.Receive_No;
+                    modelQrCodeMain.Valid_Status = "Y";
+                    modelQrCodeMain.Is_Scanned = "Y";
+                    modelQrCodeMain.Invalid_Date = qrCodeMain.Invalid_Date;
+                    modelQrCodeMain.QRCode_Version = qrCodeMain.QRCode_Version + 1;
+                    modelQrCodeMain.Updated_Time = timeNow;
+                    modelQrCodeMain.Updated_By = "Emma";
+                    _repoQRCodeMain.Add(modelQrCodeMain);
+
+                    // Update cho QRCode cũ, Valid_Status =N, Invalid_Date = Ngày mà tạo ra version mới
+                    qrCodeMain.Valid_Status = "N";
+                    qrCodeMain.Invalid_Date = timeNow;
+                    _repoQRCodeMain.Update(qrCodeMain);
+
+                    // thêm qrcodedetail của qrcode mới: thêm qrcode main cũng phải thêm qrcode detail
+                    var qrCodeDetails = await _repoQRCodeDetail.FindAll(x => x.QRCode_ID.Trim() == qrCodeMain.QRCode_ID.Trim() && x.QRCode_Version == qrCodeMain.QRCode_Version).ToListAsync();
+                    foreach (var itemQrCodeDetail in qrCodeDetails)
+                    {
+                        itemQrCodeDetail.QID = 0;
+                        itemQrCodeDetail.Updated_By = "Emma";
+                        itemQrCodeDetail.Updated_Time = timeNow;
+                        itemQrCodeDetail.QRCode_Version = modelQrCodeMain.QRCode_Version;
+                        itemQrCodeDetail.Qty = itemt.transactionDetail.Where(x => x.Tool_Size == itemQrCodeDetail.Tool_Size && x.Order_Size == itemQrCodeDetail.Order_Size && x.Model_Size == itemQrCodeDetail.Model_Size).FirstOrDefault().Instock_Qty;
+                        _repoQRCodeDetail.Add(itemQrCodeDetail);
+                    }
                 }
             }
 
             // lưu Db
             return await _repoTransactionMain.SaveAll();
-        }
-
-        public Task<bool> SubmitOutput(List<OutputMain_Dto> outputs)
-        {
-            Random ran = new Random();
-            int num = ran.Next(100, 999);
-            string outputSheetNo = "OB" + DateTime.Now.ToString("yyyyMMdd") + num;// OB + 20200421 + 001
-            foreach (var item in outputs)
-            {
-                var transactionMain = _repoTransactionMain.FindSingle(x => x.Transac_No.Trim() == item.TransacNo.Trim());
-                transactionMain.Transac_Sheet_No = outputSheetNo;
-                _repoTransactionMain.Update(transactionMain);
-            }
-            return _repoTransactionMain.SaveAll();
         }
     }
 }

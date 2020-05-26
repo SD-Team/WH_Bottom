@@ -22,6 +22,8 @@ export class OutputProcessComponent implements OnInit {
   output: any = [];
   sumResult1: number = 0;
   sumResult3: number = 0;
+  pickupNo: string = '';
+  listOutputSave: any[] = [];
 
   constructor(
     private router: Router,
@@ -30,7 +32,7 @@ export class OutputProcessComponent implements OnInit {
     private route: ActivatedRoute,
     private functionUtility: FunctionUtility,
     private alertify: AlertifyService
-  ) {}
+  ) { }
 
   ngOnInit() {
     // lấy ra currenoutput lưu trong oututservice, khi từ output main qua là có gán currentoutput
@@ -46,6 +48,17 @@ export class OutputProcessComponent implements OnInit {
       }, 0);
     });
 
+    // lấy ra mã material sheetno, lúc quét mã để hiện ra output
+    this.outputService.currentQrCodeId.subscribe(res => {
+      this.pickupNo = res;
+    });
+
+    // lấy ra những output đã được process
+    this.outputService.currentListOutputSave.subscribe(res => {
+      this.listOutputSave = res;
+    });
+
+    // load dữ liệu lên để proccess
     this.getData();
   }
 
@@ -75,8 +88,8 @@ export class OutputProcessComponent implements OnInit {
 
         // Group by transactiondetail theo tool_Size rồi gán vào result2
         const groups = new Set(
-            this.transactionDetails.map((item) => item.tool_Size)
-          ),
+          this.transactionDetails.map((item) => item.tool_Size)
+        ),
           results = [];
         groups.forEach((g) =>
           results.push({
@@ -127,9 +140,7 @@ export class OutputProcessComponent implements OnInit {
     }, 0);
     this.output.remainingQty = this.output.inStockQty - this.output.transOutQty;
     // gán pickupno bằng giá trị sheetno trong input lúc scan: mình đặt tên biến ra qrcodeId, có lưu trong outputservice để dùng chung
-    this.outputService.currentQrCodeId.subscribe((res) => {
-      this.output.pickupNo = res;
-    });
+    this.output.pickupNo = this.pickupNo;
 
     // thay thế outputmain cũ thành giá trị mới để lúc save quay về trang main hiện giá trị sau lúc save
     if (indexOutput !== -1) {
@@ -168,19 +179,11 @@ export class OutputProcessComponent implements OnInit {
       });
     });
 
-    // gửi lên server với output và transactiondetail dựa vào output có giá trị mới
-    this.outputService
-      .saveOutput(this.output, tmpTranssactionDetails)
-      .subscribe(
-        () => {
-          this.alertify.success('Save succeed');
-        },
-        (error) => {
-          this.alertify.error(error);
-        }
-      );
-
-    //// --------
+    //// lưu output vừa được proccess lưu vào giá trị chung qua trang output main lấy 1 list để gửi server lưu
+    const tmpOutputSave = {output: this.output, transactionDetail: tmpTranssactionDetails};
+    this.listOutputSave.push(tmpOutputSave);
+    this.outputService.changeListOutputSave(this.listOutputSave);
+    //// -- ----------
 
     // lưu lại những biến dùng chung ở outputservice rồi chuyển lại trang main
     this.outputService.changeListOutputM(listOutputM);
