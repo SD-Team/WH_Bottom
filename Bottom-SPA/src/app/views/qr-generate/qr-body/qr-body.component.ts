@@ -22,6 +22,7 @@ export class QrBodyComponent implements OnInit {
   pagination: Pagination;
   bsConfig: Partial<BsDatepickerConfig>;
   listQrCodeMainModel: QRCodeMainModel[] = [];
+  listQrCodeMainModelAll: QRCodeMainModel[] = [];
   packingListDetailAll: PackingListDetailModel[][] = [];
   time_start: string;
   time_end: string;
@@ -172,22 +173,27 @@ export class QrBodyComponent implements OnInit {
   checkAll(e) {
     let arrayCheck = [];
     if (e.target.checked) {
-      $('input:checkbox').not(this).prop('checked', true);
-      this.listQrCodeMainModel.forEach(item => {
-        arrayCheck.push(item.qrCode_ID);
+      this.qrCodeMainService.searchNotPagination(this.qrCodeMainSearch).subscribe(res => {
+        this.listQrCodeMainModelAll = res;
+        this.listQrCodeMainModelAll.forEach(element => {
+          arrayCheck.push(element.qrCode_ID);
+        });
       });
-      this.checkArray.length = 0;
-      this.checkArray = arrayCheck;
     } else {
-      $('input:checkbox').not(this).prop('checked', false);
-      this.checkArray.length = 0;
+      this.listQrCodeMainModel.forEach(element => {
+        let ele =  document.getElementById(element.qrCode_ID.toString()) as HTMLInputElement;
+        ele.checked = false;
+        arrayCheck.length = 0;
+      });
     }
+    this.checkArray = arrayCheck;
+    console.log(this.checkArray);
   }
   onCheckboxChange(e) {
     let arrayCheck = [];
     if (e.target.checked) {
       this.checkArray.push(e.target.value);
-      this.listQrCodeMainModel.forEach(item => {
+      this.listQrCodeMainModelAll.forEach(item => {
         arrayCheck.push(item.qrCode_ID);
       });
       let difference = _.difference(arrayCheck,this.checkArray);
@@ -206,7 +212,7 @@ export class QrBodyComponent implements OnInit {
     let qrCodeVersionList = [];
     if (this.checkArray.length > 0) {
       this.checkArray.forEach(element => {
-        this.listQrCodeMainModel.forEach(element1 => {
+        this.listQrCodeMainModelAll.forEach(element1 => {
           if (element1.qrCode_ID === element) {
             let item = {
               qrCode_ID: element1.qrCode_ID,
@@ -230,5 +236,13 @@ export class QrBodyComponent implements OnInit {
     this.getTimeNow();
     this.mO_No = '';
     this.listQrCodeMainModel= [];
+  }
+  ngAfterViewChecked() {
+    this.checkArray.forEach(element => {
+      let ele =  document.getElementById(element.toString()) as HTMLInputElement;
+        if(ele) {
+          ele.checked = true;
+      }
+    })
   }
 }

@@ -176,5 +176,41 @@ namespace Bottom_API._Services.Services
             var model = await _repoQrcode.FindAll(x => x.QRCode_ID.Trim() == qrCodeId.Trim()).OrderByDescending(x => x.QRCode_Version).FirstOrDefaultAsync();
             return model.QRCode_Version;
         }
+
+        public async Task<List<QRCodeMainViewModel>> SearchNotPagination(FilterQrCodeParam filterParam)
+        {
+            var listPackingList =  _repoPacking.GetAll();
+            if (filterParam.From_Date != null && filterParam.To_Date != null) {
+                listPackingList = listPackingList
+                .Where( x => x.Receive_Date >= Convert.ToDateTime(filterParam.From_Date + " 00:00:00.000") &&
+                        x.Receive_Date <= Convert.ToDateTime(filterParam.To_Date + " 23:59:59.997"));
+            }
+            var listQrCodeMain = _repoQrcode.GetAll().Where(x => x.Is_Scanned.Trim() == "N");
+            if (filterParam.MO_No != null && filterParam.MO_No != string.Empty) {
+                listPackingList = listPackingList.Where(x => x.MO_No.Trim() == filterParam.MO_No.Trim());
+            }
+            var listQrCodeModel = (from x in listQrCodeMain join y in listPackingList
+                                    on x.Receive_No.Trim() equals y.Receive_No.Trim()
+                                    select new QRCodeMainViewModel() {
+                                        QRCode_ID = x.QRCode_ID,
+                                        MO_No = y.MO_No,
+                                        QRCode_Version = x.QRCode_Version,
+                                        Receive_No = x.Receive_No,
+                                        Receive_Date = y.Receive_Date,
+                                        Supplier_ID = y.Supplier_ID,
+                                        Supplier_Name = y.Supplier_Name,
+                                        T3_Supplier = y.T3_Supplier,
+                                        T3_Supplier_Name = y.T3_Supplier_Name,
+                                        Subcon_ID = y.Subcon_ID,
+                                        Subcon_Name = y.Subcon_Name,
+                                        Model_Name = y.Model_Name,
+                                        Model_No = y.Model_No,
+                                        Article = y.Article,
+                                        MO_Seq = y.MO_Seq,
+                                        Material_ID = y.Material_ID,
+                                        Material_Name = y.Material_Name
+                                                    }).Distinct().OrderByDescending(x => x.Receive_Date);
+            return await listQrCodeModel.ToListAsync();
+        }
     }
 }

@@ -125,7 +125,6 @@ export class QrMainComponent implements OnInit {
     if (e.target.checked) {
       let check = 0;
       this.checkArray.push(e.target.value);
-      debugger
       this.packingListsAll.forEach(element => {
           let testCheck = this.checkArray.includes(element.receive_No.toString());
           if(testCheck === false) {
@@ -151,15 +150,7 @@ export class QrMainComponent implements OnInit {
           this.packingListsAll = res;
           this.checkArray.length = 0;
           this.packingListsAll.forEach(element1 => {
-            // let ele =  document.getElementById(element.receive_No.toString()) as HTMLInputElement;
-            // ele.checked = true;
             arrayCheck.push(element1.receive_No);
-          });
-          this.packingLists.forEach(element2 => {
-            let ele =  document.getElementById(element2.receive_No.toString()) as HTMLInputElement;
-            if(ele !== null) {
-              ele.checked = true;
-            }
           });
       })
     } else {

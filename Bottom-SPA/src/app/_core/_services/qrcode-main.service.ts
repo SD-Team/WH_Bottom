@@ -43,6 +43,9 @@ constructor(private http: HttpClient) { }
       })
     );
   }
+  searchNotPagination(modelSearch: QRCodeMainSearch): Observable<QRCodeMainModel[]> {
+    return this.http.post<any>(this.baseUrl + 'qRCodeMain/searchNotPagination/', modelSearch);
+  }
   changeQrCodeMainList(qrCodeMainList: QRCodeMainModel[]) {
     this.qrCodeMainListSource.next(qrCodeMainList);
   }

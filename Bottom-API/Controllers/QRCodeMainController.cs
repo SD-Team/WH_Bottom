@@ -36,6 +36,11 @@ namespace Bottom_API.Controllers
             return Ok(lists);
         }
 
+        [HttpPost("searchNotPagination")]
+        public async Task<IActionResult> SearchNotPagination(FilterQrCodeParam filterParam) {
+            var lists = await _service.SearchNotPagination(filterParam);
+            return Ok(lists);
+        }
         [HttpGet("printqrcode/{qrCodeId}/version/{qrCodeVersion}", Name="PrintQrCode")]
         public async Task<IActionResult> PrintQrCode(string qrCodeId, int qrCodeVersion)
         {
