@@ -64,8 +64,11 @@ namespace Bottom_API._Services.Services
             var packingListFind = packingList
                 .Where(x => x.Receive_No.Trim() == qrCodeMan.Receive_No.Trim()).FirstOrDefault();
             // Tìm List ReceiveNo tương ứng với Purchase và Sheet_Type ở trên        
-            var ReceiveNoList = packingList.Where(x => x.Sheet_Type.Trim() == packingListFind.Sheet_Type.Trim() &&
-                x.Purchase_No.Trim() == packingListFind.Purchase_No.Trim()).Select(x => x.Receive_No).ToList();
+            var ReceiveNoList = packingList
+                .Where(x => x.Sheet_Type.Trim() == packingListFind.Sheet_Type.Trim() &&
+                x.Purchase_No.Trim() == packingListFind.Purchase_No.Trim() &&
+                x.Receive_Date <= packingListFind.Receive_Date)
+                .Select(x => x.Receive_No).ToList();
             
             var packingListDetailAll = await _repoPackingListDetail.GetAll().ToListAsync();
             var packingDetailList = new List<WMSB_PackingList_Detail>();
