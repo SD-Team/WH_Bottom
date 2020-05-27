@@ -8,6 +8,8 @@ import { Pagination, PaginatedResult } from '../../../_core/_models/pagination';
 import { QrcodeMainService } from '../../../_core/_services/qrcode-main.service';
 import { PackingSearch } from '../../../_core/_viewmodels/packing-search';
 import { InputService } from '../../../_core/_services/input.service';
+import { FunctionUtility } from '../../../_core/_utility/function-utility';
+import { element } from 'protractor';
 @Component({
   selector: 'app-qr-main',
   templateUrl: './qr-main.component.html',
@@ -23,9 +25,8 @@ export class QrMainComponent implements OnInit {
   clickSearch: boolean = false;
   packingSearchParam: PackingSearch;
   packingLists: PackingList[];
-  supplier_ID: string;
+  packingListsAll: PackingList[];
   mO_No: string;
-  supplier_Name: string;
   checkArray: any[] = [];
   alerts: any = [
     {
@@ -45,7 +46,8 @@ export class QrMainComponent implements OnInit {
               private packingListService: PackingListService,
               private inputService: InputService,
               private qrcodeService: QrcodeMainService,
-              private alertifyService: AlertifyService) { }
+              private alertifyService: AlertifyService,
+              private functionUtility: FunctionUtility) { }
 
   ngOnInit() {
     this.pagination = {                                                                              
@@ -64,76 +66,102 @@ export class QrMainComponent implements OnInit {
     this.getDataLoadPage();
     this.inputService.clearDataChangeMenu();
   }
-  changeSupplier() {
-    if (this.supplier_ID !== undefined && this.supplier_ID !== '') {
-      this.packingListService.findBySupplier(this.supplier_ID).subscribe(res => {
-        if (res === null) {
-          this.supplier_Name = '';
-        } else {
-          this.supplier_Name = res.supplier_Name;
-        }
-      });
-    }
-  }
-  getDataLoadPage() {
-    let form_date = new Date(this.time_start).toLocaleDateString();
-    let to_date = new Date(this.time_end).toLocaleDateString();
-    this.packingSearchParam = {
-      supplier_ID: '',
-      mO_No: '',
-      from_Date: form_date,
-      to_Date: to_date
-    };
+  getData() {
     this.packingListService.search(this.pagination.currentPage , this.pagination.itemsPerPage, this.packingSearchParam)
     .subscribe((res: PaginatedResult<PackingList[]>) => {
       this.packingLists = res.result;
       this.pagination = res.pagination;
+      if(this.packingLists.length === 0) {
+        this.alertifyService.error('No Data!');
+      }
     }, error => {
       this.alertifyService.error(error);
     });
   }
+  getDataLoadPage() {
+    let form_date = this.functionUtility.getDateFormat(new Date(this.time_start));
+    let to_date = this.functionUtility.getDateFormat(new Date(this.time_end));
+    this.packingSearchParam = {
+      mO_No: '',
+      from_Date: form_date,
+      to_Date: to_date
+    };
+    this.getData();
+  }
   search() {
-    if (this.time_start === undefined || this.time_end === undefined) {
-      this.alertifyService.error('Please option start and end time');
+    this.pagination.currentPage = 1;
+    let checkSearch = true;
+    if (this.time_start !== null) {
+      if (this.time_end === null) {
+        checkSearch = false;
+        this.alertifyService.error('Please option time end!')
+      }
     } else {
-      let form_date = new Date(this.time_start).toLocaleDateString();
-      let to_date = new Date(this.time_end).toLocaleDateString();
+      if (this.time_end !== null) {
+        checkSearch = false;
+        this.alertifyService.error('Please option time start!')
+      }
+    }
+    if (this.time_start === null) {
       this.packingSearchParam = {
-        supplier_ID: this.supplier_ID,
+        mO_No: this.mO_No,
+        from_Date: null,
+        to_Date: null
+      };
+    } else {
+      let form_date = this.functionUtility.getDateFormat(new Date(this.time_start));
+      let to_date = this.functionUtility.getDateFormat(new Date(this.time_end));
+      this.packingSearchParam = {
         mO_No: this.mO_No,
         from_Date: form_date,
         to_Date: to_date
       };
-      this.packingListService.search(this.pagination.currentPage , this.pagination.itemsPerPage, this.packingSearchParam)
-      .subscribe((res: PaginatedResult<PackingList[]>) => {
-        this.packingLists = res.result;
-        this.pagination = res.pagination;
-        if(this.packingLists.length === 0) {
-          this.alertifyService.error('No Data!');
-        }
-      }, error => {
-        this.alertifyService.error(error);
-      });
+    }
+    if(checkSearch) {
+      this.getData();
     }
   }
   onCheckboxChange(e) {
     if (e.target.checked) {
+      let check = 0;
       this.checkArray.push(e.target.value);
+      debugger
+      this.packingListsAll.forEach(element => {
+          let testCheck = this.checkArray.includes(element.receive_No.toString());
+          if(testCheck === false) {
+            check ++;
+          }
+      });
+      if(check === 0) {
+        let checkAll = document.getElementById('all') as HTMLInputElement;
+        checkAll.checked = true;
+      }
     } else {
       let i = this.checkArray.findIndex(element => element === e.target.value);
       this.checkArray.splice(i, 1);
+      let checkAll = document.getElementById('all') as HTMLInputElement;
+      checkAll.checked = false;
     }
   }
   // Khi stick chọn all checkbox
   checkAll(e) {
     let arrayCheck = [];
     if (e.target.checked) {
-      this.packingLists.forEach(element => {
-        let ele =  document.getElementById(element.receive_No.toString()) as HTMLInputElement;
-        ele.checked = true;
-        this.checkArray.length = 0;
-        arrayCheck.push(element.receive_No);
-      });
+        this.packingListService.searchNotPagination(this.packingSearchParam).subscribe(res => {
+          this.packingListsAll = res;
+          this.checkArray.length = 0;
+          this.packingListsAll.forEach(element1 => {
+            // let ele =  document.getElementById(element.receive_No.toString()) as HTMLInputElement;
+            // ele.checked = true;
+            arrayCheck.push(element1.receive_No);
+          });
+          this.packingLists.forEach(element2 => {
+            let ele =  document.getElementById(element2.receive_No.toString()) as HTMLInputElement;
+            if(ele !== null) {
+              ele.checked = true;
+            }
+          });
+      })
     } else {
       this.packingLists.forEach(element => {
         let ele =  document.getElementById(element.receive_No.toString()) as HTMLInputElement;
@@ -145,10 +173,11 @@ export class QrMainComponent implements OnInit {
   }
   pageChanged(event: any): void {
     this.pagination.currentPage = event.page;
-    this.search();
+    this.getData();
   }
   // genare QrCode
   pageQrCode() {
+    console.log(this.checkArray);
     if (this.checkArray.length > 0) {
       this.qrcodeService.generateQrCode(this.checkArray).subscribe(res => {
         this.alertifyService.success('Generate QRCode successed!');
@@ -164,5 +193,13 @@ export class QrMainComponent implements OnInit {
   cancel() {
     this.clickSearch = false;
     this.packingLists.length = 0;
+  }
+  ngAfterViewChecked() {
+    this.checkArray.forEach(element => {
+      let ele =  document.getElementById(element.toString()) as HTMLInputElement;
+        if(ele) {
+          ele.checked = true;
+      }
+    })
   }
 }

@@ -32,6 +32,9 @@ export class PackingListService {
         })
       );
     }
+    searchNotPagination(packingSearch: PackingSearch): Observable<PackingList[]> {
+      return this.http.post<PackingList[]>(this.baseUrl + 'searchNotPagination/', packingSearch);
+    }
     findBySupplier(supplier: any): Observable<PackingList> {
       return this.http.get<any>(this.baseUrl + 'findBySupplier/' + supplier, {});
     }

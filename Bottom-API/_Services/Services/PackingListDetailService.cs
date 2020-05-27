@@ -52,6 +52,7 @@ namespace Bottom_API._Services.Services
             throw new System.NotImplementedException();
         }
 
+
         // ---Phần in QrCodeId khi vào Menu 2.QrGenerate => Print (Material Form)-------//
         public async Task<object> FindByQrCodeID(QrCodeIDVersion data)
         {
@@ -77,7 +78,7 @@ namespace Bottom_API._Services.Services
             // Gộp theo từng tool size và tính tổng Purchase, Received Qty theo tool size đó.
             var BalByToolSize = packingDetailList.GroupBy(x => x.Tool_Size).Select(x => new {
                 Tool_Size = x.FirstOrDefault().Tool_Size,
-                Bal = x.Sum(cl => cl.Purchase_Qty) - x.Sum(cl => cl.Received_Qty)
+                Bal = x.Sum(cl => cl.Purchase_Qty)/(ReceiveNoList.Count()) - x.Sum(cl => cl.Received_Qty)
             });
 
             var packingListDetailModel = new List<PackingListDetailViewModel>();
@@ -123,22 +124,22 @@ namespace Bottom_API._Services.Services
                             Purchase_Qty = x.Sum(cl => cl.Purchase_Qty),
                             Received_Qty = x.Sum(cl => cl.Received_Qty),
                             Act = x.Sum(cl => cl.Act),
-                            Bal = x.Sum(cl => cl.Bal)
+                            Bal = x.First().Bal
                         }).FirstOrDefault();
-                    foreach (var itemPack in packingListDetailModel)
+                    var packingDetailByToolSize = packingListDetailModel
+                        .Where(x => x.Tool_Size.Trim() == itemToolSize.Trim()).ToList();
+                    for (var i = 0; i < packingDetailByToolSize.Count; i ++)
                     {
-                        if(itemPack.Tool_Size.Trim() == itemToolSize.Trim() &&
-                            itemPack.Order_Size.Trim() != itemToolSize.Trim()) {
-                                itemPack.Purchase_Qty = null;
-                                itemPack.Received_Qty = null;
-                                itemPack.Act = null;
-                                itemPack.Bal = null;
-                        } else if(itemPack.Tool_Size.Trim() == itemToolSize.Trim() &&
-                            itemPack.Order_Size.Trim() == itemToolSize.Trim()) {
-                            itemPack.Purchase_Qty = model1.Purchase_Qty;
-                            itemPack.Received_Qty = model1.Received_Qty;
-                            itemPack.Act = model1.Act;
-                            itemPack.Bal = model1.Bal;
+                        if( i != 0) {
+                                packingDetailByToolSize[i].Purchase_Qty = null;
+                                packingDetailByToolSize[i].Received_Qty = null;
+                                packingDetailByToolSize[i].Act = null;
+                                packingDetailByToolSize[i].Bal = null;
+                        } else {
+                            packingDetailByToolSize[i].Purchase_Qty = model1.Purchase_Qty;
+                            packingDetailByToolSize[i].Received_Qty = model1.Received_Qty;
+                            packingDetailByToolSize[i].Act = model1.Act;
+                            packingDetailByToolSize[i].Bal = model1.Bal;
                         }
                     }
                 }
@@ -260,18 +261,20 @@ namespace Bottom_API._Services.Services
                             Act = x.Sum(cl => cl.Act),
                             Bal = x.Sum(cl => cl.Bal)
                         }).FirstOrDefault();
-                    foreach (var itemPack in packingListDetailModel)
+                    var packingListByToolSize = packingListDetailModel
+                        .Where(x => x.Tool_Size.Trim() == itemToolSize.Trim()).ToList();
+                    for (var i = 0; i < packingListByToolSize.Count; i ++)
                     {
-                        if(itemPack.Tool_Size.Trim() == itemToolSize && itemPack.Tool_Size != itemPack.Order_Size) {
-                            itemPack.Purchase_Qty = null;
-                            itemPack.Received_Qty = null;
-                            itemPack.Act = null;
-                            itemPack.Bal = null;
-                        } else if(itemPack.Tool_Size.Trim() == itemToolSize && itemPack.Tool_Size == itemPack.Order_Size) {
-                            itemPack.Purchase_Qty = model1.Purchase_Qty;
-                            itemPack.Received_Qty = model1.Received_Qty;
-                            itemPack.Act = model1.Act;
-                            itemPack.Bal = model1.Bal;
+                        if(i != 0) {
+                            packingListByToolSize[i].Purchase_Qty = null;
+                            packingListByToolSize[i].Received_Qty = null;
+                            packingListByToolSize[i].Act = null;
+                            packingListByToolSize[i].Bal = null;
+                        } else {
+                            packingListByToolSize[i].Purchase_Qty = model1.Purchase_Qty;
+                            packingListByToolSize[i].Received_Qty = model1.Received_Qty;
+                            packingListByToolSize[i].Act = model1.Act;
+                            packingListByToolSize[i].Bal = model1.Bal;
                         }
                     }
                 }
@@ -384,18 +387,20 @@ namespace Bottom_API._Services.Services
                             Act = x.Sum(cl => cl.Act),
                             Bal = x.Sum(cl => cl.Bal)
                         }).FirstOrDefault();
-                    foreach (var itemPack in packingListDetailModel)
+                    var packingListByToolSize = packingListDetailModel
+                        .Where(x => x.Tool_Size.Trim() == itemToolSize.Trim()).ToList();
+                    for (var i = 0; i < packingListByToolSize.Count; i ++)
                     {
-                        if(itemPack.Tool_Size.Trim() == itemToolSize && itemPack.Tool_Size != itemPack.Order_Size) {
-                            itemPack.Purchase_Qty = null;
-                            itemPack.Received_Qty = null;
-                            itemPack.Act = null;
-                            itemPack.Bal = null;
-                        } else if(itemPack.Tool_Size.Trim() == itemToolSize && itemPack.Tool_Size == itemPack.Order_Size) {
-                            itemPack.Purchase_Qty = model1.Purchase_Qty;
-                            itemPack.Received_Qty = model1.Received_Qty;
-                            itemPack.Act = model1.Act;
-                            itemPack.Bal = model1.Bal;
+                        if(i != 0) {
+                            packingListByToolSize[i].Purchase_Qty = null;
+                            packingListByToolSize[i].Received_Qty = null;
+                            packingListByToolSize[i].Act = null;
+                            packingListByToolSize[i].Bal = null;
+                        } else {
+                            packingListByToolSize[i].Purchase_Qty = model1.Purchase_Qty;
+                            packingListByToolSize[i].Received_Qty = model1.Received_Qty;
+                            packingListByToolSize[i].Act = model1.Act;
+                            packingListByToolSize[i].Bal = model1.Bal;
                         }
                     }
                 }

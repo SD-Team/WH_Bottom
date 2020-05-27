@@ -27,7 +27,12 @@ namespace Bottom_API.Controllers
             Response.AddPagination(lists.CurrentPage, lists.PageSize, lists.TotalCount, lists.TotalPages);
             return Ok(lists);
         }
-
+        
+        [HttpPost("searchNotPagination")]
+        public async Task<IActionResult> SearchNotPagination(FilterPackingListParam filterParam) {
+            var lists = await _service.SearchNotPagination(filterParam);
+            return Ok(lists);
+        }
 
         [HttpGet("findBySupplier/{supplier_ID}")]
         public async Task<IActionResult> FindBySupplier(string supplier_ID) {

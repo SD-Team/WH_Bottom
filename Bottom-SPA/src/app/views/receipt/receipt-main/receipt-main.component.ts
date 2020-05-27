@@ -7,11 +7,11 @@ import { Pagination, PaginatedResult } from '../../../_core/_models/pagination';
 import { PackingListService } from '../../../_core/_services/packing-list.service';
 import { MaterialModel } from '../../../_core/_viewmodels/material-model';
 import { ReceiveNoMain } from '../../../_core/_viewmodels/receive_no_main';
-// import { AlertConfig } from 'ngx-bootstrap/alert';
 import * as _ from 'lodash'; 
 import { MaterialSearch } from '../../../_core/_viewmodels/material-search';
 import { InputService } from '../../../_core/_services/input.service';
 import { FunctionUtility } from '../../../_core/_utility/function-utility';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-receipt-main',
   templateUrl: './receipt-main.component.html',
@@ -48,6 +48,7 @@ export class ReceiptMainComponent implements OnInit {
               private packingListService: PackingListService,
               private inputService: InputService,
               private router: Router,
+              private spinnerService: NgxSpinnerService,
               private alertifyService: AlertifyService,
               private functionUtility: FunctionUtility) { }
 
@@ -59,12 +60,6 @@ export class ReceiptMainComponent implements OnInit {
       totalItems: 0,
       totalPages: 0
     };
-    // Lấy ngày hiện tại
-    // const timeNow = new Date().getFullYear().toString() +
-    //                 '/' + (new Date().getMonth() + 1).toString() +
-    //                 '/' + new Date().getDate().toString();
-    // this.time_start = timeNow;
-    // this.time_end = timeNow;
     this.bsConfig = Object.assign(
       {},
       {
@@ -79,12 +74,12 @@ export class ReceiptMainComponent implements OnInit {
       this.supplier_ID = this.materialSearch.supplier_ID;
       this.status = this.materialSearch.status;
       console.log('---',this.materialSearch);
-      if(this.time_start === null) {
+      if(this.materialSearch.from_Date === null) {
         this.time_start = '';
       } else {
         this.time_start = this.materialSearch.from_Date;
       }
-      if(this.time_end === null) {
+      if(this.materialSearch.to_Date === null) {
         this.time_end = '';
       } else {
         this.time_end = this.materialSearch.to_Date;
@@ -100,27 +95,6 @@ export class ReceiptMainComponent implements OnInit {
         this.supplierList = res;
       });
   }
-  // getDataLoadPage() {
-  //   let form_date = this.functionUtility.getDateFormat(new Date(this.time_start));
-  //   let to_date = this.functionUtility.getDateFormat(new Date(this.time_end));
-  //   this.materialSearch = {
-  //     supplier_ID: '',
-  //     mO_No: '',
-  //     from_Date: form_date,
-  //     to_Date: to_date,
-  //     status: 'all'
-  //   };
-  //   this.materialService.search(this.pagination.currentPage , this.pagination.itemsPerPage, this.materialSearch)
-  //       .subscribe((res: PaginatedResult<MaterialModel[]>) => {
-  //         this.materialLists = res.result;
-  //         this.pagination = res.pagination;
-  //         if(this.materialLists.length === 0) {
-  //           this.alertifyService.error('No Data!');
-  //         }
-  //       }, error => {
-  //       this.alertifyService.error(error);
-  //   });
-  // }
   search() {
       let checkSearch = true;
       if(this.time_start === undefined || this.time_start === '') {
@@ -149,12 +123,15 @@ export class ReceiptMainComponent implements OnInit {
       } else {
 
       }
+      console.log(this.materialSearch);
       if(checkSearch) {
         this.materialService.changeMaterialSearch(this.materialSearch);
+        this.spinnerService.show();
         this.materialService.search(this.pagination.currentPage , this.pagination.itemsPerPage, this.materialSearch)
           .subscribe((res: PaginatedResult<MaterialModel[]>) => {
             this.materialLists = res.result;
             this.pagination = res.pagination;
+            this.spinnerService.hide();
             if(this.materialLists.length === 0) {
               this.alertifyService.error('No Data!');
             }

@@ -93,9 +93,12 @@ namespace Bottom_API._Services.Services
         }
         public async Task<PagedList<QRCodeMainViewModel>> SearchByPlanNo(PaginationParams param ,FilterQrCodeParam filterParam)
         {
-            var listPackingList =  _repoPacking.GetAll()
+            var listPackingList =  _repoPacking.GetAll();
+            if (filterParam.From_Date != null && filterParam.To_Date != null) {
+                listPackingList = listPackingList
                 .Where( x => x.Receive_Date >= Convert.ToDateTime(filterParam.From_Date + " 00:00:00.000") &&
                         x.Receive_Date <= Convert.ToDateTime(filterParam.To_Date + " 23:59:59.997"));
+            }
             var listQrCodeMain = _repoQrcode.GetAll().Where(x => x.Is_Scanned.Trim() == "N");
             if (filterParam.MO_No != null && filterParam.MO_No != string.Empty) {
                 listPackingList = listPackingList.Where(x => x.MO_No.Trim() == filterParam.MO_No.Trim());

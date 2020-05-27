@@ -20,8 +20,6 @@ import { FunctionUtility } from '../../../_core/_utility/function-utility';
 })
 export class QrBodyComponent implements OnInit {
   pagination: Pagination;
-  fromDate = new Date();
-  toDate = new Date();
   bsConfig: Partial<BsDatepickerConfig>;
   listQrCodeMainModel: QRCodeMainModel[] = [];
   packingListDetailAll: PackingListDetailModel[][] = [];
@@ -90,6 +88,26 @@ export class QrBodyComponent implements OnInit {
       '/' + new Date().getDate().toString();
       this.time_start = timeNow;
       this.time_end = timeNow;
+      let form_date = this.functionUtility.getDateFormat(new Date(this.time_start));
+      let to_date = this.functionUtility.getDateFormat(new Date(this.time_end));
+      this.qrCodeMainSearch = {
+        mO_No: '',
+        from_Date: form_date,
+        to_Date: to_date
+      }
+      this.qrCodeMainService.changeQrCodeMainSearch(this.qrCodeMainSearch);
+  }
+  getData() {
+    this.qrCodeMainService.search(this.pagination.currentPage , this.pagination.itemsPerPage, this.qrCodeMainSearch)
+    .subscribe((res: PaginatedResult<QRCodeMainModel[]>) => {
+      this.listQrCodeMainModel = res.result;
+      this.pagination = res.pagination;
+      if(this.listQrCodeMainModel.length === 0) {
+        this.alertifyService.error('No Data!');
+      }
+    }, error => {
+      this.alertifyService.error(error);
+    });
   }
   getDataLoadPage() {
     let form_date = this.functionUtility.getDateFormat(new Date(this.time_start));
@@ -102,39 +120,30 @@ export class QrBodyComponent implements OnInit {
       from_Date: form_date,
       to_Date: to_date
     };
-    this.qrCodeMainService.search(this.pagination.currentPage , this.pagination.itemsPerPage, this.qrCodeMainSearch)
-    .subscribe((res: PaginatedResult<QRCodeMainModel[]>) => {
-      this.listQrCodeMainModel = res.result;
-      this.pagination = res.pagination;
-    }, error => {
-      this.alertifyService.error(error);
-    });
+    this.getData();
   }
   search() {
-      if (this.time_start === undefined || this.time_end === undefined) {
-        this.alertifyService.error('Please option start and end time');
-      } else {
-        let form_date = this.functionUtility.getDateFormat(new Date(this.time_start));
-          let to_date = this.functionUtility.getDateFormat(new Date(this.time_end));
-        if (this.mO_No === undefined) {
-          this.mO_No = null;
-        }
-        this.qrCodeMainSearch = {
-          mO_No: this.mO_No,
-          from_Date: form_date,
-          to_Date: to_date
-        };
-        this.qrCodeMainService.changeQrCodeMainSearch(this.qrCodeMainSearch);
-        this.qrCodeMainService.search(this.pagination.currentPage , this.pagination.itemsPerPage, this.qrCodeMainSearch)
-        .subscribe((res: PaginatedResult<QRCodeMainModel[]>) => {
-          this.listQrCodeMainModel = res.result;
-          this.pagination = res.pagination;
-          if(this.listQrCodeMainModel.length === 0) {
-            this.alertifyService.error('No Data!');
+    this.pagination.currentPage = 1;
+        let checkSearch = true;
+        if (this.time_start !== null) {
+          if (this.time_end === null) {
+            this.alertifyService.error('Please option time end!');
+            checkSearch = false;
           }
-        }, error => {
-          this.alertifyService.error(error);
-        });
+        }
+        if(checkSearch) {
+          if (this.time_start === null) {
+            this.qrCodeMainSearch = {mO_No: this.mO_No,from_Date: null,to_Date: null};
+          } else {
+            let form_date = this.functionUtility.getDateFormat(new Date(this.time_start));
+            let to_date = this.functionUtility.getDateFormat(new Date(this.time_end));
+            this.qrCodeMainSearch = {mO_No: this.mO_No,from_Date: form_date,to_Date: to_date};
+          }
+          if (this.mO_No === undefined) {
+            this.mO_No = null;
+          }
+          this.qrCodeMainService.changeQrCodeMainSearch(this.qrCodeMainSearch);
+          this.getData();
       }
   }
   print(qrCodeMain) {
@@ -153,8 +162,12 @@ export class QrBodyComponent implements OnInit {
       })
   }
   pageChanged(event: any): void {
+    debugger
+    this.qrCodeMainService.currentQrCodeMainSearch.subscribe(res => {
+      this.qrCodeMainSearch = res;
+    })
     this.pagination.currentPage = event.page;
-    this.search();
+    this.getData();
   }
   checkAll(e) {
     let arrayCheck = [];

@@ -53,11 +53,6 @@ export class RecordComponent implements OnInit {
   }
   editReceiveNo(receiveNoMain: ReceiveNoMain) {
     this.materialService.changeReceiveNoMainItem(receiveNoMain);
-    // this.materialService.editMaterial(receiveNoMain).subscribe(res => {
-    //   this.materialEditModels = res;
-    //   this.materialService.changeReceiveNoMainItem(receiveNoMain);
-    //   this.materialService.changeMaterialEditModel(this.materialEditModels);
-    // });
     this.router.navigate(['/receipt/record/record-edit']);
   }
   changeForm() {

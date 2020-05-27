@@ -16,22 +16,22 @@ namespace Bottom_API._Services.Services
 {
     public class PackingListService : IPackingListService
     {
-        private readonly IPackingListRepository _repo;
+        private readonly IPackingListRepository _repoPackingList;
         private readonly IMaterialViewRepository _repoMaterialView;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
-        public PackingListService(  IPackingListRepository repo,
+        public PackingListService(  IPackingListRepository repoPackingList,
                                     IMaterialViewRepository repoMaterialView,
                                     IMapper mapper,
                                     MapperConfiguration configMapper) {
-            _repo = repo;
+            _repoPackingList = repoPackingList;
             _repoMaterialView = repoMaterialView;
             _mapper = mapper;
             _configMapper = configMapper;
         }
         public async Task<List<Packing_List_Dto>> GetAllAsync()
         {
-            return await _repo.GetAll().ProjectTo<Packing_List_Dto>(_configMapper).ToListAsync();
+            return await _repoPackingList.GetAll().ProjectTo<Packing_List_Dto>(_configMapper).ToListAsync();
         }
 
         public Packing_List_Dto GetById(object id)
@@ -58,26 +58,25 @@ namespace Bottom_API._Services.Services
             return data;
         }
 
-        public async Task<PagedList<Packing_List_Dto>> SearchViewModel(PaginationParams param,FilterPackingListParam filterParam)
+        public async Task<PagedList<WMSB_Packing_List>> SearchViewModel(PaginationParams param,FilterPackingListParam filterParam)
         {
-            var test = DateTime.Now.Date.ToString();
-            var packingSearch =  _repo.GetAll().ProjectTo<Packing_List_Dto>(_configMapper).
+            var packingSearch =  _repoPackingList.GetAll();
+            if(filterParam.From_Date != null && filterParam.To_Date != null) {
+                packingSearch =  packingSearch.
                             Where(  x => x.Receive_Date >= DateTime.Parse(filterParam.From_Date + " 00:00:00.000") &&
                                     x.Generated_QRCode.Trim() == "N" &&
                                     x.Receive_Date <= DateTime.Parse(filterParam.To_Date + " 23:59:59.000")
                                     );
-            if (filterParam.Supplier_ID != null && filterParam.Supplier_ID != string.Empty) {
-                packingSearch = packingSearch.Where(x => x.Supplier_ID.Trim() == filterParam.Supplier_ID.Trim());
             }
             if (filterParam.MO_No != null && filterParam.MO_No != string.Empty) {
                 packingSearch = packingSearch.Where(x => x.MO_No.Trim() == filterParam.MO_No.Trim());
             }
-            return await PagedList<Packing_List_Dto>.CreateAsync(packingSearch, param.PageNumber, param.PageSize);
+            return await PagedList<WMSB_Packing_List>.CreateAsync(packingSearch, param.PageNumber, param.PageSize);
         }
 
         public async Task<Packing_List_Dto> FindBySupplier(string supplier_ID)
         {
-            var data =  await _repo.GetAll()
+            var data =  await _repoPackingList.GetAll()
                         .Where(x => x.Supplier_ID.Trim() == supplier_ID.Trim())
                         .FirstOrDefaultAsync();
             var model = _mapper.Map<Packing_List_Dto>(data);
@@ -86,8 +85,8 @@ namespace Bottom_API._Services.Services
         public async Task<bool> Add(Packing_List_Dto model)
         {
             var data = _mapper.Map<WMSB_Packing_List>(model);
-            _repo.Add(data);
-            return await _repo.SaveAll();
+            _repoPackingList.Add(data);
+            return await _repoPackingList.SaveAll();
         }
 
         public Task<bool> Update(Packing_List_Dto model)
@@ -98,6 +97,22 @@ namespace Bottom_API._Services.Services
         public Task<bool> Delete(object id)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<List<WMSB_Packing_List>> SearchNotPagination(FilterPackingListParam filterParam)
+        {
+            var packingSearch =  _repoPackingList.GetAll();
+            if(filterParam.From_Date != null && filterParam.To_Date != null) {
+                packingSearch =  packingSearch.
+                            Where(  x => x.Receive_Date >= DateTime.Parse(filterParam.From_Date + " 00:00:00.000") &&
+                                    x.Generated_QRCode.Trim() == "N" &&
+                                    x.Receive_Date <= DateTime.Parse(filterParam.To_Date + " 23:59:59.000")
+                                    );
+            }
+            if (filterParam.MO_No != null && filterParam.MO_No != string.Empty) {
+                packingSearch = packingSearch.Where(x => x.MO_No.Trim() == filterParam.MO_No.Trim());
+            }
+            return await packingSearch.ToListAsync();
         }
     }
 }

@@ -631,6 +631,12 @@ namespace Bottom_API._Services.Services
 
         public async Task<bool> EditDetail(List<MaterialEditModel> data)
         {
+            // Update Receive_Date trong bảng PackingList.
+            var packingListFind = await _repoPackingList.GetAll()
+                .Where(x => x.Receive_No.Trim() == data[0].Receive_No.Trim()).FirstOrDefaultAsync();
+            packingListFind.Receive_Date = DateTime.Now;
+            await _repoPackingList.SaveAll();
+
             var editResult = false;
             var receive_No = data[0].Receive_No;
             var missing_No = data[0].Missing_No;

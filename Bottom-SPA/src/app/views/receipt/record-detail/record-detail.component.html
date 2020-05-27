@@ -33,28 +33,32 @@
               <input type="text" [(ngModel)]="receiveNoMain.material_Name" disabled name="material_name" class="form-control">
             </div>
           </div>
-          <table *ngIf="receiveDetail !== undefined && receiveDetail !== null" class="table table-bordered">
-            <thead>
-              <tr>
-                <th class="bgr-table">Size</th>
-                <th *ngFor="let item of receiveDetail" class="text-center vertical-middle">{{item.order_Size}}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="bgr-table">Purchase Qty</td>
-                <td *ngFor="let item of receiveDetail"  class="text-center vertical-middle">{{item.purchase_Qty}}</td>
-              </tr>
-              <tr>
-                <td class="bgr-table">Received Qty</td>
-                <td *ngFor="let item of receiveDetail"  class="text-center vertical-middle">{{item.received_Qty}}</td>
-              </tr>
-              <!-- <tr>
-                <td class="bgr-table">Remaining canbe receive Qty</td>
-                <td *ngFor="let item of receiveDetail" class="text-center vertical-middle">{{item.remaining}}</td>
-              </tr> -->
-            </tbody>
-          </table>
+          <div class="row ">
+            <div class="col-md-10 offset-md-1 table-responsive">
+              <table *ngIf="receiveDetail !== undefined && receiveDetail !== null" class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th class="bgr-table">Size</th>
+                    <th *ngFor="let item of receiveDetail" class="text-center vertical-middle">{{item.order_Size}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="bgr-table">Purchase Qty</td>
+                    <td *ngFor="let item of receiveDetail"  class="text-center vertical-middle">{{item.purchase_Qty}}</td>
+                  </tr>
+                  <tr>
+                    <td class="bgr-table">Received Qty</td>
+                    <td *ngFor="let item of receiveDetail"  class="text-center vertical-middle">{{item.received_Qty}}</td>
+                  </tr>
+                  <!-- <tr>
+                    <td class="bgr-table">Remaining canbe receive Qty</td>
+                    <td *ngFor="let item of receiveDetail" class="text-center vertical-middle">{{item.remaining}}</td>
+                  </tr> -->
+                </tbody>
+              </table>
+            </div>
+          </div>
           <div class="d-flex">
             
           </div>
