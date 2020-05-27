@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Output } from '../_models/output';
 import { BehaviorSubject } from 'rxjs';
 import { MaterialSheetSize } from '../_models/material-sheet-size';
-import { OutputM } from '../_models/outputM';
+import { OutputM, OutputParam } from '../_models/outputM';
 import { TransferDetail } from '../_models/transfer-detail';
 import { OutputParams } from '../_viewmodels/output-param';
 import { OutputDetail } from '../_models/output-detail';
@@ -26,6 +26,8 @@ export class OutputService {
   currentFlagFinish = this.flagFinishSource.asObservable();
   flagSubmitSource = new BehaviorSubject<boolean>(false);
   currentFlagSubmit = this.flagFinishSource.asObservable();
+  listOutputSaveSource = new BehaviorSubject<Array<any>>([]);
+  currentListOutputSave = this.listOutputSaveSource.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -47,17 +49,16 @@ export class OutputService {
   changeFlagSubmit(flag: boolean) {
     this.flagSubmitSource.next(flag);
   }
+  changeListOutputSave(listOutputSave: any[]) {
+    this.listOutputSaveSource.next(listOutputSave);
+  }
   getMainByQrCodeId(qrCodeId: string) {
     return this.http.get<Output>(this.baseUrl + 'Output/GetByQrCodeId', { params: { qrCodeId: qrCodeId } });
-  }
-  saveOutput(outputM: OutputM, listTransactionDetail: TransferDetail[]) {
-    const param = {output: outputM, transactionDetail: listTransactionDetail};
-    return this.http.post(this.baseUrl + 'Output/Save', param);
   }
   getOutputDetail(transacNo: string) {
     return this.http.get<OutputDetail>(this.baseUrl + 'Output/detail/' + transacNo);
   }
-  submitOutput(outputs: OutputM[]) {
-    return this.http.post(this.baseUrl + 'Output/submit', outputs);
+  saveListOutput(listOutput: OutputParam[]) {
+    return this.http.post(this.baseUrl + 'Output/savelistoutput', listOutput);
   }
 }

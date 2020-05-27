@@ -27,17 +27,17 @@ namespace Bottom_API.Controllers
             else return NoContent();
         }
 
-        [HttpPost("save")]
-        public async Task<IActionResult> SaveOutput(OutputParam outputParam)
+        [HttpPost("savelistoutput")]
+        public async Task<IActionResult> SaveListOutput(List<OutputParam> outputParam)
         {
-            if (await _service.SaveOutput(outputParam)) 
+            if (await _service.SaveListOutput(outputParam))
             {
                 return Ok();
             }
 
             throw new Exception("Submit failed on save");
         }
-
+        
         [HttpGet("detail/{transacNo}")]
         public async Task<IActionResult> OutputDetail(string transacNo)
         {
@@ -45,17 +45,6 @@ namespace Bottom_API.Controllers
             if (model != null)
                 return Ok(model);
             else return NoContent();
-        }
-
-        [HttpPost("submit")]
-        public async Task<IActionResult> SubmitOutput(List<OutputMain_Dto> outputs)
-        {
-            if (await _service.SubmitOutput(outputs)) 
-            {
-                return Ok();
-            }
-
-            throw new Exception("Submit failed on save");
         }
     }
 }

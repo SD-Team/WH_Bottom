@@ -78,7 +78,7 @@
                       <button
                         class="btn btn-warning mr-2"
                         *ngIf="item.transOutQty != 0"
-                        (click)="detail(item)"
+                        (click)="detail(item, i)"
                       >
                         <i class="fa fa-search-plus"></i> Detail
                       </button>
@@ -108,7 +108,7 @@
           <div class="d-flex"></div>
         </div>
         <div class="card-footer" *ngIf="outputs.length > 0">
-          <button class="btn btn-danger mr-2">
+          <button class="btn btn-danger mr-2" (click)="cancel()">
             <i class="fa fa-ban"></i> Cancel
           </button>
           <button class="btn btn-success mr-2" [disabled]="!flagFinish" (click)="submit()">

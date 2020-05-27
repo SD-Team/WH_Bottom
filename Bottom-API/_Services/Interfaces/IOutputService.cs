@@ -8,8 +8,7 @@ namespace Bottom_API._Services.Interfaces
     public interface IOutputService
     {
         Task<Output_Dto> GetByQrCodeId(string qrCodeId);
-        Task<bool> SaveOutput(OutputParam outputParam);
-        Task<bool> SubmitOutput(List<OutputMain_Dto> outputs);
+        Task<bool> SaveListOutput(List<OutputParam> outputParam);
         Task<OutputDetail_Dto> GetDetailOutput(string transacNo);
     }
 }
